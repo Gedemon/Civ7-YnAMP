@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Database>
+	<EnglishText>
+		<Row Tag="LOC_MAP_GREATEST_EARTH_SIZE_NAME">
+			<Text>Custom Huge for Greatest Earth (104x64)</Text>
+		</Row>
+		<Row Tag="LOC_MAPSIZE_MASSIVE_NAME">
+			<Text>Massive (128x80)</Text>
+		</Row>
+		<Row Tag="LOC_MAPSIZE_GIANT_NAME">
+			<Text>Giant (180x94)[n][icon:BUILDING_WARNING] no texture on tiles > 127 [icon:BUILDING_WARNING]</Text>
+		</Row>
+		<Row Tag="LOC_MAPSIZE_LUDICROUS_NAME">
+			<Text>Ludicrous (230x116)[n][icon:BUILDING_WARNING] no texture on tiles > 127 [icon:BUILDING_WARNING]</Text>
+		</Row>
+		<Row Tag="LOC_MAP_CONTINENTS_YNAMP_NAME">
+			<Text>Continents++ (YnAMP)</Text>
+		</Row>
+		<Row Tag="LOC_MAP_FRACTAL_YNAMP_NAME">
+			<Text>Fractal (YnAMP)</Text>
+		</Row>
+		<Row Tag="LOC_MAP_GIANT_EARTH_YNAMP_NAME">
+			<Text>[icon:YNAMP_CIV6_EARTH] Giant Earth Map (YnAMP)[n][icon:DEFAULT_NOTIFICATION] Landmasses shape only [icon:DEFAULT_NOTIFICATION]</Text>
+		</Row>
+		<Row Tag="LOC_MAP_GREATEST_EARTH_YNAMP_NAME">
+			<Text>[icon:YNAMP_CIV6_EARTH] Greatest Earth Map (YnAMP)[n]Civ5 map by djvandyke</Text>
+		</Row>
+	</EnglishText>
+</Database>

@@ -1,0 +1,15 @@
+{
+  "name": "YnAMP",
+  "description": "Civilization 7 YnAMP module",
+  "author": "Gedemon",
+  "version": "1.0.0",
+  "license": "UNLICENSED",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./*": "./src/*"
+  },
+  "dependencies": {
+    "modding-sdk": "workspace:*"
+  }
+}

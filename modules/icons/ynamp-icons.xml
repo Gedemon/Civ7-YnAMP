@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Database>
+<!-- -->
+	<IconDefinitions>
+        <Replace>
+			<ID>CHAT_HAPPYTIBS</ID>
+			<Path>fs://game/ged-ynamp/icons/happy_cat.png</Path>
+			<Context>DEFAULT</Context>
+		</Replace>
+        <Replace>
+			<ID>YNAMP_CIV6_EARTH</ID>
+			<Path>fs://game/ged-ynamp/icons/civ6_earth.png</Path>
+			<Context>DEFAULT</Context>
+		</Replace>
+<!-- ->
+		<Replace>
+			<ID>CIVILIZATION_AKSUM</ID>
+			<Path>fs://game/ged-ynamp/icons/happy_cat.png</Path>
+		</Replace>
+    </IconDefinitions>
+<!-- -->
+</Database>

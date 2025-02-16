@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Database>
+	<EnglishText>
+		<Row Tag="LOC_MODULE_YNAMP_NAME">
+			<Text>Yet (not) Another Map Pack</Text>
+		</Row>
+		<Row Tag="LOC_MODULE_YNAMP_DESCRIPTION">
+			<Text>Yet (not) Another Map Pack for Civ7</Text>
+		</Row>
+	</EnglishText>
+</Database>

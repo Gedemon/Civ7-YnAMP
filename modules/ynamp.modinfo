@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mod id="ged-ynamp" version="1"
+	xmlns="ModInfo">
+	<Properties>
+		<Name>LOC_MODULE_YNAMP_NAME</Name>
+		<Description>LOC_MODULE_YNAMP_DESCRIPTION</Description>
+		<Authors>Gedemon</Authors>
+		<Package>MOD</Package>
+	</Properties>
+	<Dependencies>
+		<Mod id="base-standard" title="LOC_MODULE_BASE_STANDARD_NAME"/>
+	</Dependencies>
+	<ActionCriteria>
+		<Criteria id="always">
+			<AlwaysMet></AlwaysMet>
+		</Criteria>
+	</ActionCriteria>
+	<ActionGroups>
+		<ActionGroup id="base-game-main-ynamp" scope="game" criteria="always">
+			<Actions>
+				<UpdateDatabase>
+					<Item>data/maps.xml</Item>
+				</UpdateDatabase>
+				<UpdateText>
+					<Item>text/en_us/MapText.xml</Item>
+				</UpdateText>
+				<ImportFiles>
+					<Item>maps/ynamp-utilities.js</Item>
+					<Item>icons/happy_cat.png</Item>
+					<Item>icons/civ6_earth.png</Item>
+				</ImportFiles>
+				<UpdateIcons>
+					<Item>icons/ynamp-icons.xml</Item>
+				</UpdateIcons>
+				<ScenarioScripts>
+					<Item>scenario/test.js</Item>
+				</ScenarioScripts>
+			</Actions>
+		</ActionGroup>
+		<ActionGroup id="shell-ynamp" scope="shell" criteria="always">
+			<Actions>
+				<UpdateDatabase>
+					<Item>config/config.xml</Item>
+				</UpdateDatabase>
+				<UpdateText>
+					<Item>text/en_us/MapText.xml</Item>
+				</UpdateText>
+				<ImportFiles>
+					<Item>icons/happy_cat.png</Item>
+					<Item>icons/civ6_earth.png</Item>
+				</ImportFiles>
+				<UpdateIcons>
+					<Item>icons/ynamp-icons.xml</Item>
+				</UpdateIcons>
+			</Actions>
+		</ActionGroup>
+	</ActionGroups>
+	<LocalizedText>
+		<File>text/en_us/ModuleText.xml</File>
+	</LocalizedText>
+</Mod>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Database>
+	<Types>
+		<Replace Type="MAPSIZE_GREATEST_EARTH" Kind="KIND_MAPSIZE"/>
+		<Replace Type="MAPSIZE_MASSIVE" Kind="KIND_MAPSIZE"/>
+		<Replace Type="MAPSIZE_GIANT" Kind="KIND_MAPSIZE"/>
+		<Replace Type="MAPSIZE_LUDICROUS" Kind="KIND_MAPSIZE"/>
+	</Types>
+	<Maps>
+		<Replace MapSizeType="MAPSIZE_GREATEST_EARTH" Name="LOC_MAP_GREATEST_EARTH_SIZE_NAME" Description="LOC_MAP_GREATEST_EARTH_SIZE_DESCRIPTION" DefaultPlayers="8" PlayersLandmass1="5" PlayersLandmass2="3" GridWidth="104" GridHeight="64" NumNaturalWonders="6" OceanWidth="4" LakeSizeCutoff="8" LakeGenerationFrequency="25" Continents="4" StartSectorRows="4" StartSectorCols="3"/>
+		<Replace MapSizeType="MAPSIZE_MASSIVE" Name="LOC_MAPSIZE_MASSIVE_NAME" Description="LOC_MAPSIZE_MASSIVE_DESCRIPTION" DefaultPlayers="8" PlayersLandmass1="5" PlayersLandmass2="3" GridWidth="128" GridHeight="80" NumNaturalWonders="6" OceanWidth="4" LakeSizeCutoff="8" LakeGenerationFrequency="25" Continents="4" StartSectorRows="4" StartSectorCols="3"/>
+		<Replace MapSizeType="MAPSIZE_GIANT" Name="LOC_MAPSIZE_GIANT_NAME" Description="LOC_MAPSIZE_GIANT_DESCRIPTION" DefaultPlayers="8" PlayersLandmass1="5" PlayersLandmass2="3" GridWidth="180" GridHeight="94" NumNaturalWonders="6" OceanWidth="4" LakeSizeCutoff="8" LakeGenerationFrequency="25" Continents="4" StartSectorRows="4" StartSectorCols="3"/>
+		<Replace MapSizeType="MAPSIZE_LUDICROUS" Name="LOC_MAPSIZE_LUDICROUS_NAME" Description="LOC_MAPSIZE_LUDICROUS_DESCRIPTION" DefaultPlayers="8" PlayersLandmass1="5" PlayersLandmass2="3" GridWidth="230" GridHeight="116" NumNaturalWonders="6" OceanWidth="4" LakeSizeCutoff="8" LakeGenerationFrequency="25" Continents="4" StartSectorRows="4" StartSectorCols="3"/>
+	</Maps>	
+	<AgeProgressionEvents>
+		<Replace AgeProgressionEventType="AGE_PROGRESSION_TURN_COUNTER" 		Points="1"	AgeType="AGE_ANTIQUITY" MapSizeType="MAPSIZE_GREATEST_EARTH"/>
+		<Replace AgeProgressionEventType="AGE_PROGRESSION_PLAYER_ELIMINATED"	Points="15"	AgeType="AGE_ANTIQUITY" MapSizeType="MAPSIZE_GREATEST_EARTH"/>
+		<Replace AgeProgressionEventType="AGE_PROGRESSION_TURN_COUNTER"			Points="1"	AgeType="AGE_ANTIQUITY" MapSizeType="MAPSIZE_MASSIVE"/>
+		<Replace AgeProgressionEventType="AGE_PROGRESSION_PLAYER_ELIMINATED"	Points="15"	AgeType="AGE_ANTIQUITY" MapSizeType="MAPSIZE_MASSIVE"/>
+		<Replace AgeProgressionEventType="AGE_PROGRESSION_TURN_COUNTER" 		Points="1"	AgeType="AGE_ANTIQUITY" MapSizeType="MAPSIZE_GIANT"/>
+		<Replace AgeProgressionEventType="AGE_PROGRESSION_PLAYER_ELIMINATED"	Points="10"	AgeType="AGE_ANTIQUITY" MapSizeType="MAPSIZE_GIANT"/>
+		<Replace AgeProgressionEventType="AGE_PROGRESSION_TURN_COUNTER"			Points="1"	AgeType="AGE_ANTIQUITY" MapSizeType="MAPSIZE_LUDICROUS"/>
+		<Replace AgeProgressionEventType="AGE_PROGRESSION_PLAYER_ELIMINATED"	Points="10"	AgeType="AGE_ANTIQUITY" MapSizeType="MAPSIZE_LUDICROUS"/>
+		
+		<Replace AgeProgressionEventType="AGE_PROGRESSION_TURN_COUNTER" 		Points="1"	AgeType="AGE_EXPLORATION" MapSizeType="MAPSIZE_GREATEST_EARTH"/>
+		<Replace AgeProgressionEventType="AGE_PROGRESSION_PLAYER_ELIMINATED"	Points="10"	AgeType="AGE_EXPLORATION" MapSizeType="MAPSIZE_GREATEST_EARTH"/>
+		<Replace AgeProgressionEventType="AGE_PROGRESSION_TURN_COUNTER"			Points="1"	AgeType="AGE_EXPLORATION" MapSizeType="MAPSIZE_MASSIVE"/>
+		<Replace AgeProgressionEventType="AGE_PROGRESSION_PLAYER_ELIMINATED"	Points="10"	AgeType="AGE_EXPLORATION" MapSizeType="MAPSIZE_MASSIVE"/>
+		<Replace AgeProgressionEventType="AGE_PROGRESSION_TURN_COUNTER" 		Points="1"	AgeType="AGE_EXPLORATION" MapSizeType="MAPSIZE_GIANT"/>
+		<Replace AgeProgressionEventType="AGE_PROGRESSION_PLAYER_ELIMINATED"	Points="8"	AgeType="AGE_EXPLORATION" MapSizeType="MAPSIZE_GIANT"/>
+		<Replace AgeProgressionEventType="AGE_PROGRESSION_TURN_COUNTER"			Points="1"	AgeType="AGE_EXPLORATION" MapSizeType="MAPSIZE_LUDICROUS"/>
+		<Replace AgeProgressionEventType="AGE_PROGRESSION_PLAYER_ELIMINATED"	Points="8"	AgeType="AGE_EXPLORATION" MapSizeType="MAPSIZE_LUDICROUS"/>
+		
+		<Replace AgeProgressionEventType="AGE_PROGRESSION_TURN_COUNTER" 		Points="1"	AgeType="AGE_MODERN" MapSizeType="MAPSIZE_GREATEST_EARTH"/>
+		<Replace AgeProgressionEventType="AGE_PROGRESSION_PLAYER_ELIMINATED"	Points="10"	AgeType="AGE_MODERN" MapSizeType="MAPSIZE_GREATEST_EARTH"/>
+		<Replace AgeProgressionEventType="AGE_PROGRESSION_TURN_COUNTER"			Points="1"	AgeType="AGE_MODERN" MapSizeType="MAPSIZE_MASSIVE"/>
+		<Replace AgeProgressionEventType="AGE_PROGRESSION_PLAYER_ELIMINATED"	Points="10"	AgeType="AGE_MODERN" MapSizeType="MAPSIZE_MASSIVE"/>
+		<Replace AgeProgressionEventType="AGE_PROGRESSION_TURN_COUNTER" 		Points="1"	AgeType="AGE_MODERN" MapSizeType="MAPSIZE_GIANT"/>
+		<Replace AgeProgressionEventType="AGE_PROGRESSION_PLAYER_ELIMINATED"	Points="8"	AgeType="AGE_MODERN" MapSizeType="MAPSIZE_GIANT"/>
+		<Replace AgeProgressionEventType="AGE_PROGRESSION_TURN_COUNTER"			Points="1"	AgeType="AGE_MODERN" MapSizeType="MAPSIZE_LUDICROUS"/>
+		<Replace AgeProgressionEventType="AGE_PROGRESSION_PLAYER_ELIMINATED"	Points="8"	AgeType="AGE_MODERN" MapSizeType="MAPSIZE_LUDICROUS"/>
+	</AgeProgressionEvents>
+</Database>
