@@ -132,13 +132,13 @@ function getHeightAdjustingForStartSector(iX, iY, iWaterHeight, iFractalWeight, 
 
 /*	Civ6 maps --------------------------------------------------- | Civ7 maps --------------------------------------------------------------------------------
 		
-	0 FEATURE_ICE				0  TERRAIN_GRASS					0  FEATURE_SAGEBRUSH_STEPPE					0 BIOME_TUNDRA		0 TERRAIN_MOUNTAIN			
-	1 FEATURE_JUNGLE			1  TERRAIN_GRASS_HILLS				1  FEATURE_OASIS							1 BIOME_GRASSLAND	1 TERRAIN_HILL				
-	2 FEATURE_FOREST			2  TERRAIN_GRASS_MOUNTAIN			2  FEATURE_DESERT_FLOODPLAIN_MINOR			2 BIOME_PLAINS		2 TERRAIN_FLAT				
-	3 FEATURE_OASIS				3  TERRAIN_PLAINS					3  FEATURE_DESERT_FLOODPLAIN_NAVIGABLE		3 BIOME_TROPICAL	3 TERRAIN_COAST				
-	4 FEATURE_MARSH				4  TERRAIN_PLAINS_HILLS				4  FEATURE_FOREST							4 BIOME_DESERT		4 TERRAIN_OCEAN				
-	5 FEATURE_BARRIER_REEF		5  TERRAIN_PLAINS_MOUNTAIN			5  FEATURE_MARSH							5 BIOME_MARINE		5 TERRAIN_NAVIGABLE_RIVER	
-								6  TERRAIN_DESERT					6  FEATURE_GRASSLAND_FLOODPLAIN_MINOR		
+	0 FEATURE_FLOODPLAINS		0  TERRAIN_GRASS					0  FEATURE_SAGEBRUSH_STEPPE					0 BIOME_TUNDRA		0 TERRAIN_MOUNTAIN			
+	1 FEATURE_ICE				1  TERRAIN_GRASS_HILLS				1  FEATURE_OASIS							1 BIOME_GRASSLAND	1 TERRAIN_HILL				
+	2 FEATURE_JUNGLE			2  TERRAIN_GRASS_MOUNTAIN			2  FEATURE_DESERT_FLOODPLAIN_MINOR			2 BIOME_PLAINS		2 TERRAIN_FLAT				
+	3 FEATURE_FOREST			3  TERRAIN_PLAINS					3  FEATURE_DESERT_FLOODPLAIN_NAVIGABLE		3 BIOME_TROPICAL	3 TERRAIN_COAST				
+	4 FEATURE_OASIS				4  TERRAIN_PLAINS_HILLS				4  FEATURE_FOREST							4 BIOME_DESERT		4 TERRAIN_OCEAN				
+	5 FEATURE_MARSH				5  TERRAIN_PLAINS_MOUNTAIN			5  FEATURE_MARSH							5 BIOME_MARINE		5 TERRAIN_NAVIGABLE_RIVER	
+	6 FEATURE_BARRIER_REEF		6  TERRAIN_DESERT					6  FEATURE_GRASSLAND_FLOODPLAIN_MINOR		
 								7  TERRAIN_DESERT_HILLS				7  FEATURE_GRASSLAND_FLOODPLAIN_NAVIGABLE	
 								8  TERRAIN_DESERT_MOUNTAIN			8  FEATURE_REEF								
 								9  TERRAIN_TUNDRA					9  FEATURE_COLD_REEF						
@@ -157,22 +157,159 @@ function getHeightAdjustingForStartSector(iX, iY, iWaterHeight, iFractalWeight, 
 																	22 FEATURE_TUNDRA_FLOODPLAIN_NAVIGABLE		
 																	23 FEATURE_VOLCANO							
 	
+	Map Data (from Civ6 WB)
+	MapToConvert[x][y] = {civ6TerrainType, civ6FeatureTypes, civ6ContinentType, {{IsNEOfRiver, flow}, {IsWOfRiver, flow}, {IsNWOfRiver, flow}}, {Civ6ResourceType, num}, {IsNEOfCliff, IsWOfCliff, IsNWOfCliff} }
+
 //*/
 const civ7terrain	= ["TERRAIN_MOUNTAIN", "TERRAIN_HILL", "TERRAIN_FLAT","TERRAIN_COAST", "TERRAIN_OCEAN","TERRAIN_NAVIGABLE_RIVER"];
 const civ7biome		= ["BIOME_TUNDRA", "BIOME_GRASSLAND", "BIOME_PLAINS","BIOME_TROPICAL", "BIOME_DESERT", "BIOME_MARINE"];
 const civ7Feature	= ["FEATURE_SAGEBRUSH_STEPPE", "FEATURE_OASIS", "FEATURE_DESERT_FLOODPLAIN_MINOR","FEATURE_DESERT_FLOODPLAIN_NAVIGABLE", "FEATURE_FOREST", "FEATURE_MARSH","FEATURE_GRASSLAND_FLOODPLAIN_MINOR", "FEATURE_GRASSLAND_FLOODPLAIN_NAVIGABLE", "FEATURE_REEF","FEATURE_COLD_REEF", "FEATURE_ICE", "FEATURE_SAVANNA_WOODLAND","FEATURE_WATERING_HOLE", "FEATURE_PLAINS_FLOODPLAIN_MINOR", "FEATURE_PLAINS_FLOODPLAIN_NAVIGABLE","FEATURE_RAINFOREST", "FEATURE_MANGROVE", "FEATURE_TROPICAL_FLOODPLAIN_MINOR","FEATURE_TROPICAL_FLOODPLAIN_NAVIGABLE", "FEATURE_TAIGA", "FEATURE_TUNDRA_BOG","FEATURE_TUNDRA_FLOODPLAIN_MINOR", "FEATURE_TUNDRA_FLOODPLAIN_NAVIGABLE", "FEATURE_VOLCANO"];
-const civ6Terrain	= ["TERRAIN_GRASS_HILLS", "TERRAIN_GRASS_MOUNTAIN", "TERRAIN_PLAINS", "TERRAIN_PLAINS_HILLS", "TERRAIN_PLAINS_MOUNTAIN", "TERRAIN_DESERT", "TERRAIN_DESERT_HILLS", "TERRAIN_DESERT_MOUNTAIN", "TERRAIN_TUNDRA", "TERRAIN_TUNDRA_HILLS", "TERRAIN_TUNDRA_MOUNTAIN", "TERRAIN_SNOW", "TERRAIN_SNOW_HILLS", "TERRAIN_SNOW_MOUNTAIN", "TERRAIN_COAST", "TERRAIN_OCEAN"];
-const civ6Feature	= ["FEATURE_ICE", "FEATURE_JUNGLE", "FEATURE_FOREST","FEATURE_OASIS", "FEATURE_MARSH", "FEATURE_BARRIER_REEF"];
-const civ6mountain	= ["TERRAIN_GRASS", "TERRAIN_GRASS_HILLS", "TERRAIN_GRASS_MOUNTAIN", "TERRAIN_PLAINS", "TERRAIN_PLAINS_HILLS", "TERRAIN_PLAINS_MOUNTAIN", "TERRAIN_DESERT", "TERRAIN_DESERT_HILLS", "TERRAIN_DESERT_MOUNTAIN", "TERRAIN_TUNDRA", "TERRAIN_TUNDRA_HILLS", "TERRAIN_TUNDRA_MOUNTAIN", "TERRAIN_SNOW", "TERRAIN_SNOW_HILLS", "TERRAIN_SNOW_MOUNTAIN", "TERRAIN_COAST", "TERRAIN_OCEAN"];
+const civ6Terrain	= ["TERRAIN_GRASS", "TERRAIN_GRASS_HILLS", "TERRAIN_GRASS_MOUNTAIN", "TERRAIN_PLAINS", "TERRAIN_PLAINS_HILLS", "TERRAIN_PLAINS_MOUNTAIN", "TERRAIN_DESERT", "TERRAIN_DESERT_HILLS", "TERRAIN_DESERT_MOUNTAIN", "TERRAIN_TUNDRA", "TERRAIN_TUNDRA_HILLS", "TERRAIN_TUNDRA_MOUNTAIN", "TERRAIN_SNOW", "TERRAIN_SNOW_HILLS", "TERRAIN_SNOW_MOUNTAIN", "TERRAIN_COAST", "TERRAIN_OCEAN"];
+const civ6Feature	= ["FEATURE_FLOODPLAINS","FEATURE_ICE", "FEATURE_JUNGLE", "FEATURE_FOREST","FEATURE_OASIS", "FEATURE_MARSH", "FEATURE_BARRIER_REEF"];
 
-export function getCiv6Terrain(iTerrain) {
+const mapIDX = {
+	terrain: 0,
+	feature: 1,
+	continent: 2,
+	river: 3,
+	resource: 4,
+	cliff: 5
+}
+
+function getCiv6Terrain(iTerrain) {
 	return civ6Terrain[iTerrain];
 }
 
-export function getBiomeType(iCiv6Terrain) {
-
+function getTerrainType(sCiv6Terrain) {
+	if (sCiv6Terrain.search("MOUNTAIN") != -1) {
+		return globals.g_MountainTerrain;
+	} else if (sCiv6Terrain.search("HILLS") != -1) {
+		return globals.g_HillTerrain;
+	} else if (sCiv6Terrain == "TERRAIN_COAST") {
+		return globals.g_CoastTerrain;
+	} else if (sCiv6Terrain == "TERRAIN_OCEAN") {
+		return globals.g_OceanTerrain;
+	} 
+	// default
+	return globals.g_FlatTerrain;
 }
 
+function getBiomeType(sCiv6Terrain) {
+	if (sCiv6Terrain.search("GRASS") != -1) {
+		return globals.g_GrasslandBiome;
+	} else if (sCiv6Terrain.search("PLAINS") != -1) {
+		return globals.g_PlainsBiome;
+	} else if (sCiv6Terrain.search("DESERT") != -1) {
+		return globals.g_DesertBiome;
+	} else if (sCiv6Terrain.search("TUNDRA") != -1) {
+		return globals.g_TundraBiome;
+	}
+	// default
+	return globals.g_MarineBiome;
+}
+
+export function getTerrainFromRow(row) {
+	let terrain = row[mapIDX.terrain];
+	console.log("getTerrainFromRow - terrain = " + terrain);
+	if (typeof(terrain) == 'number') {
+		let sCiv6Terrain = civ6Terrain[terrain];
+		return getTerrainType(sCiv6Terrain);
+	} else {
+		return getTerrainType(terrain);
+	}
+}
+
+export function getBiomeFromRow(row) {
+	let terrain = row[mapIDX.terrain];
+	let feature = row[mapIDX.feature];
+	let isJungle;
+	
+	if (typeof(feature) == 'number') {
+		isJungle = civ6Feature[feature] == "FEATURE_JUNGLE";
+	} else {
+		isJungle = feature == "FEATURE_JUNGLE";
+	}
+	
+	if (isJungle) {
+		return globals.g_TropicalBiome;
+	}
+	
+	if (typeof(terrain) == 'number') {
+		let sCiv6Terrain = civ6Terrain[terrain];
+		return getBiomeType(sCiv6Terrain);
+	} else {
+		return getBiomeType(terrain);
+	}
+}
+
+
+export function isRowJungle(row) {
+	let feature = row[mapIDX.feature];
+	//console.log("isRowjungle - feature = " + feature);
+	if (typeof(feature) == 'number') {
+		let sCiv6Feature = civ6Feature[feature];
+		return sCiv6Feature == "FEATURE_JUNGLE";
+	} else {
+		return feature == "FEATURE_JUNGLE";
+	}
+}
+
+export function isRowSnow(row) {
+	let terrain = row[mapIDX.terrain];
+	console.log("getTerrainFromRow - terrain = " + terrain);
+	if (typeof(terrain) == 'number') {
+		let sCiv6Terrain = civ6Terrain[terrain];
+		return sCiv6Terrain.search("SNOW") != -1;
+	} else {
+		return terrain.search("SNOW") != -1;
+	}
+}
+
+
+function scatterFeatures(iWidth, iHeight) {
+    // Find spots and use PlacementDensity to decide whether or not to place it
+    for (let iY = 0; iY < iHeight; iY++) {
+        for (let iX = 0; iX < iWidth; iX++) {
+            let feature = GameplayMap.getFeatureType(iX, iY);
+            if (GameplayMap.isWater(iX, iY) == false && feature == FeatureTypes.NO_FEATURE && GameplayMap.isNavigableRiver(iX, iY) == false) {
+                // See if we can scatter a feature here
+                for (var featIdx = 0; featIdx < GameInfo.Features.length; featIdx++) {
+                    if (canAddFeature(iX, iY, featIdx, true /*bScatterable*/, false /*bRiverMouth*/, false /*bCoastal*/, false /*bNearRiver*/, false /*bIsolated*/, false /*bReef*/, false /*bIce*/)) {
+                        let iScatterChance = GameInfo.Features[featIdx].PlacementDensity;
+                        let iRoll = TerrainBuilder.getRandomNumber(100, "Feature Scatter");
+                        if (iRoll < iScatterChance) {
+                            const featureParam = {
+                                Feature: featIdx,
+                                Direction: -1,
+                                Elevation: 0
+                            };
+                            TerrainBuilder.setFeatureType(iX, iY, featureParam);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/*
+
+export var g_MountainTerrain = GameInfo.Terrains.find(t => t.TerrainType == 'TERRAIN_MOUNTAIN').$index;
+export var g_HillTerrain = GameInfo.Terrains.find(t => t.TerrainType == 'TERRAIN_HILL').$index;
+export var g_FlatTerrain = GameInfo.Terrains.find(t => t.TerrainType == 'TERRAIN_FLAT').$index;
+export var g_CoastTerrain = GameInfo.Terrains.find(t => t.TerrainType == 'TERRAIN_COAST').$index;
+export var g_OceanTerrain = GameInfo.Terrains.find(t => t.TerrainType == 'TERRAIN_OCEAN').$index;
+export var g_NavigableRiverTerrain = GameInfo.Terrains.find(t => t.TerrainType == 'TERRAIN_NAVIGABLE_RIVER').$index;
+export var g_TundraBiome = GameInfo.Biomes.find(t => t.BiomeType == 'BIOME_TUNDRA').$index;
+export var g_GrasslandBiome = GameInfo.Biomes.find(t => t.BiomeType == 'BIOME_GRASSLAND').$index;
+export var g_PlainsBiome = GameInfo.Biomes.find(t => t.BiomeType == 'BIOME_PLAINS').$index;
+export var g_TropicalBiome = GameInfo.Biomes.find(t => t.BiomeType == 'BIOME_TROPICAL').$index;
+export var g_DesertBiome = GameInfo.Biomes.find(t => t.BiomeType == 'BIOME_DESERT').$index;
+export var g_MarineBiome = GameInfo.Biomes.find(t => t.BiomeType == 'BIOME_MARINE').$index;
+export var g_VolcanoFeature = GameInfo.Features.find(t => t.FeatureType == 'FEATURE_VOLCANO').$index;
+
+//*/
 
 console.log("Loading YnAMP Utilities");
 

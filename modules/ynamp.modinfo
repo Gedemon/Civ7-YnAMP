@@ -25,6 +25,7 @@
 					<Item>text/en_us/MapText.xml</Item>
 				</UpdateText>
 				<ImportFiles>
+					<Item>maps/greatest-earth-map/greatest-earth-data.js</Item>
 					<Item>maps/ynamp-utilities.js</Item>
 					<Item>icons/happy_cat.png</Item>
 					<Item>icons/civ6_earth.png</Item>
