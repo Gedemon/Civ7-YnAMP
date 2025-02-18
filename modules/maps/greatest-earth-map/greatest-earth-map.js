@@ -339,7 +339,8 @@ function assignTSL() {
         "CIVILIZATION_MAJAPAHIT": {X: 87, Y: 24},
         "CIVILIZATION_MING": {X: 87, Y: 48},
         "CIVILIZATION_MONGOLIA": {X: 81, Y: 57},
-        "CIVILIZATION_NORMAN": {X: 41, Y: 48},
+        //"CIVILIZATION_NORMAN": {X: 41, Y: 48}, // Rouen
+        "CIVILIZATION_NORMAN": {X: 39, Y: 52}, // London
         "CIVILIZATION_SHAWNEE": {X: 17, Y: 48},
         "CIVILIZATION_SONGHAI": {X: 47, Y: 25},
         "CIVILIZATION_SPAIN": {X: 37, Y: 38},
