@@ -30,16 +30,6 @@ export function createLandmasses(iWidth, iHeight, continent1, continent2, iStart
             if (iY < continent1.south + iRandom || iY >= continent1.north - iRandom) {
                 terrain = globals.g_OceanTerrain;
             }
-			/**
-			// Gedemon <<
-            // Or if between the continents
-            else if (iX < continent1.west + iRandom2 || iX >= continent2.east - iRandom2 ||
-                (iX >= continent1.east - iRandom2 && iX < continent2.west + iRandom2)) {
-                iPlotHeight = Math.floor (iPlotHeight*0.3);
-                console.log("   - iPlotHeight = " + iPlotHeight);
-            }
-			// >> Gedemon
-			//*/
             else {
                 // Finally see whether or not this stays as Land or has too low a score and drops back to water
                 if (iPlotHeight < iWaterHeight * globals.g_Cutoff ) {
@@ -203,6 +193,8 @@ function getBiomeType(sCiv6Terrain) {
 		return globals.g_DesertBiome;
 	} else if (sCiv6Terrain.search("TUNDRA") != -1) {
 		return globals.g_TundraBiome;
+	} else if (sCiv6Terrain.search("SNOW") != -1) {
+		return globals.g_TundraBiome;
 	}
 	// default
 	return globals.g_MarineBiome;
@@ -266,50 +258,22 @@ export function isRowSnow(row) {
 }
 
 
-function scatterFeatures(iWidth, iHeight) {
-    // Find spots and use PlacementDensity to decide whether or not to place it
-    for (let iY = 0; iY < iHeight; iY++) {
-        for (let iX = 0; iX < iWidth; iX++) {
-            let feature = GameplayMap.getFeatureType(iX, iY);
-            if (GameplayMap.isWater(iX, iY) == false && feature == FeatureTypes.NO_FEATURE && GameplayMap.isNavigableRiver(iX, iY) == false) {
-                // See if we can scatter a feature here
-                for (var featIdx = 0; featIdx < GameInfo.Features.length; featIdx++) {
-                    if (canAddFeature(iX, iY, featIdx, true /*bScatterable*/, false /*bRiverMouth*/, false /*bCoastal*/, false /*bNearRiver*/, false /*bIsolated*/, false /*bReef*/, false /*bIce*/)) {
-                        let iScatterChance = GameInfo.Features[featIdx].PlacementDensity;
-                        let iRoll = TerrainBuilder.getRandomNumber(100, "Feature Scatter");
-                        if (iRoll < iScatterChance) {
-                            const featureParam = {
-                                Feature: featIdx,
-                                Direction: -1,
-                                Elevation: 0
-                            };
-                            TerrainBuilder.setFeatureType(iX, iY, featureParam);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
 /*
-
-export var g_MountainTerrain = GameInfo.Terrains.find(t => t.TerrainType == 'TERRAIN_MOUNTAIN').$index;
-export var g_HillTerrain = GameInfo.Terrains.find(t => t.TerrainType == 'TERRAIN_HILL').$index;
-export var g_FlatTerrain = GameInfo.Terrains.find(t => t.TerrainType == 'TERRAIN_FLAT').$index;
-export var g_CoastTerrain = GameInfo.Terrains.find(t => t.TerrainType == 'TERRAIN_COAST').$index;
-export var g_OceanTerrain = GameInfo.Terrains.find(t => t.TerrainType == 'TERRAIN_OCEAN').$index;
-export var g_NavigableRiverTerrain = GameInfo.Terrains.find(t => t.TerrainType == 'TERRAIN_NAVIGABLE_RIVER').$index;
-export var g_TundraBiome = GameInfo.Biomes.find(t => t.BiomeType == 'BIOME_TUNDRA').$index;
-export var g_GrasslandBiome = GameInfo.Biomes.find(t => t.BiomeType == 'BIOME_GRASSLAND').$index;
-export var g_PlainsBiome = GameInfo.Biomes.find(t => t.BiomeType == 'BIOME_PLAINS').$index;
-export var g_TropicalBiome = GameInfo.Biomes.find(t => t.BiomeType == 'BIOME_TROPICAL').$index;
-export var g_DesertBiome = GameInfo.Biomes.find(t => t.BiomeType == 'BIOME_DESERT').$index;
-export var g_MarineBiome = GameInfo.Biomes.find(t => t.BiomeType == 'BIOME_MARINE').$index;
-export var g_VolcanoFeature = GameInfo.Features.find(t => t.FeatureType == 'FEATURE_VOLCANO').$index;
-
+(for reference)
+g_MountainTerrain = GameInfo.Terrains.find(t => t.TerrainType == 'TERRAIN_MOUNTAIN').$index;
+g_HillTerrain = GameInfo.Terrains.find(t => t.TerrainType == 'TERRAIN_HILL').$index;
+g_FlatTerrain = GameInfo.Terrains.find(t => t.TerrainType == 'TERRAIN_FLAT').$index;
+g_CoastTerrain = GameInfo.Terrains.find(t => t.TerrainType == 'TERRAIN_COAST').$index;
+g_OceanTerrain = GameInfo.Terrains.find(t => t.TerrainType == 'TERRAIN_OCEAN').$index;
+g_NavigableRiverTerrain = GameInfo.Terrains.find(t => t.TerrainType == 'TERRAIN_NAVIGABLE_RIVER').$index;
+g_TundraBiome = GameInfo.Biomes.find(t => t.BiomeType == 'BIOME_TUNDRA').$index;
+g_GrasslandBiome = GameInfo.Biomes.find(t => t.BiomeType == 'BIOME_GRASSLAND').$index;
+g_PlainsBiome = GameInfo.Biomes.find(t => t.BiomeType == 'BIOME_PLAINS').$index;
+g_TropicalBiome = GameInfo.Biomes.find(t => t.BiomeType == 'BIOME_TROPICAL').$index;
+g_DesertBiome = GameInfo.Biomes.find(t => t.BiomeType == 'BIOME_DESERT').$index;
+g_MarineBiome = GameInfo.Biomes.find(t => t.BiomeType == 'BIOME_MARINE').$index;
+g_VolcanoFeature = GameInfo.Features.find(t => t.FeatureType == 'FEATURE_VOLCANO').$index;
 //*/
 
-console.log("Loading YnAMP Utilities");
+console.log("Loaded YnAMP Utilities");
 

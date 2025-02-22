@@ -310,8 +310,12 @@ function createBiomes(iWidth, iHeight, importedMap) {
 }
 
 function importSnow(iWidth, iHeight, importedMap) {
+	
+    const aLightSnowEffects = MapPlotEffects.getPlotEffectTypesContainingTags(["SNOW", "LIGHT", "PERMANENT"]);
     const aMediumSnowEffects = MapPlotEffects.getPlotEffectTypesContainingTags(["SNOW", "MEDIUM", "PERMANENT"]);
-	let aWeightEffect = (aMediumSnowEffects ? aMediumSnowEffects[0] : -1);
+    const aHeavySnowEffects = MapPlotEffects.getPlotEffectTypesContainingTags(["SNOW", "HEAVY", "PERMANENT"]);
+	
+	let aWeightEffect = (aHeavySnowEffects ? aHeavySnowEffects[0] : -1);
 	
     for (let iY = 0; iY < iHeight; iY++) {
         for (let iX = 0; iX < iWidth; iX++) {	
