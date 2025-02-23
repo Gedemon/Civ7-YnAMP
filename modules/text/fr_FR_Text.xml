@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database>
+  <LocalizedText>
+    <Replace Tag="LOC_MAPSIZE_LARGE_NAME" Language="fr_FR">
+      <Text>Grande</Text>
+    </Replace>
+    <Replace Tag="LOC_MAPSIZE_HUGE_NAME" Language="fr_FR">
+      <Text>Immense</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_GREATEST_EARTH_SIZE_NAME" Language="fr_FR">
+      <Text>Immense pour Greatest Earth (104x64)</Text>
+    </Replace>
+    <Replace Tag="LOC_MAPSIZE_MASSIVE_NAME" Language="fr_FR">
+      <Text>Massive (128x80)</Text>
+    </Replace>
+    <Replace Tag="LOC_MAPSIZE_GIANT_NAME" Language="fr_FR">
+      <Text>Géante (180x94)[n][icon:BUILDING_WARNING] pas de texture pour les hex > 127</Text>
+    </Replace>
+    <Replace Tag="LOC_MAPSIZE_LUDICROUS_NAME" Language="fr_FR">
+      <Text>Démesurée (230x116)[n][icon:BUILDING_WARNING] pas de texture pour les hex > 127</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_CONTINENTS_YNAMP_NAME" Language="fr_FR">
+      <Text>Continents++ (YnAMP)</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_GIANT_EARTH_YNAMP_NAME" Language="fr_FR">
+      <Text>[icon:YNAMP_CIV6_EARTH] Giant Earth Map (YnAMP)</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_GREATEST_EARTH_YNAMP_NAME" Language="fr_FR">
+      <Text>[icon:YNAMP_CIV6_EARTH] Greatest Earth Map (YnAMP)[n]carte Civ5 par djvandyke</Text>
+    </Replace>
+  </LocalizedText>
+</Database>

@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database>
+  <LocalizedText>
+    <Replace Tag="LOC_MAP_GREATEST_EARTH_SIZE_NAME" Language="pt_BR">
+      <Text>Custom Huge for Greatest Earth (104x64)</Text>
+    </Replace>
+    <Replace Tag="LOC_MAPSIZE_MASSIVE_NAME" Language="pt_BR">
+      <Text>Massive (128x80)</Text>
+    </Replace>
+    <Replace Tag="LOC_MAPSIZE_GIANT_NAME" Language="pt_BR">
+      <Text>Giant (180x94)[n][icon:BUILDING_WARNING] no texture on tiles > 127</Text>
+    </Replace>
+    <Replace Tag="LOC_MAPSIZE_LUDICROUS_NAME" Language="pt_BR">
+      <Text>Ludicrous (230x116)[n][icon:BUILDING_WARNING] no texture on tiles > 127</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_CONTINENTS_YNAMP_NAME" Language="pt_BR">
+      <Text>Continents++ (YnAMP)</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_GIANT_EARTH_YNAMP_NAME" Language="pt_BR">
+      <Text>Giant Earth Map (YnAMP)</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_GREATEST_EARTH_YNAMP_NAME" Language="pt_BR">
+      <Text>Greatest Earth Map (YnAMP)[n]Civ5 map by djvandyke</Text>
+    </Replace>
+  </LocalizedText>
+</Database>

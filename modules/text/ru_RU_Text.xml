@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database>
+  <LocalizedText>
+    <Replace Tag="LOC_MAPSIZE_HUGE_NAME" Language="ru_RU">
+      <Text>Огромная</Text>
+    </Replace>
+    <Replace Tag="LOC_MAPSIZE_LARGE_NAME" Language="ru_RU">
+      <Text>Большая</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_GREATEST_EARTH_SIZE_NAME" Language="ru_RU">
+      <Text>Огромная (Специально для Великой Земли) (104x64)</Text>
+    </Replace>
+    <Replace Tag="LOC_MAPSIZE_MASSIVE_NAME" Language="ru_RU">
+      <Text>Громадная (128x80)</Text>
+    </Replace>
+    <Replace Tag="LOC_MAPSIZE_GIANT_NAME" Language="ru_RU">
+      <Text>Гигантская (180x94)[n][icon:BUILDING_WARNING] нет текстур на клетках > 127</Text>
+    </Replace>
+    <Replace Tag="LOC_MAPSIZE_LUDICROUS_NAME" Language="ru_RU">
+      <Text>Колоссальная (230x116)[n][icon:BUILDING_WARNING] нет текстур на клетках > 127</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_CONTINENTS_YNAMP_NAME" Language="ru_RU">
+      <Text>Континенты++ (YnAMP)</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_GIANT_EARTH_YNAMP_NAME" Language="ru_RU">
+      <Text>Гигантская Земля (YnAMP)</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_GREATEST_EARTH_YNAMP_NAME" Language="ru_RU">
+      <Text>Великая Земля (YnAMP)[n]Карта из civ5 от djvandyke</Text>
+    </Replace>
+  </LocalizedText>
+</Database>

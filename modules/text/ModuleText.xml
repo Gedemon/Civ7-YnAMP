@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database>
+  <LocalizedText>
+    <Replace Tag="LOC_MODULE_YNAMP_DESCRIPTION" Language="pt_BR">
+      <Text>Yet (not) Another Map Pack for Civ7</Text>
+    </Replace>
+    <Replace Tag="LOC_MODULE_YNAMP_NAME" Language="pt_BR">
+		<Text>YnAMP - Yet (not) Another Map Pack</Text>
+    </Replace>
+    <Replace Tag="LOC_MODULE_YNAMP_DESCRIPTION" Language="fr_FR">
+      <Text>Yet (not) Another Map Pack pour Civ7</Text>
+    </Replace>
+    <Replace Tag="LOC_MODULE_YNAMP_NAME" Language="fr_FR">
+		<Text>YnAMP - Yet (not) Another Map Pack</Text>
+    </Replace>
+    <Replace Tag="LOC_MODULE_YNAMP_DESCRIPTION" Language="de_DE">
+      <Text>Yet (not) Another Map Pack for Civ7</Text>
+    </Replace>
+    <Replace Tag="LOC_MODULE_YNAMP_NAME" Language="de_DE">
+		<Text>YnAMP - Yet (not) Another Map Pack</Text>
+    </Replace>
+    <Replace Tag="LOC_MODULE_YNAMP_DESCRIPTION" Language="it_IT">
+      <Text>Yet (not) Another Map Pack for Civ7</Text>
+    </Replace>
+    <Replace Tag="LOC_MODULE_YNAMP_NAME" Language="it_IT">
+		<Text>YnAMP - Yet (not) Another Map Pack</Text>
+    </Replace>
+    <Replace Tag="LOC_MODULE_YNAMP_DESCRIPTION" Language="ja_JP">
+      <Text>Yet (not) Another Map Pack for Civ7</Text>
+    </Replace>
+    <Replace Tag="LOC_MODULE_YNAMP_NAME" Language="ja_JP">
+		<Text>YnAMP - Yet (not) Another Map Pack</Text>
+    </Replace>
+    <Replace Tag="LOC_MODULE_YNAMP_DESCRIPTION" Language="ko_KR">
+      <Text>Yet (not) Another Map Pack for Civ7</Text>
+    </Replace>
+    <Replace Tag="LOC_MODULE_YNAMP_NAME" Language="ko_KR">
+		<Text>YnAMP - Yet (not) Another Map Pack</Text>
+    </Replace>
+    <Replace Tag="LOC_MODULE_YNAMP_DESCRIPTION" Language="pl_PL">
+      <Text>Yet (not) Another Map Pack for Civ7</Text>
+    </Replace>
+    <Replace Tag="LOC_MODULE_YNAMP_NAME" Language="pl_PL">
+      <Text>Yet (not) Another Map Pack for Civ7</Text>
+    </Replace>
+    <Replace Tag="LOC_MODULE_YNAMP_DESCRIPTION" Language="ru_RU">
+      <Text>Yet (not) Another Map Pack for Civ7</Text>
+    </Replace>
+    <Replace Tag="LOC_MODULE_YNAMP_NAME" Language="ru_RU">
+		<Text>YnAMP - Yet (not) Another Map Pack</Text>
+    </Replace>
+    <Replace Tag="LOC_MODULE_YNAMP_DESCRIPTION" Language="zh_Hans_CN">
+      <Text>Yet (not) Another Map Pack for Civ7</Text>
+    </Replace>
+    <Replace Tag="LOC_MODULE_YNAMP_NAME" Language="zh_Hans_CN">
+		<Text>YnAMP - Yet (not) Another Map Pack</Text>
+    </Replace>
+    <Replace Tag="LOC_MODULE_YNAMP_DESCRIPTION" Language="es_ES">
+      <Text>Yet (not) Another Map Pack for Civ7</Text>
+    </Replace>
+    <Replace Tag="LOC_MODULE_YNAMP_NAME" Language="es_ES">
+		<Text>YnAMP - Yet (not) Another Map Pack</Text>
+    </Replace>
+    <Replace Tag="LOC_MODULE_YNAMP_DESCRIPTION" Language="zh_Hant_HK">
+      <Text>Yet (not) Another Map Pack for Civ7</Text>
+    </Replace>
+    <Replace Tag="LOC_MODULE_YNAMP_NAME" Language="zh_Hant_HK">
+      <Text>Yet (not) Another Map Pack for Civ7</Text>
+    </Replace>
+  </LocalizedText>
+</Database>

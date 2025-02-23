@@ -1,10 +1,13 @@
 /*
 
 --	FILE:	 GreatestEarthMap
---  by djvandyke
---  Imported to Civ VII by Gedemon (2025)
+--  made by djvandyke for civ5
+--  imported to civ6
+--  imported to civ7 by Gedemon (2025)
 
 */
+
+console.log("loading greatest-earth-data.js");
 
 export function GetMap() {
 
@@ -6677,4 +6680,5 @@ export function GetMap() {
     return MapToConvert;
 }
 
-//# sourceMappingURL=file:///base-standard/maps/continents-plus.js.map
+console.log("loaded greatest-earth-data.js");
+//

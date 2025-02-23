@@ -200,9 +200,9 @@ function getBiomeType(sCiv6Terrain) {
 	return globals.g_MarineBiome;
 }
 
-export function getTerrainFromRow(row) {
+function getTerrainFromRow(row) {
 	let terrain = row[mapIDX.terrain];
-	console.log("getTerrainFromRow - terrain = " + terrain);
+	//console.log("getTerrainFromRow - terrain = " + terrain);
 	if (typeof(terrain) == 'number') {
 		let sCiv6Terrain = civ6Terrain[terrain];
 		return getTerrainType(sCiv6Terrain);
@@ -211,7 +211,7 @@ export function getTerrainFromRow(row) {
 	}
 }
 
-export function getBiomeFromRow(row) {
+function getBiomeFromRow(row) {
 	let terrain = row[mapIDX.terrain];
 	let feature = row[mapIDX.feature];
 	let isJungle;
@@ -235,7 +235,7 @@ export function getBiomeFromRow(row) {
 }
 
 
-export function isRowJungle(row) {
+function isRowJungle(row) {
 	let feature = row[mapIDX.feature];
 	//console.log("isRowjungle - feature = " + feature);
 	if (typeof(feature) == 'number') {
@@ -246,9 +246,9 @@ export function isRowJungle(row) {
 	}
 }
 
-export function isRowSnow(row) {
+function isRowSnow(row) {
 	let terrain = row[mapIDX.terrain];
-	console.log("getTerrainFromRow - terrain = " + terrain);
+	//console.log("getTerrainFromRow - terrain = " + terrain);
 	if (typeof(terrain) == 'number') {
 		let sCiv6Terrain = civ6Terrain[terrain];
 		return sCiv6Terrain.search("SNOW") != -1;
@@ -274,6 +274,177 @@ g_DesertBiome = GameInfo.Biomes.find(t => t.BiomeType == 'BIOME_DESERT').$index;
 g_MarineBiome = GameInfo.Biomes.find(t => t.BiomeType == 'BIOME_MARINE').$index;
 g_VolcanoFeature = GameInfo.Features.find(t => t.FeatureType == 'FEATURE_VOLCANO').$index;
 //*/
+
+
+export function testElevation (iWidth, iHeight) {
+    let featIdx = GameInfo.Features.find(t => t.FeatureType == 'FEATURE_SAGEBRUSH_STEPPE').$index;
+	const waterLevel = 0;
+	const level = 128;
+    for (let iY = 0; iY < iHeight; iY++) {
+        for (let iX = 0; iX < iWidth; iX++) {
+            let iTerrain = GameplayMap.getTerrainType(iX, iY);
+			const terrain = GameInfo.Terrains.lookup(iTerrain);
+			let iElevation = GameplayMap.getElevation(iX, iY);
+            if (iTerrain == globals.g_HillTerrain) {
+				console.log("Validate (" + iX + "," + iY +") - Elevation = " + iElevation + ", terrain = " + terrain.TerrainType);
+				const featureParam = {
+					Feature: -1,
+					Direction: -1,
+					Elevation: 2
+				};
+				TerrainBuilder.setFeatureType(iX, iY, featureParam);
+			}
+			/*
+            if (iTerrain == globals.g_HillTerrain) {
+                console.log("  - Hills !");
+				if (iElevation < waterLevel + 2) {
+					const featureParam = {
+						Feature: -1,
+						Direction: -1,
+						Elevation: 1 * level
+					};
+					TerrainBuilder.setFeatureType(iX, iY, featureParam);
+				}
+				
+            } else if (iTerrain == globals.g_MountainTerrain) {
+                console.log("  - mountains !");
+				if (iElevation < waterLevel + 5) {
+					const featureParam = {
+						Feature: -1,
+						Direction: -1,
+						Elevation: 1 * level
+					};
+					TerrainBuilder.setFeatureType(iX, iY, featureParam);
+				}
+				
+            } else if ((iTerrain == globals.g_CoastTerrain || iTerrain == globals.g_OceanTerrain) && !GameplayMap.isLake(iX, iY)) {
+                console.log("  - Ocast/Ocean !");
+				if (iElevation > waterLevel) {
+					const featureParam = {
+						Feature: -1,
+						Direction: -1,
+						Elevation: -(iElevation-waterLevel)
+					};
+					TerrainBuilder.setFeatureType(iX, iY, featureParam);
+				}
+				
+            } else if (iTerrain == globals.g_FlatTerrain) {
+                console.log("  - flat !");
+				if (iElevation > waterLevel + 2) {
+					const featureParam = {
+						Feature: -1,
+						Direction: -1,
+						Elevation: -1 * level
+					};
+					TerrainBuilder.setFeatureType(iX, iY, featureParam);
+				}
+			}
+			//*/
+            //console.log("      - new Elevation = " + GameplayMap.getElevation(iX, iY));
+        }
+    }
+}
+
+export function createMapTerrains(iWidth, iHeight, continent1, continent2, importedMap) {
+    
+    let greatestEarth = importedMap;
+
+    console.log("YnAMP : Set Land and Water...");
+    console.log(iHeight);
+    console.log(iWidth);
+
+    for (let iY = 0; iY < iHeight; iY++) {
+        for (let iX = 0; iX < iWidth; iX++) {
+            let terrain = globals.g_FlatTerrain;
+            // Initialize plot tag
+            TerrainBuilder.setPlotTag(iX, iY, PlotTags.PLOT_TAG_NONE);
+            //console.log("createLandmasses (" + iX + "," + iY +")");
+			terrain = getTerrainFromRow(importedMap[iX][iY]);
+
+            // Add plot tag if applicable
+            if (terrain != globals.g_OceanTerrain && terrain != globals.g_CoastTerrain) {
+                utilities.addLandmassPlotTags(iX, iY, continent2.west);
+            }
+            else {
+                utilities.addWaterPlotTags(iX, iY, continent2.west);
+            }
+            TerrainBuilder.setTerrainType(iX, iY, terrain);
+            //console.log("createLandmasses (" + iX + "," + iY +") = " + importedMap[iX][iY][0] + " = " + terrain + " / " + GameplayMap.getTerrainType(iX, iY));
+        }
+    }
+}
+
+
+export function createBiomes(iWidth, iHeight, importedMap) {
+    
+    console.log("YnAMP : Create Biomes...");
+    //console.log(iHeight);
+    //console.log(iWidth);
+
+    for (let iY = 0; iY < iHeight; iY++) {
+        for (let iX = 0; iX < iWidth; iX++) {
+            let biome = getBiomeFromRow(importedMap[iX][iY]);
+            TerrainBuilder.setBiomeType(iX, iY, biome);
+            //console.log("SetBiome (" + iX + "," + iY +") = " + importedMap[iX][iY][0] + " = " + biome);
+        }
+    }
+}
+
+export function importSnow(iWidth, iHeight, importedMap) {
+	
+    console.log("YnAMP : Add snow...");
+    const aLightSnowEffects = MapPlotEffects.getPlotEffectTypesContainingTags(["SNOW", "LIGHT", "PERMANENT"]);
+    const aMediumSnowEffects = MapPlotEffects.getPlotEffectTypesContainingTags(["SNOW", "MEDIUM", "PERMANENT"]);
+    const aHeavySnowEffects = MapPlotEffects.getPlotEffectTypesContainingTags(["SNOW", "HEAVY", "PERMANENT"]);
+	
+	let aWeightEffect = (aHeavySnowEffects ? aHeavySnowEffects[0] : -1);
+	
+    for (let iY = 0; iY < iHeight; iY++) {
+        for (let iX = 0; iX < iWidth; iX++) {	
+			if (isRowSnow(importedMap[iX][iY])) {
+				console.log("Snow (" + iX + "," + iY +") = " + importedMap[iX][iY][0]);
+				MapPlotEffects.addPlotEffect(GameplayMap.getIndexFromXY(iX, iY), aWeightEffect);
+			}
+        }
+    }
+}
+
+export function extraJungle(iWidth, iHeight, importedMap) {
+    let featIdx = GameInfo.Features.find(t => t.FeatureType == 'FEATURE_RAINFOREST').$index;
+    console.log("YnAMP : Extra Jungle...");
+    console.log(iHeight);
+    console.log(iWidth);
+
+    for (let iY = 0; iY < iHeight; iY++) {
+        for (let iX = 0; iX < iWidth; iX++) {			
+            let feature = GameplayMap.getFeatureType(iX, iY);
+            if (GameplayMap.isWater(iX, iY) == false && feature == FeatureTypes.NO_FEATURE && GameplayMap.isNavigableRiver(iX, iY) == false) {
+				if (isRowJungle(importedMap[iX][iY]) ) {//&& canAddFeature(iX, iY, featIdx, true /*bScatterable*/, false /*bRiverMouth*/, false /*bCoastal*/, false /*bNearRiver*/, false /*bIsolated*/, false /*bReef*/, false /*bIce*/)) {
+					console.log("Extra Jungle (" + iX + "," + iY +") = " + importedMap[iX][iY][0]);
+					 const featureParam = {
+						Feature: featIdx,
+						Direction: -1,
+						Elevation: 0
+					};
+					TerrainBuilder.setFeatureType(iX, iY, featureParam);
+				}
+			}
+        }
+    }
+}
+
+export function expandCoastsPlus(iWest, iEast, iHeight) {
+    for (let iY = 0; iY < iHeight; iY++) {
+        for (let iX = iWest; iX < iEast; iX++) {
+            let terrain = GameplayMap.getTerrainType(iX, iY);
+            if (terrain == globals.g_OceanTerrain) {
+                if (GameplayMap.isAdjacentToShallowWater(iX, iY) && TerrainBuilder.getRandomNumber(2, "Shallow Water Scater Scatter") == 0) {
+                    TerrainBuilder.setTerrainType(iX, iY, globals.g_CoastTerrain);
+                }
+            }
+        }
+    }
+}
 
 console.log("Loaded YnAMP Utilities");
 
