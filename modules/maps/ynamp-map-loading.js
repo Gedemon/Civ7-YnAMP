@@ -21,17 +21,20 @@ import * as ynamp from '/ged-ynamp/maps/ynamp-utilities.js';
 export function generateYnAMP(mapName, importedMap, genParameters) {
 
     //let importedMap = GetMap();
+	let mapType = ynamp.getMapType(importedMap);
+	
     let naturalWonderEvent = false;
     const liveEventDBRow = GameInfo.GlobalParameters.lookup("REGISTERED_RACE_TO_WONDERS_EVENT");
     if (liveEventDBRow && liveEventDBRow.Value != "0") {
         naturalWonderEvent = true;
     }
-    console.log("Generating a map!");
+    console.log("Loading yet (not) another map!");
     console.log(`Age - ${GameInfo.Ages.lookup(Game.age).AgeType}`);
     let iWidth = GameplayMap.getGridWidth();
     let iHeight = GameplayMap.getGridHeight();
     let uiMapSize = GameplayMap.getMapSize();
     console.log("uiMapSize = " + uiMapSize);
+    console.log("mapType = " + mapType);
     let startPositions = [];
     let mapInfo = GameInfo.Maps.lookup(uiMapSize);
     if (mapInfo == null)
@@ -83,7 +86,7 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     }
     let bHumanNearEquator = utilities.needHumanNearEquator();
     startSectors = chooseStartSectors(iNumPlayers1, iNumPlayers2, iStartSectorRows, iStartSectorCols, bHumanNearEquator);
-    ynamp.createMapTerrains(iWidth, iHeight, westContinent, eastContinent, importedMap);
+    ynamp.createMapTerrains(iWidth, iHeight, westContinent, eastContinent, importedMap, mapType);
     //utilities.createIslands(iWidth, iHeight, westContinent2, eastContinent2, 4);
     //utilities.createIslands(iWidth, iHeight, westContinent2, eastContinent2, 5);
     //utilities.createIslands(iWidth, iHeight, westContinent2, eastContinent2, 6);
@@ -119,13 +122,17 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     console.log("validateAndFixTerrain (2)...");
     TerrainBuilder.validateAndFixTerrain();
     TerrainBuilder.defineNamedRivers();
-	ynamp.createBiomes(iWidth, iHeight, importedMap);
+	ynamp.createBiomes(iWidth, iHeight, importedMap, mapType);
     //designateBiomes(iWidth, iHeight);
     addNaturalWonders(iWidth, iHeight, iNumNaturalWonders, naturalWonderEvent);
     console.log("addFloodplains...");
     TerrainBuilder.addFloodplains(4, 10);
-    addFeatures(iWidth, iHeight);
-	ynamp.extraJungle(iWidth, iHeight, importedMap);
+	if (mapType == 'CIV6') {
+        addFeatures(iWidth, iHeight);
+		ynamp.extraJungle(iWidth, iHeight, importedMap);
+	} else {
+		ynamp.addFeatures(iWidth, iHeight, importedMap, mapType);
+	}
     TerrainBuilder.validateAndFixTerrain();
     console.log("adjustOceanPlotTags...");
     utilities.adjustOceanPlotTags(iNumPlayers1 > iNumPlayers2);

@@ -1,6 +1,10 @@
 import * as globals from '/base-standard/maps/map-globals.js';
 import * as utilities from '/base-standard/maps/map-utilities.js';
 
+/*
+ *  map script
+ *
+ */
 export function createLandmasses(iWidth, iHeight, continent1, continent2, iStartSectorRows, iStartSectorCols, startSectors, fMapScale, fWaterPercentFactor) {
     FractalBuilder.create(globals.g_LandmassFractal, iWidth, iHeight, 2, 0);
     let iWaterHeight = FractalBuilder.getHeightFromPercent(globals.g_LandmassFractal, globals.g_WaterPercent * fWaterPercentFactor);
@@ -119,6 +123,10 @@ function getHeightAdjustingForStartSector(iX, iY, iWaterHeight, iFractalWeight, 
     return iPlotHeight;
 }
 
+/*
+ *  map data
+ *
+ */
 
 /*	Civ6 maps --------------------------------------------------- | Civ7 maps --------------------------------------------------------------------------------
 		
@@ -157,7 +165,18 @@ const civ7Feature	= ["FEATURE_SAGEBRUSH_STEPPE", "FEATURE_OASIS", "FEATURE_DESER
 const civ6Terrain	= ["TERRAIN_GRASS", "TERRAIN_GRASS_HILLS", "TERRAIN_GRASS_MOUNTAIN", "TERRAIN_PLAINS", "TERRAIN_PLAINS_HILLS", "TERRAIN_PLAINS_MOUNTAIN", "TERRAIN_DESERT", "TERRAIN_DESERT_HILLS", "TERRAIN_DESERT_MOUNTAIN", "TERRAIN_TUNDRA", "TERRAIN_TUNDRA_HILLS", "TERRAIN_TUNDRA_MOUNTAIN", "TERRAIN_SNOW", "TERRAIN_SNOW_HILLS", "TERRAIN_SNOW_MOUNTAIN", "TERRAIN_COAST", "TERRAIN_OCEAN"];
 const civ6Feature	= ["FEATURE_FLOODPLAINS","FEATURE_ICE", "FEATURE_JUNGLE", "FEATURE_FOREST","FEATURE_OASIS", "FEATURE_MARSH", "FEATURE_BARRIER_REEF"];
 
-const mapIDX = {
+
+export function getMapType(importedMap) {
+	if (importedMap[0][0].length > 5 && importedMap[0][0][3].length == 3 && importedMap[0][0][5].length == 3) {
+		return 'CIV6';
+	} else {
+		return 'CIV7';
+	}
+}
+
+// Civ6
+
+const civ6MapIDX = {
 	terrain: 0,
 	feature: 1,
 	continent: 2,
@@ -166,11 +185,7 @@ const mapIDX = {
 	cliff: 5
 }
 
-function getCiv6Terrain(iTerrain) {
-	return civ6Terrain[iTerrain];
-}
-
-function getTerrainType(sCiv6Terrain) {
+function getTerrainFromCiv6(sCiv6Terrain) {
 	if (sCiv6Terrain.search("MOUNTAIN") != -1) {
 		return globals.g_MountainTerrain;
 	} else if (sCiv6Terrain.search("HILLS") != -1) {
@@ -184,7 +199,7 @@ function getTerrainType(sCiv6Terrain) {
 	return globals.g_FlatTerrain;
 }
 
-function getBiomeType(sCiv6Terrain) {
+function getBiomeFromCiv6(sCiv6Terrain) {
 	if (sCiv6Terrain.search("GRASS") != -1) {
 		return globals.g_GrasslandBiome;
 	} else if (sCiv6Terrain.search("PLAINS") != -1) {
@@ -200,20 +215,20 @@ function getBiomeType(sCiv6Terrain) {
 	return globals.g_MarineBiome;
 }
 
-function getTerrainFromRow(row) {
-	let terrain = row[mapIDX.terrain];
-	//console.log("getTerrainFromRow - terrain = " + terrain);
+function getTerrainFromCiv6Row(row) {
+	let terrain = row[civ6MapIDX.terrain];
+	//console.log("getTerrainFromCiv6Row - terrain = " + terrain);
 	if (typeof(terrain) == 'number') {
 		let sCiv6Terrain = civ6Terrain[terrain];
-		return getTerrainType(sCiv6Terrain);
+		return getTerrainFromCiv6(sCiv6Terrain);
 	} else {
-		return getTerrainType(terrain);
+		return getTerrainFromCiv6(terrain);
 	}
 }
 
-function getBiomeFromRow(row) {
-	let terrain = row[mapIDX.terrain];
-	let feature = row[mapIDX.feature];
+function getBiomeFromCiv6Row(row) {
+	let terrain = row[civ6MapIDX.terrain];
+	let feature = row[civ6MapIDX.feature];
 	let isJungle;
 	
 	if (typeof(feature) == 'number') {
@@ -228,16 +243,21 @@ function getBiomeFromRow(row) {
 	
 	if (typeof(terrain) == 'number') {
 		let sCiv6Terrain = civ6Terrain[terrain];
-		return getBiomeType(sCiv6Terrain);
+		return getBiomeFromCiv6(sCiv6Terrain);
 	} else {
-		return getBiomeType(terrain);
+		return getBiomeFromCiv6(terrain);
 	}
 }
 
+function getFeatureFromCiv6Row(row) {
+	console.log("Civ6 features import not implemented");
+	return;
+}
 
-function isRowJungle(row) {
-	let feature = row[mapIDX.feature];
-	//console.log("isRowjungle - feature = " + feature);
+
+function isCiv6RowJungle(row) {
+	let feature = row[civ6MapIDX.feature];
+	//console.log("isCiv6RowJungle - feature = " + feature);
 	if (typeof(feature) == 'number') {
 		let sCiv6Feature = civ6Feature[feature];
 		return sCiv6Feature == "FEATURE_JUNGLE";
@@ -246,8 +266,8 @@ function isRowJungle(row) {
 	}
 }
 
-function isRowSnow(row) {
-	let terrain = row[mapIDX.terrain];
+function isCiv6RowSnow(row) {
+	let terrain = row[civ6MapIDX.terrain];
 	//console.log("getTerrainFromRow - terrain = " + terrain);
 	if (typeof(terrain) == 'number') {
 		let sCiv6Terrain = civ6Terrain[terrain];
@@ -275,81 +295,60 @@ g_MarineBiome = GameInfo.Biomes.find(t => t.BiomeType == 'BIOME_MARINE').$index;
 g_VolcanoFeature = GameInfo.Features.find(t => t.FeatureType == 'FEATURE_VOLCANO').$index;
 //*/
 
+// Civ7 functions
 
-export function testElevation (iWidth, iHeight) {
-    let featIdx = GameInfo.Features.find(t => t.FeatureType == 'FEATURE_SAGEBRUSH_STEPPE').$index;
-	const waterLevel = 0;
-	const level = 128;
-    for (let iY = 0; iY < iHeight; iY++) {
-        for (let iX = 0; iX < iWidth; iX++) {
-            let iTerrain = GameplayMap.getTerrainType(iX, iY);
-			const terrain = GameInfo.Terrains.lookup(iTerrain);
-			let iElevation = GameplayMap.getElevation(iX, iY);
-            if (iTerrain == globals.g_HillTerrain) {
-				console.log("Validate (" + iX + "," + iY +") - Elevation = " + iElevation + ", terrain = " + terrain.TerrainType);
-				const featureParam = {
-					Feature: -1,
-					Direction: -1,
-					Elevation: 2
-				};
-				TerrainBuilder.setFeatureType(iX, iY, featureParam);
-			}
-			/*
-            if (iTerrain == globals.g_HillTerrain) {
-                console.log("  - Hills !");
-				if (iElevation < waterLevel + 2) {
-					const featureParam = {
-						Feature: -1,
-						Direction: -1,
-						Elevation: 1 * level
-					};
-					TerrainBuilder.setFeatureType(iX, iY, featureParam);
-				}
-				
-            } else if (iTerrain == globals.g_MountainTerrain) {
-                console.log("  - mountains !");
-				if (iElevation < waterLevel + 5) {
-					const featureParam = {
-						Feature: -1,
-						Direction: -1,
-						Elevation: 1 * level
-					};
-					TerrainBuilder.setFeatureType(iX, iY, featureParam);
-				}
-				
-            } else if ((iTerrain == globals.g_CoastTerrain || iTerrain == globals.g_OceanTerrain) && !GameplayMap.isLake(iX, iY)) {
-                console.log("  - Ocast/Ocean !");
-				if (iElevation > waterLevel) {
-					const featureParam = {
-						Feature: -1,
-						Direction: -1,
-						Elevation: -(iElevation-waterLevel)
-					};
-					TerrainBuilder.setFeatureType(iX, iY, featureParam);
-				}
-				
-            } else if (iTerrain == globals.g_FlatTerrain) {
-                console.log("  - flat !");
-				if (iElevation > waterLevel + 2) {
-					const featureParam = {
-						Feature: -1,
-						Direction: -1,
-						Elevation: -1 * level
-					};
-					TerrainBuilder.setFeatureType(iX, iY, featureParam);
-				}
-			}
-			//*/
-            //console.log("      - new Elevation = " + GameplayMap.getElevation(iX, iY));
-        }
-    }
+const civ7MapIDX = {
+	terrain: 0,
+	biome: 1,
+	feature: 2
 }
 
-export function createMapTerrains(iWidth, iHeight, continent1, continent2, importedMap) {
-    
-    let greatestEarth = importedMap;
+function getTerrainFromCiv7Row(row) {
+	let terrain = row[civ7MapIDX.terrain];
+	if (typeof(terrain) == 'number') {
+		return terrain;
+	} else {
+		return GameInfo.Terrains.find(t => t.TerrainType == terrain).$index;;
+	}
+}
 
+function getBiomeFromCiv7Row(row) {
+	let biome = row[civ7MapIDX.biome];
+	if (typeof(biome) == 'number') {
+		return biome;
+	} else {
+		return GameInfo.Biomes.find(t => t.BiomeType == biome).$index;;
+	}
+}
+
+function getFeatureFromCiv7Row(row) {
+	let feature = row[civ7MapIDX.feature];
+	if (typeof(feature) == 'number') {
+		return feature;
+	} else {
+		return GameInfo.Features.find(t => t.FeatureType == feature).$index;;
+	}
+}
+
+// Map creation
+
+export function createMapTerrains(iWidth, iHeight, continent1, continent2, importedMap, mapType) {
+    
     console.log("YnAMP : Set Land and Water...");
+	let getTerrainFromRow;
+	
+	switch (mapType) {
+		case "CIV6":
+			getTerrainFromRow = getTerrainFromCiv6Row;
+			break;
+		case "CIV7":
+			getTerrainFromRow = getTerrainFromCiv7Row;
+			break;
+		default:
+			console.log("MapType Error = " + mapType);
+			return;
+	}
+
     console.log(iHeight);
     console.log(iWidth);
 
@@ -374,10 +373,24 @@ export function createMapTerrains(iWidth, iHeight, continent1, continent2, impor
     }
 }
 
-
-export function createBiomes(iWidth, iHeight, importedMap) {
+export function createBiomes(iWidth, iHeight, importedMap, mapType) {
     
     console.log("YnAMP : Create Biomes...");
+	
+	let getBiomeFromRow;
+	
+	switch (mapType) {
+		case "CIV6":
+			getBiomeFromRow = getBiomeFromCiv6Row;
+			break;
+		case "CIV7":
+			getBiomeFromRow = getBiomeFromCiv7Row;
+			break;
+		default:
+			console.log("MapType Error = " + mapType);
+			return;
+	}
+	
     //console.log(iHeight);
     //console.log(iWidth);
 
@@ -386,6 +399,36 @@ export function createBiomes(iWidth, iHeight, importedMap) {
             let biome = getBiomeFromRow(importedMap[iX][iY]);
             TerrainBuilder.setBiomeType(iX, iY, biome);
             //console.log("SetBiome (" + iX + "," + iY +") = " + importedMap[iX][iY][0] + " = " + biome);
+        }
+    }
+}
+
+export function placeFeatures(iWidth, iHeight, importedMap, mapType) {
+    
+    console.log("YnAMP : Add Features...");
+	
+	let getFeatureFromRow;
+	
+	switch (mapType) {
+		case "CIV6":
+			getFeatureFromRow = getFeatureFromCiv6Row;
+			break;
+		case "CIV7":
+			getFeatureFromRow = getFeatureFromCiv7Row;
+			break;
+		default:
+			console.log("MapType Error = " + mapType);
+			return;
+	}
+
+    for (let iY = 0; iY < iHeight; iY++) {
+        for (let iX = 0; iX < iWidth; iX++) {
+            let feature = getFeatureFromRow(importedMap[iX][iY]);
+			if (TerrainBuilder.canHaveFeature(iX, iY, feature)) {
+                TerrainBuilder.setFeatureType(iX, iY, feature);
+			} else {
+				console.log("Can't place at (" + iX + "," + iY +") feature = " + feature);
+			}
         }
     }
 }
@@ -401,7 +444,7 @@ export function importSnow(iWidth, iHeight, importedMap) {
 	
     for (let iY = 0; iY < iHeight; iY++) {
         for (let iX = 0; iX < iWidth; iX++) {	
-			if (isRowSnow(importedMap[iX][iY])) {
+			if (isCiv6RowSnow(importedMap[iX][iY])) {
 				console.log("Snow (" + iX + "," + iY +") = " + importedMap[iX][iY][0]);
 				MapPlotEffects.addPlotEffect(GameplayMap.getIndexFromXY(iX, iY), aWeightEffect);
 			}
@@ -419,7 +462,7 @@ export function extraJungle(iWidth, iHeight, importedMap) {
         for (let iX = 0; iX < iWidth; iX++) {			
             let feature = GameplayMap.getFeatureType(iX, iY);
             if (GameplayMap.isWater(iX, iY) == false && feature == FeatureTypes.NO_FEATURE && GameplayMap.isNavigableRiver(iX, iY) == false) {
-				if (isRowJungle(importedMap[iX][iY]) ) {//&& canAddFeature(iX, iY, featIdx, true /*bScatterable*/, false /*bRiverMouth*/, false /*bCoastal*/, false /*bNearRiver*/, false /*bIsolated*/, false /*bReef*/, false /*bIce*/)) {
+				if (isCiv6RowJungle(importedMap[iX][iY]) ) {//&& canAddFeature(iX, iY, featIdx, true /*bScatterable*/, false /*bRiverMouth*/, false /*bCoastal*/, false /*bNearRiver*/, false /*bIsolated*/, false /*bReef*/, false /*bIce*/)) {
 					console.log("Extra Jungle (" + iX + "," + iY +") = " + importedMap[iX][iY][0]);
 					 const featureParam = {
 						Feature: featIdx,
