@@ -18,8 +18,11 @@ import { generateSnow, dumpPermanentSnow } from '/base-standard/maps/snow-genera
 import { dumpStartSectors, dumpContinents, dumpTerrain, dumpElevation, dumpRainfall, dumpBiomes, dumpFeatures, dumpResources, dumpNoisePredicate } from '/base-standard/maps/map-debug-helpers.js';
 import * as ynamp from '/ged-ynamp/maps/ynamp-utilities.js';
 
+// Wrapper for compability with existing maps
 export function generateYnAMP(mapName, importedMap, genParameters) {
-
+    generateYnAMP2(mapName, importedMap, null, genParameters);
+}
+export function generateYnAMP2(mapName, importedMap, importedMap2, genParameters) {
     //let importedMap = GetMap();
     let naturalWonderEvent = false;
     const liveEventDBRow = GameInfo.GlobalParameters.lookup("REGISTERED_RACE_TO_WONDERS_EVENT");
@@ -27,6 +30,14 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
         naturalWonderEvent = true;
     }
     console.log("Generating a map!");
+
+    if (null != importedMap2) {
+        console.log("Using importedMap2 for Civ7!");
+    }
+    else {
+        console.log("Not using importedMap2 for Civ7 :(");
+    }
+
     console.log(`Age - ${GameInfo.Ages.lookup(Game.age).AgeType}`);
     let iWidth = GameplayMap.getGridWidth();
     let iHeight = GameplayMap.getGridHeight();
@@ -83,7 +94,7 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     }
     let bHumanNearEquator = utilities.needHumanNearEquator();
     startSectors = chooseStartSectors(iNumPlayers1, iNumPlayers2, iStartSectorRows, iStartSectorCols, bHumanNearEquator);
-    ynamp.createMapTerrains(iWidth, iHeight, westContinent, eastContinent, importedMap);
+    ynamp.createMapTerrains(iWidth, iHeight, westContinent, eastContinent, importedMap, importedMap2);
     //utilities.createIslands(iWidth, iHeight, westContinent2, eastContinent2, 4);
     //utilities.createIslands(iWidth, iHeight, westContinent2, eastContinent2, 5);
     //utilities.createIslands(iWidth, iHeight, westContinent2, eastContinent2, 6);
@@ -119,7 +130,7 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     console.log("validateAndFixTerrain (2)...");
     TerrainBuilder.validateAndFixTerrain();
     TerrainBuilder.defineNamedRivers();
-	ynamp.createBiomes(iWidth, iHeight, importedMap);
+    ynamp.createBiomes(iWidth, iHeight, importedMap, importedMap2);
     //designateBiomes(iWidth, iHeight);
     addNaturalWonders(iWidth, iHeight, iNumNaturalWonders, naturalWonderEvent);
     console.log("addFloodplains...");

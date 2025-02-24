@@ -5,7 +5,9 @@
  */
 console.log("loading script greatest-earth-map.js");
 import { generateYnAMP } from '/ged-ynamp/maps/ynamp-map-loading.js';
+import { generateYnAMP2 } from '/ged-ynamp/maps/ynamp-map-loading.js';
 import { GetMap } from '/ged-ynamp/maps/greatest-earth-map/greatest-earth-data.js';
+//import { GetMap2 } from '/ged-ynamp/maps/greatest-earth-map/greatest-earth-data2.js'; // EXPERIMENTAL: Data saved directly in Civ7 format
 
 function requestMapData(initParams) {
     console.log(initParams.width);
@@ -26,7 +28,8 @@ function generateMap() {
         eastEnd: 102
     };
     let importedMap = GetMap();
-    generateYnAMP(mapName, importedMap, genParameters);
+    //let importedMap2 = GetMap2();
+    generateYnAMP2(mapName, importedMap, null/*importedMap2*/, genParameters); // Passing null will not use the data in Civ7 format
 }
 
 // Register listeners.
