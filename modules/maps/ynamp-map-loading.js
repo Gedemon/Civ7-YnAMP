@@ -172,7 +172,9 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     AreaBuilder.recalculateAreas();
     TerrainBuilder.storeWaterData();
     //generateSnow(iWidth, iHeight);
-	ynamp.importSnow(iWidth, iHeight, importedMap);
+	if (mapType == 'CIV6') {
+		ynamp.importSnow(iWidth, iHeight, importedMap);
+	}
     console.log("dump...");
     //dumpStartSectors(startSectors);
     dumpContinents(iWidth, iHeight);
