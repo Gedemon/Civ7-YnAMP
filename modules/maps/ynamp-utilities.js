@@ -166,6 +166,12 @@ const mapIDX = {
 	cliff: 5
 }
 
+const mapIDX2 = {
+	terrain: 0,
+	biome: 1,
+	feature: 2
+}
+
 function getCiv6Terrain(iTerrain) {
 	return civ6Terrain[iTerrain];
 }
@@ -234,6 +240,77 @@ function getBiomeFromRow(row) {
 	}
 }
 
+//--------------------------------------------------------------------------------------
+// Alternative versions of getTerrainType/getTerrainFromRow and getBiomeType/getBiomeFromRow that are importing from Civ7 data format
+//--------------------------------------------------------------------------------------
+function getTerrainType2(sCiv7Terrain) {
+	console.log("getTerrainTypeV7 - sCiv7Terrain = " + sCiv7Terrain);
+
+	if (sCiv7Terrain.search("MOUNTAIN") != -1) {
+		return globals.g_MountainTerrain;
+	} else if (sCiv7Terrain.search("HILLS") != -1) {
+		return globals.g_HillTerrain;
+	} else if (sCiv7Terrain == "TERRAIN_HILL") {
+		return globals.g_HillTerrain;
+	} else if (sCiv7Terrain == "TERRAIN_COAST") {
+		return globals.g_CoastTerrain;
+	} else if (sCiv7Terrain == "TERRAIN_OCEAN") {
+		return globals.g_OceanTerrain;
+	}
+	else if (sCiv7Terrain == "TERRAIN_NAVIGABLE_RIVER") {
+		return globals.g_NavigableRiverTerrain;
+	}
+	// default
+	return globals.g_FlatTerrain;
+}
+
+export function getTerrainFromRow2(row) {
+	let terrain = row[mapIDX2.terrain];
+	console.log("getTerrainFromRow2 - terrain = " + terrain);
+	if (typeof (terrain) == 'number') {
+		terrain = civ7terrain[terrain];
+	} else {
+		return getTerrainType2(terrain);
+	}
+}
+
+function getBiomeType2(sCiv7Biome) {
+	if (sCiv7Biome.search("TUNDRA") != -1) {
+		return globals.g_TundraBiome;
+	}
+	else if (sCiv7Biome.search("GRASSLAND") != -1) {
+		return globals.g_GrasslandBiome;
+	}
+	else if (sCiv7Biome.search("PLAINS") != -1) {
+		return globals.g_PlainsBiome;
+	}
+	else if (sCiv7Biome.search("TROPICAL") != -1) {
+		return globals.g_TropicalBiome;
+	}
+	else if (sCiv7Biome.search("DESERT") != -1) {
+		return globals.g_DesertBiome;
+	}
+	else if (sCiv7Biome.search("MARINE") != -1) {
+		return globals.g_MarineBiome;
+	}
+
+	// default
+	return globals.g_MarineBiome;
+}
+export function getBiomeFromRow2(row) {
+	let biome = row[mapIDX2.biome];
+	console.log("getBiomeFromRow2 - biome = " + biome);
+
+	if (typeof (biome) == 'number') {
+		biome = civ7biome[biome];
+	}
+
+	return getBiomeType2(biome);
+}
+
+//--------------------------------------------------------------------------------------
+// End of alternative versions of getTerrainType/getTerrainFromRow and getBiomeType/getBiomeFromRow that are importing from Civ7 data format
+//--------------------------------------------------------------------------------------
 
 function isRowJungle(row) {
 	let feature = row[mapIDX.feature];
@@ -345,7 +422,7 @@ export function testElevation (iWidth, iHeight) {
     }
 }
 
-export function createMapTerrains(iWidth, iHeight, continent1, continent2, importedMap) {
+export function createMapTerrains(iWidth, iHeight, continent1, continent2, importedMap, importedMap2) {
     
     let greatestEarth = importedMap;
 
@@ -358,8 +435,15 @@ export function createMapTerrains(iWidth, iHeight, continent1, continent2, impor
             let terrain = globals.g_FlatTerrain;
             // Initialize plot tag
             TerrainBuilder.setPlotTag(iX, iY, PlotTags.PLOT_TAG_NONE);
-            //console.log("createLandmasses (" + iX + "," + iY +")");
-			terrain = getTerrainFromRow(importedMap[iX][iY]);
+			//console.log("createLandmasses (" + iX + "," + iY +")");
+
+			// Use Civ7 data if present
+			if (null != importedMap2) { 
+				terrain = getTerrainFromRow2(importedMap2[iX][iY]);	
+			}
+			else {
+				terrain = getTerrainFromRow(importedMap[iX][iY]);
+			}
 
             // Add plot tag if applicable
             if (terrain != globals.g_OceanTerrain && terrain != globals.g_CoastTerrain) {
@@ -374,16 +458,22 @@ export function createMapTerrains(iWidth, iHeight, continent1, continent2, impor
     }
 }
 
-
-export function createBiomes(iWidth, iHeight, importedMap) {
-    
+export function createBiomes(iWidth, iHeight, importedMap, importedMap2) {    
     console.log("YnAMP : Create Biomes...");
     //console.log(iHeight);
     //console.log(iWidth);
 
     for (let iY = 0; iY < iHeight; iY++) {
-        for (let iX = 0; iX < iWidth; iX++) {
-            let biome = getBiomeFromRow(importedMap[iX][iY]);
+		for (let iX = 0; iX < iWidth; iX++) {
+			let biome = globals.g_MarineBiome;
+
+			// Use Civ7 data if present
+			if (null != importedMap2) {
+				biome = getBiomeFromRow2(importedMap2[iX][iY]);
+			}
+			else {
+				biome = getBiomeFromRow(importedMap[iX][iY]);
+			}
             TerrainBuilder.setBiomeType(iX, iY, biome);
             //console.log("SetBiome (" + iX + "," + iY +") = " + importedMap[iX][iY][0] + " = " + biome);
         }
