@@ -33,7 +33,8 @@ function generateMap() {
     if (liveEventDBRow && liveEventDBRow.Value != "0") {
         naturalWonderEvent = true;
     }
-    console.log("Generating a map!");
+    let version = GlobalParameters.YNAMP_VERSION;
+    console.log("YnAMP v" + version + " - Generating Continent++ map!");
     console.log(`Age - ${GameInfo.Ages.lookup(Game.age).AgeType}`);
     let iWidth = GameplayMap.getGridWidth();
     let iHeight = GameplayMap.getGridHeight();

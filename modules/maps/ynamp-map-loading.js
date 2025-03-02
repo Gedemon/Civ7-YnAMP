@@ -22,19 +22,19 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
 
     //let importedMap = GetMap();
     let mapType = ynamp.getMapType(importedMap);
+    let version = GlobalParameters.YNAMP_VERSION;
+    console.log("YnAMP v" + version + " - Generating map type : " + mapType);
     
     let naturalWonderEvent = false;
     const liveEventDBRow = GameInfo.GlobalParameters.lookup("REGISTERED_RACE_TO_WONDERS_EVENT");
     if (liveEventDBRow && liveEventDBRow.Value != "0") {
         naturalWonderEvent = true;
     }
-    console.log("Loading yet (not) another map!");
     console.log(`Age - ${GameInfo.Ages.lookup(Game.age).AgeType}`);
     let iWidth = GameplayMap.getGridWidth();
     let iHeight = GameplayMap.getGridHeight();
     let uiMapSize = GameplayMap.getMapSize();
     console.log("uiMapSize = " + uiMapSize);
-    console.log("mapType = " + mapType);
     let startPositions = [];
     let mapInfo = GameInfo.Maps.lookup(uiMapSize);
     if (mapInfo == null)
