@@ -29,6 +29,7 @@
 		<ActionGroup id="base-game-main-ynamp" scope="game" criteria="always">
 			<Actions>
 				<UpdateDatabase>
+					<Item>version.sql</Item>
 					<Item>data/maps.xml</Item>
 					<Item>maps/giant-earth-map/giant-earth.xml</Item>
 					<Item>maps/giant-earth-map/giant-earth-city.xml</Item>
