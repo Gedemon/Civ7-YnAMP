@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GameData>
+<Database>
 
 	<!-- ++++++++++++++++++++++++++ -->
 	<!-- "Giant Earth Map" City Map -->
@@ -5086,12 +5086,6 @@
 		<Replace MapName="GiantEarth" X="77" Y="84" CityLocaleName="LOC_CITY_NAME_OLENYOK" Area="1" />
 		<Replace MapName="GiantEarth" X="77" Y="82" CityLocaleName="LOC_CITY_NAME_MORKOKA" Area="1" />
 
-
-
-
-
-
-
 	</CityMap>
 
-</GameData>
+</Database>

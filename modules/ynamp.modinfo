@@ -22,7 +22,7 @@
 			</Properties>
 			<Actions>
 				<UpdateDatabase>
-					<Item>data/Tables.sql</Item>
+					<Item>data/tables.sql</Item>
 				</UpdateDatabase>
 			</Actions>
 		</ActionGroup>
@@ -30,10 +30,10 @@
 			<Actions>
 				<UpdateDatabase>
 					<Item>data/maps.xml</Item>
-					<Item>maps/giant-earth-map/Map.xml</Item>
-					<Item>maps/giant-earth-map/CityMap.xml</Item>
-					<Item>maps/greatest-earth-map/Map.xml</Item>
-					<Item>maps/greatest-earth-map/CityMap.xml</Item>
+					<Item>maps/giant-earth-map/giant-earth.xml</Item>
+					<Item>maps/giant-earth-map/giant-earth-city.xml</Item>
+					<Item>maps/greatest-earth-map/greatest-earth.xml</Item>
+					<Item>maps/greatest-earth-map/greatest-earth-city.xml</Item>
 				</UpdateDatabase>
 				<UpdateText>
 					<Item>text/en_us/MapText.xml</Item>

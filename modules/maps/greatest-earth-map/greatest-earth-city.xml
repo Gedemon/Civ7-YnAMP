@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GameData>
+<Database>
 
 	<!-- +++++++++++++++++++++++++++++ -->
 	<!-- "Greatest Earth Map" City Map -->
@@ -198,4 +198,4 @@
 		
 	</CityMap>
 	
-</GameData>
+</Database>

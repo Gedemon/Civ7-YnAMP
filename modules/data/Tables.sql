@@ -8,18 +8,18 @@
 -- Create Tables
 -----------------------------------------------
 
--- City names by Era		
+-- City names by Era
 CREATE TABLE IF NOT EXISTS CityNameByEra
 	(	CityLocaleName TEXT,
 		Era TEXT,
 		CityEraName TEXT);
 		
--- Resources : Exclusion zones for resources	
+-- Resources : Exclusion zones for resources
 CREATE TABLE IF NOT EXISTS ResourceRegionExclude
 	(	Region TEXT,
 		Resource TEXT);
 		
--- Resources : Exclusive zones for resources	
+-- Resources : Exclusive zones for resources
 CREATE TABLE IF NOT EXISTS ResourceRegionExclusive
 	(	Region TEXT,
 		Resource TEXT);	
@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS StartPosition
 		Leader TEXT,
 		DisabledByCivilization TEXT,
 		DisabledByLeader TEXT,
-		AlternateStart INT default 0,		
+		AlternateStart INT default 0,
 		X INT default 0,
 		Y INT default 0);
 		
@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS RegionPosition
 		X INT default 0,
 		Y INT default 0,
 		Width INT default 0,
-		Height INT default 0);			
+		Height INT default 0);
 
 -- City Map		
 CREATE TABLE IF NOT EXISTS CityMap
