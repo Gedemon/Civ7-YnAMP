@@ -12,6 +12,7 @@
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_AKSUM"			X="63"	Y="29" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_AMERICA"			X="19"	Y="47" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_BUGANDA"			X="59"	Y="19" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_CARTHAGE"		X="48"	Y="36" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_CHOLA"			X="59"	Y="19" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_EGYPT"			X="58"	Y="35" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_FRENCH_EMPIRE"	X="42"	Y="48" />
@@ -29,8 +30,8 @@
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MISSISSIPPIAN"	X="11"	Y="49" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MONGOLIA"		X="81"	Y="57" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MUGHAL"			X="75"	Y="39" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_NORMAN"			X="41"	Y="48" DisabledByCivilization="CIVILIZATION_FRENCH_EMPIRE" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_NORMAN"			X="39"	Y="52" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_NORMAN"			X="41"	Y="48" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_GREAT_BRITAIN"	X="39"	Y="52" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_PERSIA"			X="67"	Y="41" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_PRUSSIA"			X="56"	Y="56" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_QING"			X="87"	Y="56" />
