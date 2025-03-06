@@ -134,7 +134,7 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
         addFeatures(iWidth, iHeight);
         ynamp.extraJungle(iWidth, iHeight, importedMap);
     } else {
-        ynamp.addFeatures(iWidth, iHeight, importedMap, mapType);
+        ynamp.placeFeatures(iWidth, iHeight, importedMap, mapType);
     }
     TerrainBuilder.validateAndFixTerrain();
     console.log("adjustOceanPlotTags...");
