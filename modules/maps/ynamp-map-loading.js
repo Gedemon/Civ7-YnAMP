@@ -24,7 +24,7 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     let mapType = ynamp.getMapType(importedMap);
     let version = GlobalParameters.YNAMP_VERSION;
     console.log("YnAMP v" + version + " - Generating map type : " + mapType);
-    
+
     let naturalWonderEvent = false;
     const liveEventDBRow = GameInfo.GlobalParameters.lookup("REGISTERED_RACE_TO_WONDERS_EVENT");
     if (liveEventDBRow && liveEventDBRow.Value != "0") {
@@ -76,7 +76,53 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     let iTilesPerLake = mapInfo.LakeGenerationFrequency;
     let iStartSectorRows = mapInfo.StartSectorRows;
     let iStartSectorCols = mapInfo.StartSectorCols;
+
+    console.log("assignTSL...(1st pass)");
+    startPositions = assignTSL(mapName);
+
+    let aliveMajorIds = Players.getAliveMajorIds();
+
+    let eastWestLimit = (westContinent.west + eastContinent.east) / 2;
+    console.log("East/West limit is " + eastWestLimit);
+
+    let westTSL = 0;
+    let eastTSL = 0;
+    for (let aliveMajorIndex = 0; aliveMajorIndex < aliveMajorIds.length; aliveMajorIndex++) {
+        if (aliveMajorIndex < aliveMajorIds.length) {
+            let startPlotIndex = startPositions[aliveMajorIndex];
+            let iStartX = startPlotIndex % GameplayMap.getGridWidth();
+            let iStartY = Math.floor(startPlotIndex / GameplayMap.getGridWidth());
+
+            if (Players.isHuman(aliveMajorIds[aliveMajorIndex])) {
+                if (!isNaN(iStartX)) {
+                    if (iStartX < eastWestLimit) {
+                        console.log("Player #" + aliveMajorIndex + " (ID " + aliveMajorIds[aliveMajorIndex] + ") with TSL is human (" + iStartX + " ," + iStartY + ") and will start in the WEST");
+                        westTSL++;
+                    }
+                    else {
+                        console.log("Player #" + aliveMajorIndex + " (ID " + aliveMajorIds[aliveMajorIndex] + ") with TSL is human (" + iStartX + " ," + iStartY + ") and will start in the EAST");
+                        eastTSL++;
+                    }
+                }
+            }
+
+        }
+        else {
+            console.log("Player #" + aliveMajorIndex + " (ID " + aliveMajorIds[aliveMajorIndex] + ") is AI (" + iStartX + " ," + iStartY + ")");
+        }
+    }
+
     let iRandom = !naturalWonderEvent ? TerrainBuilder.getRandomNumber(2, "East or West") : 0; // don't want random hemisphere shuffle for live event
+
+    if (eastTSL > westTSL) {
+        console.log("Random = 1 (East) because " + eastTSL + " human player(s) with TSL start in the East and " + westTSL + " start in the West");
+        iRandom = 1;
+    }
+    else if (eastTSL < westTSL) {
+        console.log("Random = 0 (West) because " + westTSL + " human player(s) with TSL start in the East and " + eastTSL + " start in the Est");
+        iRandom = 0;
+    }
+
     console.log("Random Hemisphere: " + iRandom);
     if (iRandom == 1) {
         let iNum1 = iNumPlayers1;
@@ -84,6 +130,7 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
         iNumPlayers1 = iNum2;
         iNumPlayers2 = iNum1;
     }
+
     let bHumanNearEquator = utilities.needHumanNearEquator();
     startSectors = chooseStartSectors(iNumPlayers1, iNumPlayers2, iStartSectorRows, iStartSectorCols, bHumanNearEquator);
     ynamp.createMapTerrains(iWidth, iHeight, westContinent, eastContinent, importedMap, mapType);
@@ -114,12 +161,12 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     //addHills(iWidth, iHeight);
     console.log("buildRainfallMap...");
     buildRainfallMap(iWidth, iHeight);
-    
+
     // test high rainfall near Rome for river
     if (mapName == 'GreatestEarthMap') {
         TerrainBuilder.setRainfall(50, 43, 1500);
     }
-    
+
     console.log("modelRivers...");
     TerrainBuilder.modelRivers(5, 15, globals.g_NavigableRiverTerrain);
     console.log("validateAndFixTerrain (2)...");
@@ -134,6 +181,7 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
         addFeatures(iWidth, iHeight);
         ynamp.extraJungle(iWidth, iHeight, importedMap);
     } else {
+        addFeatures(iWidth, iHeight);
         ynamp.placeFeatures(iWidth, iHeight, importedMap, mapType);
     }
     TerrainBuilder.validateAndFixTerrain();
@@ -145,7 +193,7 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
             const terrainRow = GameInfo.Terrains.lookup(terrain);
             let rainfall = GameplayMap.getRainfall(iX, iY);
             let iElevation = GameplayMap.getElevation(iX, iY);
-            console.log("Validate (" + iX + "," + iY +") - Elevation = " + iElevation + ", rainfall = " + rainfall + ", terrain = " + terrainRow.TerrainType);
+            console.log("Validate (" + iX + "," + iY + ") - Elevation = " + iElevation + ", rainfall = " + rainfall + ", terrain = " + terrainRow.TerrainType);
             if (terrain == globals.g_CoastTerrain) {
                 TerrainBuilder.setPlotTag(iX, iY, PlotTags.PLOT_TAG_WATER);
                 if (iNumPlayers1 > iNumPlayers2) {
@@ -190,11 +238,9 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     console.log("generateResources...");
     generateResources(iWidth, iHeight, westContinent, eastContinent, iNumPlayers1, iNumPlayers2);
     console.log("assignStartPositions...");
+    startPositions = assignStartPositions(iNumPlayers1, iNumPlayers2, westContinent, eastContinent, iStartSectorRows, iStartSectorCols, startSectors);
+    console.log("assignTSL... (2nd pass)");
     startPositions = assignTSL(mapName);
-    if (startPositions === undefined || startPositions.length == 0) {
-        console.log("TSL Failed, calling assignStartPositions...");
-        startPositions = assignStartPositions(iNumPlayers1, iNumPlayers2, westContinent, eastContinent, iStartSectorRows, iStartSectorCols, startSectors);
-    }
     generateDiscoveries(iWidth, iHeight, startPositions);
     console.log("dumpResources...");
     dumpResources(iWidth, iHeight);
@@ -216,7 +262,7 @@ function placeVolcanoes(mapName) {
     let numPlaced = 0;
     for (let i = 0; i < GameInfo.ExtraPlacement.length; ++i) {
         let row = GameInfo.ExtraPlacement[i];
-        if (row.MapName == mapName && row.FeatureType=='FEATURE_VOLCANO') {
+        if (row.MapName == mapName && row.FeatureType == 'FEATURE_VOLCANO') {
             TerrainBuilder.setTerrainType(row.X, row.Y, globals.g_MountainTerrain);
             const featureParam = {
                 Feature: globals.g_VolcanoFeature,
@@ -234,14 +280,14 @@ function placeVolcanoes(mapName) {
 
 
 function assignTSL(mapName) {
-    console.log("Assigning YnAMP TSL");
+    console.log("Assigning YnAMP TSL for " + mapName);
     const startPositions = []; // Plot indices for start positions chosen
     const TSL = {};
-    
+
     for (let i = 0; i < GameInfo.StartPosition.length; ++i) {
         let row = GameInfo.StartPosition[i];
         if (row.MapName == mapName) {
-            TSL[row.Civilization] = {X: row.X, Y: row.Y};
+            TSL[row.Civilization] = { X: row.X, Y: row.Y };
         }
     }
 
@@ -252,13 +298,13 @@ function assignTSL(mapName) {
     for (let i = 0; i < aliveMajorIds.length; i++) {
 
         //console.log("aliveMajorIds["+i+"] = "+ aliveMajorIds[i]);
-        
+
         let iPlayer = aliveMajorIds[i];
         let uiCivType = Players.getEverAlive()[iPlayer].civilizationType;
         let civTypeName = GameInfo.Civilizations.lookup(uiCivType).CivilizationType;
         //console.log("uiCivType = "+ uiCivType);
-        console.log("CivType = "+ civTypeName);
-        
+        console.log("CivType = " + civTypeName);
+
         let startPosition = TSL[civTypeName];
         if (startPosition === undefined) {
             console.log("NO TSL FOR PLAYER: " + civTypeName + " " + iPlayer);
