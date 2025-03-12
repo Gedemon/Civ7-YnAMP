@@ -181,7 +181,7 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
         addFeatures(iWidth, iHeight);
         ynamp.extraJungle(iWidth, iHeight, importedMap);
     } else {
-        addFeatures(iWidth, iHeight);
+        addFeatures(iWidth, iHeight); // place random features (ynamp.placeFeatures might remove/overwrite them)
         ynamp.placeFeatures(iWidth, iHeight, importedMap, mapType);
     }
     TerrainBuilder.validateAndFixTerrain();
