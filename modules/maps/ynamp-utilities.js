@@ -423,20 +423,27 @@ export function placeFeatures(iWidth, iHeight, importedMap, mapType) {
 
     for (let iY = 0; iY < iHeight; iY++) {
         for (let iX = 0; iX < iWidth; iX++) {
-            let feature = getFeatureFromRow(importedMap[iX][iY]);
+            let featureIndex = getFeatureFromRow(importedMap[iX][iY]);
+
+            const featureParam = {
+                Feature: featureIndex,
+                Direction: -1,
+                Elevation: 0
+            };
+
             console.log("importedMap[" + iX + "][" + iY + "]) = " + getFeatureFromRow(importedMap[iX][iY]));
-            console.log("getFeatureFromRow(" + getFeatureFromRow(importedMap[iX][iY]) + ") = " + feature);
-            if (feature == 0) {
+            console.log("getFeatureFromRow(" + getFeatureFromRow(importedMap[iX][iY]) + ") = " + featureIndex);
+            if (featureIndex == 0) {
                 console.log("Force no feature at (" + iX + "," + iY + ")");
                 TerrainBuilder.setFeatureType(iX, iY, 0);
-            } else if (feature == -1) {
+            } else if (featureIndex == -1) {
                 console.log("Keep random feature at (" + iX + "," + iY + ")");
             } else { // use saved feature from file
-                if (TerrainBuilder.canHaveFeature(iX, iY, feature)) {
-                console.log("Can place at (" + iX + "," + iY + ") feature = " + feature);
-                TerrainBuilder.setFeatureType(iX, iY, feature);
+                if (TerrainBuilder.canHaveFeature(iX, iY, featureParam)) {
+                    console.log("Can place at (" + iX + "," + iY + ") feature = " + featureIndex);
+                    TerrainBuilder.setFeatureType(iX, iY, featureParam);
                 } else {
-                    console.log("Cannot place at (" + iX + "," + iY + ") feature = " + feature);
+                    console.log("Cannot place at (" + iX + "," + iY + ") feature = " + featureIndex);
                 }
             }
         }
