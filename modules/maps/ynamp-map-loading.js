@@ -177,11 +177,10 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     addNaturalWonders(iWidth, iHeight, iNumNaturalWonders, naturalWonderEvent);
     console.log("addFloodplains...");
     TerrainBuilder.addFloodplains(4, 10);
+    addFeatures(iWidth, iHeight);
     if (mapType == 'CIV6') {
-        addFeatures(iWidth, iHeight);
         ynamp.extraJungle(iWidth, iHeight, importedMap);
     } else {
-        addFeatures(iWidth, iHeight); // place random features (ynamp.placeFeatures might remove/overwrite them)
         ynamp.placeFeatures(iWidth, iHeight, importedMap, mapType);
     }
     TerrainBuilder.validateAndFixTerrain();
@@ -237,6 +236,9 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     dumpPermanentSnow(iWidth, iHeight);
     console.log("generateResources...");
     generateResources(iWidth, iHeight, westContinent, eastContinent, iNumPlayers1, iNumPlayers2);
+    if (mapType == 'CIV7') {
+        ynamp.placeResources(iWidth, iHeight, importedMap, mapType);
+    }
     console.log("assignStartPositions...");
     startPositions = assignStartPositions(iNumPlayers1, iNumPlayers2, westContinent, eastContinent, iStartSectorRows, iStartSectorCols, startSectors);
     console.log("assignTSL... (2nd pass)");
