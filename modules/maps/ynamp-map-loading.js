@@ -10,7 +10,7 @@ import { addFeatures, designateBiomes } from '/base-standard/maps/feature-biome-
 import * as globals from '/base-standard/maps/map-globals.js';
 import * as utilities from '/base-standard/maps/map-utilities.js';
 import { addNaturalWonders } from '/base-standard/maps/natural-wonder-generator.js';
-import { generateResources } from '/base-standard/maps/resource-generator.js';
+import { generateResourcesYnAMP } from '/ged-ynamp/maps/ynamp-resource-generator.js';
 import { addVolcanoes } from '/base-standard/maps/volcano-generator.js';
 import { assignAdvancedStartRegions } from '/base-standard/maps/assign-advanced-start-region.js';
 import { generateDiscoveries } from '/base-standard/maps/discovery-generator.js';
@@ -233,7 +233,7 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     dumpFeatures(iWidth, iHeight);
     dumpPermanentSnow(iWidth, iHeight);
     console.log("generateResources...");
-    generateResources(iWidth, iHeight, westContinent, eastContinent, iNumPlayers1, iNumPlayers2);
+    generateResourcesYnAMP(iWidth, iHeight, westContinent, eastContinent, iNumPlayers1, iNumPlayers2);
     if (mapType == 'CIV7') {
         ynamp.placeResources(iWidth, iHeight, importedMap, mapType);
     }
