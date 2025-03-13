@@ -1,6 +1,22 @@
 import * as globals from '/base-standard/maps/map-globals.js';
 import * as utilities from '/base-standard/maps/map-utilities.js';
 
+export function getVersion() {
+    // Modding is not defined in MapGeneration context... (13-Mar-25)
+    /*
+    const allMods = Modding.getInstalledMods()
+    allMods.forEach((mod) => {
+        if (mod.handle != null) {
+            const modInfo = Modding.getModInfo(handle);
+            if (modInfo.id == "ged-ynamp") {
+                return Modding.getModProperty(modInfo.handle, 'Version');
+            }
+        }
+    });
+    //*/
+    return GlobalParameters.YNAMP_VERSION;
+}
+
 /*
  *  map script
  *
@@ -309,7 +325,7 @@ function getTerrainFromCiv7Row(row) {
     if (typeof(terrain) == 'number') {
         return terrain;
     } else {
-        return GameInfo.Terrains.find(t => t.TerrainType == terrain).$index;;
+        return GameInfo.Terrains.find(t => t.TerrainType == terrain).$index;
     }
 }
 
@@ -318,7 +334,7 @@ function getBiomeFromCiv7Row(row) {
     if (typeof(biome) == 'number') {
         return biome;
     } else {
-        return GameInfo.Biomes.find(t => t.BiomeType == biome).$index;;
+        return GameInfo.Biomes.find(t => t.BiomeType == biome).$index;
     }
 }
 
@@ -327,7 +343,7 @@ function getFeatureFromCiv7Row(row) {
     if (typeof(feature) == 'number') {
         return feature;
     } else {
-        return GameInfo.Features.find(t => t.FeatureType == feature).$index;;
+        return GameInfo.Features.find(t => t.FeatureType == feature).$index;
     }
 }
 
@@ -336,7 +352,7 @@ function getResourceFromCiv7Row(row) {
     if (typeof (resource) == 'number') {
         return resource;
     } else {
-        return GameInfo.Resources.find(t => t.ResourceType == resource).$index;;
+        return GameInfo.Resources.find(t => t.ResourceType == resource).$index;
     }
 }
 
@@ -510,7 +526,7 @@ export function importSnow(iWidth, iHeight, importedMap) {
     for (let iY = 0; iY < iHeight; iY++) {
         for (let iX = 0; iX < iWidth; iX++) {   
             if (isCiv6RowSnow(importedMap[iX][iY])) {
-                console.log("Snow (" + iX + "," + iY +") = " + importedMap[iX][iY][0]);
+                //console.log("Snow (" + iX + "," + iY +") = " + importedMap[iX][iY][0]);
                 MapPlotEffects.addPlotEffect(GameplayMap.getIndexFromXY(iX, iY), aWeightEffect);
             }
         }
@@ -520,15 +536,13 @@ export function importSnow(iWidth, iHeight, importedMap) {
 export function extraJungle(iWidth, iHeight, importedMap) {
     let featIdx = GameInfo.Features.find(t => t.FeatureType == 'FEATURE_RAINFOREST').$index;
     console.log("YnAMP : Extra Jungle...");
-    console.log(iHeight);
-    console.log(iWidth);
 
     for (let iY = 0; iY < iHeight; iY++) {
         for (let iX = 0; iX < iWidth; iX++) {           
             let feature = GameplayMap.getFeatureType(iX, iY);
             if (GameplayMap.isWater(iX, iY) == false && feature == FeatureTypes.NO_FEATURE && GameplayMap.isNavigableRiver(iX, iY) == false) {
                 if (isCiv6RowJungle(importedMap[iX][iY]) ) {//&& canAddFeature(iX, iY, featIdx, true /*bScatterable*/, false /*bRiverMouth*/, false /*bCoastal*/, false /*bNearRiver*/, false /*bIsolated*/, false /*bReef*/, false /*bIce*/)) {
-                    console.log("Extra Jungle (" + iX + "," + iY +") = " + importedMap[iX][iY][0]);
+                    //console.log("Extra Jungle (" + iX + "," + iY +") = " + importedMap[iX][iY][0]);
                      const featureParam = {
                         Feature: featIdx,
                         Direction: -1,
@@ -541,13 +555,75 @@ export function extraJungle(iWidth, iHeight, importedMap) {
     }
 }
 
-export function expandCoastsPlus(iWest, iEast, iHeight) {
+export function validate (iWidth, iHeight, iNumPlayers1, iNumPlayers2) {
+    
+    // Fix for distant land resources on homeland
+    // (generateResources hemispheres are hardcoded, on Earth map with the old world / new world ratio being != 1/2 it causes issues )
+    let uiStartAgeHash = Configuration.getGameValue("StartAge");
+    let resourceReplace = {};
+    GameInfo.Resources.forEach((o) => {
+        var resourceInfo = o;
+        if (resourceInfo && resourceInfo.Tradeable) {
+            if (ResourceBuilder.isResourceValidForAge(resourceInfo.ResourceType, uiStartAgeHash)) {
+                let sResourceType = resourceInfo.ResourceType;
+                switch (sResourceType) {
+                    case "RESOURCE_SILVER":
+                        resourceReplace["RESOURCE_SILVER_DISTANT_LANDS"] = GameInfo.Resources.find(t => t.ResourceType == sResourceType).$index;
+                        break;
+                    case "RESOURCE_GOLD":
+                        resourceReplace["RESOURCE_GOLD_DISTANT_LANDS"] = GameInfo.Resources.find(t => t.ResourceType == sResourceType).$index;
+                        break;
+                    case "RESOURCE_KAOLIN":
+                        resourceReplace["RESOURCE_COCOA"] = GameInfo.Resources.find(t => t.ResourceType == sResourceType).$index;
+                        break;
+                    case "RESOURCE_IVORY":
+                        resourceReplace["RESOURCE_SPICES"] = GameInfo.Resources.find(t => t.ResourceType == sResourceType).$index;
+                        break;
+                    case "RESOURCE_COTTON":
+                        resourceReplace["RESOURCE_SUGAR"] = GameInfo.Resources.find(t => t.ResourceType == sResourceType).$index;
+                        break;
+                    case "RESOURCE_HIDES":
+                        resourceReplace["RESOURCE_TEA"] = GameInfo.Resources.find(t => t.ResourceType == sResourceType).$index;
+                        break;
+                    default:
+                }
+            }
+        }
+    });
+    
+    
     for (let iY = 0; iY < iHeight; iY++) {
-        for (let iX = iWest; iX < iEast; iX++) {
+        for (let iX = 0; iX < iWidth; iX++) {
             let terrain = GameplayMap.getTerrainType(iX, iY);
-            if (terrain == globals.g_OceanTerrain) {
-                if (GameplayMap.isAdjacentToShallowWater(iX, iY) && TerrainBuilder.getRandomNumber(2, "Shallow Water Scater Scatter") == 0) {
-                    TerrainBuilder.setTerrainType(iX, iY, globals.g_CoastTerrain);
+            const terrainRow = GameInfo.Terrains.lookup(terrain);
+            let rainfall = GameplayMap.getRainfall(iX, iY);
+            let iElevation = GameplayMap.getElevation(iX, iY);
+            let plotTag = "WEST";
+            if (GameplayMap.hasPlotTag(iX, iY, PlotTags.PLOT_TAG_EAST_LANDMASS) || GameplayMap.hasPlotTag(iX, iY, PlotTags.PLOT_TAG_EAST_WATER)) {
+                plotTag = "EAST";
+            }
+            //console.log("Validate (" + iX + "," + iY + ") - Elevation = " + iElevation + ", rainfall = " + rainfall + ", terrain = " + terrainRow.TerrainType + ", plotTag = " + plotTag + " num1 > num2 = " + (iNumPlayers1 > iNumPlayers2));
+            let bIsDistantLand = false;
+            if (iNumPlayers1 > iNumPlayers2) { // "EAST" is Distant Land
+                bIsDistantLand = plotTag == "EAST";
+            } else {
+                bIsDistantLand = plotTag == "WEST";
+            }
+            if (!bIsDistantLand) {
+                let iResource = GameplayMap.getResourceType(iX, iY);
+                if (iResource != ResourceTypes.NO_RESOURCE) {
+                    let resourceInfo = GameInfo.Resources.lookup(iResource);
+                    if (resourceInfo != null && resourceInfo.Hemispheres == 1) {
+                        console.log("  - FOUND DISTANT LAND RESOURCE IN HOME LAND : " + resourceInfo.ResourceType);
+                        let iResource = resourceReplace[resourceInfo.ResourceType];
+                        ResourceBuilder.setResourceType(iX, iY, ResourceTypes.NO_RESOURCE); // Remove distant land resources
+                        if (typeof resourceReplace[resourceInfo.ResourceType] !== 'undefined' && ResourceBuilder.canHaveResource(iX, iY, iResource)) {
+                            ResourceBuilder.setResourceType(iX, iY, iResource);
+                            console.log("    - replaced");
+                        } else {
+                            console.log("    - can't replace, removed");
+                        }
+                    }
                 }
             }
         }

@@ -22,7 +22,7 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
 
     //let importedMap = GetMap();
     let mapType = ynamp.getMapType(importedMap);
-    let version = GlobalParameters.YNAMP_VERSION;
+    let version = ynamp.getVersion(); //GlobalParameters.YNAMP_VERSION;
     console.log("YnAMP v" + version + " - Generating map type : " + mapType);
 
     let naturalWonderEvent = false;
@@ -36,20 +36,21 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     let uiMapSize = GameplayMap.getMapSize();
     console.log("uiMapSize = " + uiMapSize);
     let startPositions = [];
+    let trueStartPositions = [];
     let mapInfo = GameInfo.Maps.lookup(uiMapSize);
     if (mapInfo == null)
         return;
     // Establish continent boundaries
     let westContinent = {
-        west: genParameters.westStart,  //1, //(3 * globals.g_AvoidSeamOffset) + globals.g_IslandWidth,
-        east: genParameters.westEnd,    //31, //(iWidth / 2) - globals.g_AvoidSeamOffset,
+        west: genParameters.westStart,
+        east: genParameters.westEnd,
         south: globals.g_PolarWaterRows,
         north: iHeight - globals.g_PolarWaterRows,
         continent: 0
     };
     let eastContinent = {
-        west: genParameters.eastStart,  //32, //westContinent.east + (4 * globals.g_AvoidSeamOffset) + globals.g_IslandWidth,
-        east: genParameters.eastEnd,    //102, //iWidth - globals.g_AvoidSeamOffset,
+        west: genParameters.eastStart,
+        east: genParameters.eastEnd,
         south: globals.g_PolarWaterRows,
         north: iHeight - globals.g_PolarWaterRows,
         continent: 0
@@ -62,8 +63,8 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
         continent: 0
     };
     let eastContinent2 = {
-        west: (iWidth / 2) + globals.g_AvoidSeamOffset,
-        east: (iWidth / 2) + globals.g_AvoidSeamOffset + globals.g_IslandWidth,
+        west: genParameters.westEnd + globals.g_AvoidSeamOffset,
+        east: genParameters.westEnd + globals.g_AvoidSeamOffset + globals.g_IslandWidth,
         south: globals.g_PolarWaterRows,
         north: iHeight - globals.g_PolarWaterRows,
         continent: 0
@@ -77,19 +78,21 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     let iStartSectorRows = mapInfo.StartSectorRows;
     let iStartSectorCols = mapInfo.StartSectorCols;
 
+    // Assign TSL in multiple passes to handle cases when a custom/DLC civ doesn't have a TSL
+    // Check first which hemisphere should be homeland
     console.log("assignTSL...(1st pass)");
-    startPositions = assignTSL(mapName);
+    trueStartPositions = assignTSL(mapName);
 
     let aliveMajorIds = Players.getAliveMajorIds();
 
-    let eastWestLimit = (westContinent.west + eastContinent.east) / 2;
+    let eastWestLimit = (westContinent.east + eastContinent.west) / 2; //(westContinent.west + eastContinent.east) / 2;
     console.log("East/West limit is " + eastWestLimit);
 
     let westTSL = 0;
     let eastTSL = 0;
     for (let aliveMajorIndex = 0; aliveMajorIndex < aliveMajorIds.length; aliveMajorIndex++) {
         if (aliveMajorIndex < aliveMajorIds.length) {
-            let startPlotIndex = startPositions[aliveMajorIndex];
+            let startPlotIndex = trueStartPositions[aliveMajorIndex];
             let iStartX = startPlotIndex % GameplayMap.getGridWidth();
             let iStartY = Math.floor(startPlotIndex / GameplayMap.getGridWidth());
 
@@ -134,16 +137,15 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     let bHumanNearEquator = utilities.needHumanNearEquator();
     startSectors = chooseStartSectors(iNumPlayers1, iNumPlayers2, iStartSectorRows, iStartSectorCols, bHumanNearEquator);
     ynamp.createMapTerrains(iWidth, iHeight, westContinent, eastContinent, importedMap, mapType);
+    
+    // May use those with an option to add random islands on custom maps
     //utilities.createIslands(iWidth, iHeight, westContinent2, eastContinent2, 4);
     //utilities.createIslands(iWidth, iHeight, westContinent2, eastContinent2, 5);
     //utilities.createIslands(iWidth, iHeight, westContinent2, eastContinent2, 6);
+    
     console.log("validateAndFixTerrain (1)...");
     TerrainBuilder.validateAndFixTerrain();
-    // ynamp.expandCoastsPlus(westContinent.west, westContinent.east, iHeight);
-    // ynamp.expandCoastsPlus(eastContinent.west, eastContinent.east, iHeight);
-    // ynamp.expandCoastsPlus(0, westContinent.west - globals.g_OceanWaterColumns, iHeight);
-    // ynamp.expandCoastsPlus(westContinent.east + globals.g_OceanWaterColumns, eastContinent.west - globals.g_OceanWaterColumns, iHeight);
-    // ynamp.expandCoastsPlus(eastContinent.east + globals.g_OceanWaterColumns, 0, iHeight);
+    
     console.log("recalculateAreas (1)");
     AreaBuilder.recalculateAreas();
     TerrainBuilder.stampContinents();
@@ -189,10 +191,6 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     for (let iY = 0; iY < iHeight; iY++) {
         for (let iX = 0; iX < iWidth; iX++) {
             let terrain = GameplayMap.getTerrainType(iX, iY);
-            const terrainRow = GameInfo.Terrains.lookup(terrain);
-            let rainfall = GameplayMap.getRainfall(iX, iY);
-            let iElevation = GameplayMap.getElevation(iX, iY);
-            console.log("Validate (" + iX + "," + iY + ") - Elevation = " + iElevation + ", rainfall = " + rainfall + ", terrain = " + terrainRow.TerrainType);
             if (terrain == globals.g_CoastTerrain) {
                 TerrainBuilder.setPlotTag(iX, iY, PlotTags.PLOT_TAG_WATER);
                 if (iNumPlayers1 > iNumPlayers2) {
@@ -239,11 +237,26 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     if (mapType == 'CIV7') {
         ynamp.placeResources(iWidth, iHeight, importedMap, mapType);
     }
+    
+    // Call assignStartPositions to prevent issues when a custom/DLC civ doesn't have a TSL (to do: custom assignStartPositions with distance check)
     console.log("assignStartPositions...");
     startPositions = assignStartPositions(iNumPlayers1, iNumPlayers2, westContinent, eastContinent, iStartSectorRows, iStartSectorCols, startSectors);
+    
+    // Now assign TSL
     console.log("assignTSL... (2nd pass)");
-    startPositions = assignTSL(mapName);
+    trueStartPositions = assignTSL(mapName);
+    if (trueStartPositions.length == 0) {
+        console.log("TSL Failed or no TSL for the current civs on that map, using positions from assignStartPositions only...");
+    } else {
+        for (let i = 0; i < aliveMajorIds.length; i++) {
+            if (trueStartPositions[i]) {
+                console.log("Update Starting Position list for majorPlayer #" + i + " from plot #" + startPositions[i] + " to TSL plot #" + trueStartPositions[i]);
+                startPositions[i] = trueStartPositions[i];
+            }
+        }
+    }
     generateDiscoveries(iWidth, iHeight, startPositions);
+    ynamp.validate(iWidth, iHeight, iNumPlayers1, iNumPlayers2);
     console.log("dumpResources...");
     dumpResources(iWidth, iHeight);
     FertilityBuilder.recalculate(); // Must be after features are added.

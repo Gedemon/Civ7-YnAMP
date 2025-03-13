@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Mod id="ged-ynamp" version="1"
-	xmlns="ModInfo">
+<Mod id="ged-ynamp" version="1" xmlns="ModInfo">
 	<Properties>
 		<Name>LOC_MODULE_YNAMP_NAME</Name>
 		<Description>LOC_MODULE_YNAMP_DESCRIPTION</Description>
 		<Authors>Gedemon</Authors>
-		<Package>MOD</Package>
+		<Package>Mod</Package>
 	</Properties>
 	<Dependencies>
 		<Mod id="base-standard" title="LOC_MODULE_BASE_STANDARD_NAME"/>
