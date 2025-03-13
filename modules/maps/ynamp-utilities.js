@@ -300,7 +300,8 @@ g_VolcanoFeature = GameInfo.Features.find(t => t.FeatureType == 'FEATURE_VOLCANO
 const civ7MapIDX = {
     terrain: 0,
     biome: 1,
-    feature: 2
+    feature: 2,
+    resource : 3
 }
 
 function getTerrainFromCiv7Row(row) {
@@ -327,6 +328,15 @@ function getFeatureFromCiv7Row(row) {
         return feature;
     } else {
         return GameInfo.Features.find(t => t.FeatureType == feature).$index;;
+    }
+}
+
+function getResourceFromCiv7Row(row) {
+    let resource = row[civ7MapIDX.resource];
+    if (typeof (resource) == 'number') {
+        return resource;
+    } else {
+        return GameInfo.Resources.find(t => t.ResourceType == resource).$index;;
     }
 }
 
@@ -423,11 +433,66 @@ export function placeFeatures(iWidth, iHeight, importedMap, mapType) {
 
     for (let iY = 0; iY < iHeight; iY++) {
         for (let iX = 0; iX < iWidth; iX++) {
-            let feature = getFeatureFromRow(importedMap[iX][iY]);
-            if (TerrainBuilder.canHaveFeature(iX, iY, feature)) {
-                TerrainBuilder.setFeatureType(iX, iY, feature);
-            } else {
-                console.log("Can't place at (" + iX + "," + iY +") feature = " + feature);
+            let featureIndex = getFeatureFromRow(importedMap[iX][iY]);
+
+            const featureParam = {
+                Feature: featureIndex,
+                Direction: -1,
+                Elevation: 0
+            };
+
+            if (featureIndex == 0) {
+                console.log("Feature[" + iX + "][" + iY + "]) = " + featureIndex + " (None)");
+                TerrainBuilder.setFeatureType(iX, iY, 0);
+            } else if (featureIndex == -1) {
+                console.log("Feature[" + iX + "][" + iY + "]) = " + featureIndex + " (Random)");
+            } else { 
+                TerrainBuilder.setFeatureType(iX, iY, 0); // Remove existing feature if any
+                if (TerrainBuilder.canHaveFeature(iX, iY, featureParam)) {
+                    console.log("Feature[" + iX + "][" + iY + "]) = " + featureIndex + " (" + GameInfo.Features[featureIndex].Name + ") ... OK");
+                    TerrainBuilder.setFeatureType(iX, iY, featureParam);
+                } else {
+                    console.log("Feature[" + iX + "][" + iY + "]) = " + featureIndex + " (" + GameInfo.Features[featureIndex].Name + ") ... Cannot place!");
+                }
+            }
+        }
+    }
+}
+
+export function placeResources(iWidth, iHeight, importedMap, mapType) {
+    console.log("YnAMP : Add Resources...");
+
+    let getResourceFromRow;
+
+    switch (mapType) {
+        case "CIV6":
+            //getResourceFromRow = getResourceFromCiv6Row;
+            break;
+        case "CIV7":
+            getResourceFromRow = getResourceFromCiv7Row;
+            break;
+        default:
+            console.log("MapType Error = " + mapType);
+            return;
+    }
+
+    for (let iY = 0; iY < iHeight; iY++) {
+        for (let iX = 0; iX < iWidth; iX++) {
+            let resourceIndex = getResourceFromRow(importedMap[iX][iY]);
+            
+            if (resourceIndex == 0) {
+                console.log("Resource[" + iX + "][" + iY + "]) = " + resourceIndex + " (None)");
+                ResourceBuilder.setResourceType(iX, iY, ResourceTypes.NO_RESOURCE);
+            } else if (resourceIndex == -1) {
+                console.log("Resource[" + iX + "][" + iY + "]) = " + resourceIndex + "(Random)");
+            } else { 
+                ResourceBuilder.setResourceType(iX, iY, ResourceTypes.NO_RESOURCE); // Remove existing resource if any
+                if (ResourceBuilder.canHaveResource(iX, iY, resourceIndex)) {
+                    console.log("Resource[" + iX + "][" + iY + "]) = " + resourceIndex + " (" + GameInfo.Resources[resourceIndex].Name + ") ... OK");
+                    ResourceBuilder.setResourceType(iX, iY, resourceIndex);
+                } else {
+                    console.log("Resource[" + iX + "][" + iY + "]) = " + resourceIndex + " (" + GameInfo.Resources[resourceIndex].Name + ") ... Cannot place!");
+                }
             }
         }
     }
