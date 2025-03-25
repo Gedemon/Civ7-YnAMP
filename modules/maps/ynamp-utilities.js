@@ -468,7 +468,8 @@ export function placeFeatures(iWidth, iHeight, importedMap, mapType) {
                     console.log("Feature[" + iX + "][" + iY + "]) = " + featureIndex + " (" + GameInfo.Features[featureIndex].Name + ") ... OK");
                     TerrainBuilder.setFeatureType(iX, iY, featureParam);
                 } else {
-                    console.log("Feature[" + iX + "][" + iY + "]) = " + featureIndex + " (" + GameInfo.Features[featureIndex].Name + ") ... Cannot place!");
+                    console.log("Resource[" + iX + "][" + iY + "]) = " + resourceIndex + " (" + GameInfo.Resources[resourceIndex].Name + ") - WARNING: ResourceBuilder check failed, incompatible position !");
+                    TerrainBuilder.setFeatureType(iX, iY, featureParam);
                 }
             }
         }
@@ -507,7 +508,8 @@ export function placeResources(iWidth, iHeight, importedMap, mapType) {
                     console.log("Resource[" + iX + "][" + iY + "]) = " + resourceIndex + " (" + GameInfo.Resources[resourceIndex].Name + ") ... OK");
                     ResourceBuilder.setResourceType(iX, iY, resourceIndex);
                 } else {
-                    console.log("Resource[" + iX + "][" + iY + "]) = " + resourceIndex + " (" + GameInfo.Resources[resourceIndex].Name + ") ... Cannot place!");
+                    console.log("Resource[" + iX + "][" + iY + "]) = " + resourceIndex + " (" + GameInfo.Resources[resourceIndex].Name + ") - WARNING: ResourceBuilder check failed, incompatible position !");
+                    ResourceBuilder.setResourceType(iX, iY, resourceIndex); // 
                 }
             }
         }

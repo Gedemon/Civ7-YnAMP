@@ -7,40 +7,48 @@
 	
 	<!-- Major Civilizations -->
 	<StartPosition>
-		<!-- Civ7 -->
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_ABBASID"			X="65"	Y="39" />
+		<!-- Antiquity -->
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_AKSUM"			X="63"	Y="29" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_AMERICA"			X="19"	Y="47" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_BUGANDA"			X="59"	Y="19" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_ASSYRIA"		    X="65"	Y="41" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_CARTHAGE"		X="48"	Y="36" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_CHOLA"			X="59"	Y="19" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_EGYPT"			X="58"	Y="35" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_FRENCH_EMPIRE"	X="42"	Y="48" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_GREECE"			X="57"	Y="40" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_HAN"				X="82"	Y="50" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_HAWAII"			X="102"	Y="36" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_INCA"			X="23"	Y="17" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_KHMER"			X="83"	Y="37" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MAJAPAHIT"		X="87"	Y="24" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MAURYA"			X="78"	Y="39" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MAYA"			X="15"	Y="31" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MEIJI"			X="98"	Y="48" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MEXICO"			X="11"	Y="34" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MING"			X="87"	Y="48" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MISSISSIPPIAN"	X="11"	Y="49" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MONGOLIA"		X="81"	Y="57" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MUGHAL"			X="75"	Y="39" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_NORMAN"			X="41"	Y="48" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_GREAT_BRITAIN"	X="39"	Y="52" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_PERSIA"			X="67"	Y="41" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_PRUSSIA"			X="56"	Y="56" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_QING"			X="87"	Y="56" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_ROME"			X="50"	Y="42" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_RUSSIA"			X="60"	Y="60" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_SILLA"			X="93"	Y="51" />
+		<!-- Exploration -->
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_ABBASID"			X="65"	Y="39" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_BULGARIA"		X="56"	Y="47" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_CHOLA"			X="59"	Y="19" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_DAI_VIET"		X="84"	Y="41" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_HAWAII"			X="102"	Y="36" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_INCA"			X="23"	Y="17" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MAJAPAHIT"		X="87"	Y="24" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MING"			X="87"	Y="48" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MONGOLIA"		X="81"	Y="57" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_NORMAN"			X="41"	Y="48" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_SHAWNEE"			X="17"	Y="48" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_SIAM"			X="83"	Y="38" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_SONGHAI"			X="47"	Y="26" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_SPAIN"			X="37"	Y="38" />
+		<!-- Modern -->
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_AMERICA"			X="19"	Y="47" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_BUGANDA"			X="59"	Y="19" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_FRENCH_EMPIRE"	X="42"	Y="48" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MEIJI"			X="98"	Y="48" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MEXICO"			X="11"	Y="34" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MUGHAL"			X="75"	Y="39" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_NEPAL"			X="76"	Y="41" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_GREAT_BRITAIN"	X="39"	Y="52" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_PRUSSIA"			X="56"	Y="56" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_QAJAR"			X="67"	Y="43" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_QING"			X="87"	Y="56" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_RUSSIA"			X="60"	Y="60" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_SIAM"			X="83"	Y="38" />
 		
 	</StartPosition>
 	

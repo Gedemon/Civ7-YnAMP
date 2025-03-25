@@ -65,7 +65,7 @@ export function generateResourcesYnAMP(iWidth, iHeight, continent1, continent2, 
                     let iBuffer = Math.floor(iWidth / 28.0);
 
                     //console.log("GameplayMap.getHemisphere(" + iX + ") = " + GameplayMap.getHemisphere(iX));
-                    console.log("GameplayMap.getHemisphereYnAMP(" + iX + ") = " + getHemisphereYnAMP(iX, continent1, continent2, bEastBias));
+                   // console.log("GameplayMap.getHemisphereYnAMP(" + iX + ") = " + getHemisphereYnAMP(iX, continent1, continent2, bEastBias));
 
                     let hemisphereX = getHemisphereYnAMP(iX, continent1, continent2, bEastBias);
 

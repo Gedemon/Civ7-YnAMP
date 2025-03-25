@@ -59,6 +59,9 @@
 				<ScenarioScripts>
 					<Item>scenario/test.js</Item>
 				</ScenarioScripts>
+				<MapGenScripts>
+					<Item>scenario/test.js</Item>
+				</MapGenScripts>
 			</Actions>
 		</ActionGroup>
 		<ActionGroup id="shell-ynamp" scope="shell" criteria="always">
