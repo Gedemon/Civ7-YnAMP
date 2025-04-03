@@ -461,7 +461,7 @@ export function placeFeatures(iWidth, iHeight, importedMap, mapType) {
                 console.log("Feature[" + iX + "][" + iY + "]) = " + featureIndex + " (None)");
                 TerrainBuilder.setFeatureType(iX, iY, 0);
             } else if (featureIndex == -1) {
-                console.log("Feature[" + iX + "][" + iY + "]) = " + featureIndex + " (Random)");
+                //console.log("Feature[" + iX + "][" + iY + "]) = " + featureIndex + " (Random)");
             } else { 
                 TerrainBuilder.setFeatureType(iX, iY, 0); // Remove existing feature if any
                 if (TerrainBuilder.canHaveFeature(iX, iY, featureParam)) {
@@ -501,7 +501,7 @@ export function placeResources(iWidth, iHeight, importedMap, mapType) {
                 console.log("Resource[" + iX + "][" + iY + "]) = " + resourceIndex + " (None)");
                 ResourceBuilder.setResourceType(iX, iY, ResourceTypes.NO_RESOURCE);
             } else if (resourceIndex == -1) {
-                console.log("Resource[" + iX + "][" + iY + "]) = " + resourceIndex + "(Random)");
+                //console.log("Resource[" + iX + "][" + iY + "]) = " + resourceIndex + "(Random)");
             } else { 
                 ResourceBuilder.setResourceType(iX, iY, ResourceTypes.NO_RESOURCE); // Remove existing resource if any
                 if (ResourceBuilder.canHaveResource(iX, iY, resourceIndex)) {

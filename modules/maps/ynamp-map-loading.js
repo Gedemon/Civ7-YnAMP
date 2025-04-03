@@ -81,7 +81,7 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     // Assign TSL in multiple passes to handle cases when a custom/DLC civ doesn't have a TSL
     // Check first which hemisphere should be homeland
     console.log("assignTSL...(1st pass)");
-    trueStartPositions = assignTSL(mapName);
+    trueStartPositions = assignTSL(mapName, startPositions);
 
     let aliveMajorIds = Players.getAliveMajorIds();
 
@@ -132,6 +132,26 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
         let iNum2 = iNumPlayers2;
         iNumPlayers1 = iNum2;
         iNumPlayers2 = iNum1;
+    }
+
+    console.log("Players.getAliveMajorIds().length = " + Players.getAliveMajorIds());
+    console.log("iNumPlayers1 = " + iNumPlayers1);
+    console.log("iNumPlayers2 = " + iNumPlayers2);
+
+    // assignStartPositions will assign start positions only to iNumPlayers1 + iNumPlayers2 civs
+    if (iNumPlayers1 + iNumPlayers2 < Players.getAliveMajorIds()) {
+        
+        let delta = Players.getAliveMajorIds() - iNumPlayers1 - iNumPlayers2;
+
+        // Add extra to the biggest side
+        if (iNumPlayers1 >= iNumPlayers2) {
+            iNumPlayers1 += delta;
+        } else {
+            iNumPlayers2 += delta;
+        }
+
+        console.log("Adjusted iNumPlayers1 = " + iNumPlayers1);
+        console.log("Adjusted iNumPlayers2 = " + iNumPlayers2);
     }
 
     let bHumanNearEquator = utilities.needHumanNearEquator();
@@ -239,18 +259,24 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     }
     
     // Call assignStartPositions to prevent issues when a custom/DLC civ doesn't have a TSL (to do: custom assignStartPositions with distance check)
-    console.log("assignStartPositions...");
+    console.log("assignStartPositions... (iNumPlayers1=" + iNumPlayers1 + " iNumPlayers2=" + iNumPlayers2 + ")");
     startPositions = assignStartPositions(iNumPlayers1, iNumPlayers2, westContinent, eastContinent, iStartSectorRows, iStartSectorCols, startSectors);
-    
+
+    console.log("startPositions.length = " + startPositions.length);
+
+    for (let i = 0; i < startPositions.length; i++) {
+        console.log("startPositions[" + i + "] = (" + Math.floor(startPositions[i] / GameplayMap.getGridWidth()) + ", " + startPositions[i] % GameplayMap.getGridWidth() + ")");
+    }
+
     // Now assign TSL
     console.log("assignTSL... (2nd pass)");
-    trueStartPositions = assignTSL(mapName);
+    trueStartPositions = assignTSL(mapName, startPositions);
     if (trueStartPositions.length == 0) {
         console.log("TSL Failed or no TSL for the current civs on that map, using positions from assignStartPositions only...");
     } else {
         for (let i = 0; i < aliveMajorIds.length; i++) {
             if (trueStartPositions[i]) {
-                console.log("Update Starting Position list for majorPlayer #" + i + " from plot #" + startPositions[i] + " to TSL plot #" + trueStartPositions[i]);
+                console.log("Update Starting Position list for majorPlayer #" + i + " from plot #" + startPositions[i] + " (" + Math.floor(startPositions[i] / GameplayMap.getGridWidth()) + ", " + startPositions[i] % GameplayMap.getGridWidth() + ")" + " to TSL plot #" + trueStartPositions[i] + " (" + Math.floor(trueStartPositions[i] / GameplayMap.getGridWidth()) + ", " + trueStartPositions[i] % GameplayMap.getGridWidth() + ")");
                 startPositions[i] = trueStartPositions[i];
             }
         }
@@ -294,7 +320,7 @@ function placeVolcanoes(mapName) {
 }
 
 
-function assignTSL(mapName) {
+function assignTSL(mapName, defaultStartPositions) {
     console.log("Assigning YnAMP TSL for " + mapName);
     const startPositions = []; // Plot indices for start positions chosen
     const TSL = {};
@@ -322,7 +348,14 @@ function assignTSL(mapName) {
 
         let startPosition = TSL[civTypeName];
         if (startPosition === undefined) {
-            console.log("NO TSL FOR PLAYER: " + civTypeName + " " + iPlayer);
+            if (defaultStartPositions.length == 0) {
+                console.log("NO TSL FOR PLAYER: " + civTypeName + " " + iPlayer);
+            } else {
+                let iPlot = defaultStartPositions[i];
+                console.log("NO TSL FOR PLAYER: " + civTypeName + " " + iPlayer + " Use default start position (" + Math.floor(iPlot / GameplayMap.getGridWidth()) + ", " + iPlot % GameplayMap.getGridWidth() + ")");
+                startPositions[i] = iPlot;
+                StartPositioner.setStartPosition(iPlot, iPlayer);
+            }
         } else {
             let iPlot = startPosition.Y * GameplayMap.getGridWidth() + startPosition.X;
             startPositions[i] = iPlot;
