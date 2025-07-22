@@ -24,7 +24,7 @@
 		<!-- Exploration -->
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_ABBASID"			X="65"	Y="39" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_BULGARIA"		X="56"	Y="47" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_CHOLA"			X="59"	Y="19" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_CHOLA"			X="77"	Y="32" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_DAI_VIET"		X="84"	Y="41" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_HAWAII"			X="102"	Y="36" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_INCA"			X="23"	Y="17" />

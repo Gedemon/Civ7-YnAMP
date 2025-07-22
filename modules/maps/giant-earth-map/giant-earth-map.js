@@ -18,7 +18,7 @@ function requestMapData(initParams) {
     engine.call("SetMapInitData", initParams);
 }
 function generateMap() {
-    const mapName = 'GiantEarthMap';
+    const mapName = 'GiantEarth';
 	let genParameters = {
         westStart: 1,
         westEnd: 110,

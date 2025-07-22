@@ -11,6 +11,7 @@ import * as globals from '/base-standard/maps/map-globals.js';
 import * as utilities from '/base-standard/maps/map-utilities.js';
 import { addNaturalWonders } from '/base-standard/maps/natural-wonder-generator.js';
 import { generateResourcesYnAMP } from '/ged-ynamp/maps/ynamp-resource-generator.js';
+import { generateResources } from '/base-standard/maps/resource-generator.js';
 import { addVolcanoes } from '/base-standard/maps/volcano-generator.js';
 import { assignAdvancedStartRegions } from '/base-standard/maps/assign-advanced-start-region.js';
 import { generateDiscoveries } from '/base-standard/maps/discovery-generator.js';
@@ -69,7 +70,10 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
         north: iHeight - globals.g_PolarWaterRows,
         continent: 0
     };
-    console.log(westContinent.west, ", ", westContinent.east, ", ", eastContinent.west, ", ", eastContinent.east, ", ", westContinent2.west, ", ", westContinent2.east, ", ", eastContinent2.west, ", ", eastContinent2.east, ", ");
+    console.log("westContinent = { west:", westContinent.west, ", east:", westContinent.east, ", south:", westContinent.south, ", north:", westContinent.north, ", continent:", westContinent.continent, "}");
+    console.log("eastContinent = { west:", eastContinent.west, ", east:", eastContinent.east, ", south:", eastContinent.south, ", north:", eastContinent.north, ", continent:", eastContinent.continent, "}");
+    console.log("westContinent2 = { west:", westContinent2.west, ", east:", westContinent2.east, ", south:", westContinent2.south, ", north:", westContinent2.north, ", continent:", westContinent2.continent, "}");
+    console.log("eastContinent2 = { west:", eastContinent2.west, ", east:", eastContinent2.east, ", south:", eastContinent2.south, ", north:", eastContinent2.north, ", continent:", eastContinent2.continent, "}");
     let startSectors;
     let iNumPlayers1 = mapInfo.PlayersLandmass1;
     let iNumPlayers2 = mapInfo.PlayersLandmass2;
@@ -171,6 +175,7 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     TerrainBuilder.stampContinents();
     //addMountains(iWidth, iHeight);
     let numPlaced = placeVolcanoes(mapName);
+    console.log("Num Volcanoes = " + numPlaced);
     if (numPlaced == 0) {
         addVolcanoes(iWidth, iHeight);
     }
@@ -183,16 +188,21 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     //addHills(iWidth, iHeight);
     console.log("buildRainfallMap...");
     buildRainfallMap(iWidth, iHeight);
-
     // test high rainfall near Rome for river
-    if (mapName == 'GreatestEarthMap') {
-        TerrainBuilder.setRainfall(50, 43, 1500);
-    }
-
+    //if (mapName == 'GreatestEarthMap') {
+    //    TerrainBuilder.setRainfall(50, 43, 1500);
+    //}
+    
+    // debugging (crashes after river generation) 
+    console.log("validateAndFixTerrain (debug..")
+    TerrainBuilder.validateAndFixTerrain();
+    
     console.log("modelRivers...");
     TerrainBuilder.modelRivers(5, 15, globals.g_NavigableRiverTerrain);
     console.log("validateAndFixTerrain (2)...");
-    TerrainBuilder.validateAndFixTerrain();
+    // crashes here
+    //TerrainBuilder.validateAndFixTerrain();
+    console.log("defineNamedRivers...");
     TerrainBuilder.defineNamedRivers();
     ynamp.createBiomes(iWidth, iHeight, importedMap, mapType);
     //designateBiomes(iWidth, iHeight);
@@ -205,7 +215,8 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     } else {
         ynamp.placeFeatures(iWidth, iHeight, importedMap, mapType);
     }
-    TerrainBuilder.validateAndFixTerrain();
+    console.log("validateAndFixTerrain (3)")
+    //TerrainBuilder.validateAndFixTerrain();
     console.log("adjustOceanPlotTags...");
     utilities.adjustOceanPlotTags(iNumPlayers1 > iNumPlayers2);
     for (let iY = 0; iY < iHeight; iY++) {
@@ -243,7 +254,7 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     if (mapType == 'CIV6') {
         ynamp.importSnow(iWidth, iHeight, importedMap);
     }
-    console.log("dump...");
+    console.log("Debug dump...");
     dumpStartSectors(startSectors);
     dumpContinents(iWidth, iHeight);
     dumpTerrain(iWidth, iHeight);
@@ -253,12 +264,20 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     dumpFeatures(iWidth, iHeight);
     dumpPermanentSnow(iWidth, iHeight);
     console.log("generateResources...");
-    generateResourcesYnAMP(iWidth, iHeight, westContinent, eastContinent, iNumPlayers1, iNumPlayers2);
+    generateResources(iWidth, iHeight);
+    // deprecated
+    //generateResourcesYnAMP(iWidth, iHeight, westContinent, eastContinent, iNumPlayers1, iNumPlayers2);
     if (mapType == 'CIV7') {
         ynamp.placeResources(iWidth, iHeight, importedMap, mapType);
     }
     
     // Call assignStartPositions to prevent issues when a custom/DLC civ doesn't have a TSL (to do: custom assignStartPositions with distance check)
+    // this code is failing with v1.2.3
+    // [2025-07-22 18:03:19]	Uncaught TypeError: Cannot read properties of undefined (reading 'south')
+    // D:/Steam/steamapps/common/Sid Meier's Civilization VII/Base/modules/base-standard/maps/assign-starting-plots.js:847
+    // for (let iY = region.south; iY <= region.north; iY++) {
+    // disable for know, let gamecore handle placement of civs without TSL
+    /*
     console.log("assignStartPositions... (iNumPlayers1=" + iNumPlayers1 + " iNumPlayers2=" + iNumPlayers2 + ")");
     startPositions = assignStartPositions(iNumPlayers1, iNumPlayers2, westContinent, eastContinent, iStartSectorRows, iStartSectorCols, startSectors);
 
@@ -267,7 +286,6 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     for (let i = 0; i < startPositions.length; i++) {
         console.log("startPositions[" + i + "] = (" + Math.floor(startPositions[i] / GameplayMap.getGridWidth()) + ", " + startPositions[i] % GameplayMap.getGridWidth() + ")");
     }
-
     // Now assign TSL
     console.log("assignTSL... (2nd pass)");
     trueStartPositions = assignTSL(mapName, startPositions);
@@ -281,6 +299,12 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
             }
         }
     }
+    //*/
+
+    // With this method civs with no TSL are placed by gamecore, not assignStartPositions (which means no bias AFAIK)
+    console.log("assignTSL... (no backup)");
+    trueStartPositions = assignTSL(mapName);
+
     generateDiscoveries(iWidth, iHeight, startPositions);
     ynamp.validate(iWidth, iHeight, iNumPlayers1, iNumPlayers2);
     console.log("dumpResources...");
@@ -319,7 +343,8 @@ function placeVolcanoes(mapName) {
     return numPlaced;
 }
 
-
+/*//
+// this function requires assignStartPositions to have been called first
 function assignTSL(mapName, defaultStartPositions) {
     console.log("Assigning YnAMP TSL for " + mapName);
     const startPositions = []; // Plot indices for start positions chosen
@@ -356,6 +381,47 @@ function assignTSL(mapName, defaultStartPositions) {
                 startPositions[i] = iPlot;
                 StartPositioner.setStartPosition(iPlot, iPlayer);
             }
+        } else {
+            let iPlot = startPosition.Y * GameplayMap.getGridWidth() + startPosition.X;
+            startPositions[i] = iPlot;
+            console.log("TSL FOR PLAYER: " + civTypeName + " " + iPlayer + " (" + startPosition.X + ", " + startPosition.Y + ")");
+            StartPositioner.setStartPosition(iPlot, iPlayer);
+        }
+    }
+    return startPositions;
+}
+//*/
+
+// this function will only assign TSL
+function assignTSL(mapName) {
+    console.log("Assigning YnAMP TSL");
+    const startPositions = []; // Plot indices for start positions chosen
+    const TSL = {};
+    
+    for (let i = 0; i < GameInfo.StartPosition.length; ++i) {
+        let row = GameInfo.StartPosition[i];
+        if (row.MapName == mapName) {
+            TSL[row.Civilization] = {X: row.X, Y: row.Y};
+        }
+    }
+
+    // The index values we will be dealing with in this function, correspond to the index
+    // in the Alive Majors array.
+    let aliveMajorIds = Players.getAliveMajorIds();
+
+    for (let i = 0; i < aliveMajorIds.length; i++) {
+
+        //console.log("aliveMajorIds["+i+"] = "+ aliveMajorIds[i]);
+        
+        let iPlayer = aliveMajorIds[i];
+        let uiCivType = Players.getEverAlive()[iPlayer].civilizationType;
+        let civTypeName = GameInfo.Civilizations.lookup(uiCivType).CivilizationType;
+        //console.log("uiCivType = "+ uiCivType);
+        console.log("CivType = "+ civTypeName);
+        
+        let startPosition = TSL[civTypeName];
+        if (startPosition === undefined) {
+            console.log("NO TSL FOR PLAYER: " + civTypeName + " " + iPlayer);
         } else {
             let iPlot = startPosition.Y * GameplayMap.getGridWidth() + startPosition.X;
             startPositions[i] = iPlot;

@@ -1,3 +1,5 @@
+// deprecated
+
 import * as utilities from '/base-standard/maps/map-utilities.js';
 
 export function getHemisphereYnAMP(iX, continent1, continent2, bEastBias) {
