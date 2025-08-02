@@ -52,6 +52,7 @@
 				<ImportFiles>
 					<Item>icons/happy_cat.png</Item>
 					<Item>icons/civ6_earth.png</Item>
+					<Item>scenario/test.js</Item>
 				</ImportFiles>
 				<UpdateIcons>
 					<Item>icons/ynamp-icons.xml</Item>

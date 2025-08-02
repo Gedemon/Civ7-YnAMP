@@ -13,20 +13,20 @@
 		<!-- <Replace Domain="StandardMapSizes" MapSizeType="MAPSIZE_LARGE" Name="LOC_MAPSIZE_LARGE_NAME" Description="LOC_MAPSIZE_LARGE_DESCRIPTION" MinPlayers="2" MaxPlayers="10" MaxHumans="10" DefaultPlayers="8" SortIndex="50"/> -->
 		<!-- <Replace Domain="StandardMapSizes" MapSizeType="MAPSIZE_HUGE" Name="LOC_MAPSIZE_HUGE_NAME" Description="LOC_MAPSIZE_HUGE_DESCRIPTION" MinPlayers="2" MaxPlayers="10" MaxHumans="10" DefaultPlayers="8" SortIndex="60"/> -->
 		<Row Domain="StandardMapSizes" MapSizeType="MAPSIZE_GREATEST_EARTH" Name="LOC_MAP_GREATEST_EARTH_SIZE_NAME" Description="LOC_MAP_GREATEST_EARTH_SIZE_DESCRIPTION" MinPlayers="2" MaxPlayers="40" MaxHumans="10" DefaultPlayers="8" SortIndex="65"/>
-		<Row Domain="StandardMapSizes" MapSizeType="MAPSIZE_MASSIVE" Name="LOC_MAPSIZE_MASSIVE_NAME" Description="LOC_MAPSIZE_MASSIVE_DESCRIPTION" MinPlayers="2" MaxPlayers="40" MaxHumans="10" DefaultPlayers="8" SortIndex="70"/>
-		<Row Domain="StandardMapSizes" MapSizeType="MAPSIZE_GIANT" Name="LOC_MAPSIZE_GIANT_NAME" Description="LOC_MAPSIZE_GIANT_DESCRIPTION" MinPlayers="2" MaxPlayers="40" MaxHumans="10" DefaultPlayers="8" SortIndex="80"/>
+		<Row Domain="StandardMapSizes" MapSizeType="MAPSIZE_MASSIVE" Name="LOC_MAPSIZE_MASSIVE_NAME" Description="LOC_MAPSIZE_MASSIVE_DESCRIPTION" MinPlayers="2" MaxPlayers="40" MaxHumans="10" DefaultPlayers="12" SortIndex="70"/>
+		<Row Domain="StandardMapSizes" MapSizeType="MAPSIZE_GIANT" Name="LOC_MAPSIZE_GIANT_NAME" Description="LOC_MAPSIZE_GIANT_DESCRIPTION" MinPlayers="2" MaxPlayers="40" MaxHumans="10" DefaultPlayers="12" SortIndex="80"/>
 		<!-- <Row Domain="StandardMapSizes" MapSizeType="MAPSIZE_GIANT_ROTATED" Name="LOC_MAPSIZE_GIANT_ROTATED_NAME" Description="LOC_MAPSIZE_GIANT_DESCRIPTION" MinPlayers="2" MaxPlayers="10" MaxHumans="10" DefaultPlayers="8" SortIndex="85"/> -->
-		<Row Domain="StandardMapSizes" MapSizeType="MAPSIZE_LUDICROUS" Name="LOC_MAPSIZE_LUDICROUS_NAME" Description="LOC_MAPSIZE_LUDICROUS_DESCRIPTION" MinPlayers="2" MaxPlayers="40" MaxHumans="10" DefaultPlayers="8" SortIndex="90"/>
+		<Row Domain="StandardMapSizes" MapSizeType="MAPSIZE_LUDICROUS" Name="LOC_MAPSIZE_LUDICROUS_NAME" Description="LOC_MAPSIZE_LUDICROUS_DESCRIPTION" MinPlayers="2" MaxPlayers="40" MaxHumans="10" DefaultPlayers="12" SortIndex="90"/>
 		
 		<!-- Distant Lands MapSize Domain - For ages where only civs on landmass1 can win victories. 
 			This domain has lower MaxHumans so human players will only spawn on landmass1.  -->
 		<!-- <Replace Domain="DistantLandsMapSizes" MapSizeType="MAPSIZE_LARGE" Name="LOC_MAPSIZE_LARGE_NAME" Description="LOC_MAPSIZE_LARGE_DESCRIPTION" MinPlayers="2" MaxPlayers="10" MaxHumans="5" DefaultPlayers="8" SortIndex="50"/> -->
 		<!-- <Replace Domain="DistantLandsMapSizes" MapSizeType="MAPSIZE_HUGE" Name="LOC_MAPSIZE_HUGE_NAME" Description="LOC_MAPSIZE_HUGE_DESCRIPTION" MinPlayers="2" MaxPlayers="10" MaxHumans="5" DefaultPlayers="8" SortIndex="60"/> -->
 		<Row Domain="DistantLandsMapSizes" MapSizeType="MAPSIZE_GREATEST_EARTH" Name="LOC_MAP_GREATEST_EARTH_SIZE_NAME" Description="LOC_MAP_GREATEST_EARTH_SIZE_DESCRIPTION" MinPlayers="2" MaxPlayers="40" MaxHumans="5" DefaultPlayers="8" SortIndex="65"/>
-		<Row Domain="DistantLandsMapSizes" MapSizeType="MAPSIZE_MASSIVE" Name="LOC_MAPSIZE_MASSIVE_NAME" Description="LOC_MAPSIZE_MASSIVE_DESCRIPTION" MinPlayers="2" MaxPlayers="40" MaxHumans="5" DefaultPlayers="8" SortIndex="70"/>
-		<Row Domain="DistantLandsMapSizes" MapSizeType="MAPSIZE_GIANT" Name="LOC_MAPSIZE_GIANT_NAME" Description="LOC_MAPSIZE_GIANT_DESCRIPTION" MinPlayers="2" MaxPlayers="40" MaxHumans="5" DefaultPlayers="8" SortIndex="80"/>
+		<Row Domain="DistantLandsMapSizes" MapSizeType="MAPSIZE_MASSIVE" Name="LOC_MAPSIZE_MASSIVE_NAME" Description="LOC_MAPSIZE_MASSIVE_DESCRIPTION" MinPlayers="2" MaxPlayers="40" MaxHumans="5" DefaultPlayers="12" SortIndex="70"/>
+		<Row Domain="DistantLandsMapSizes" MapSizeType="MAPSIZE_GIANT" Name="LOC_MAPSIZE_GIANT_NAME" Description="LOC_MAPSIZE_GIANT_DESCRIPTION" MinPlayers="2" MaxPlayers="40" MaxHumans="5" DefaultPlayers="12" SortIndex="80"/>
 		<!-- <Row Domain="DistantLandsMapSizes" MapSizeType="MAPSIZE_GIANT_ROTATED" Name="LOC_MAPSIZE_GIANT_ROTATED_NAME" Description="LOC_MAPSIZE_GIANT_DESCRIPTION" MinPlayers="2" MaxPlayers="10" MaxHumans="5" DefaultPlayers="8" SortIndex="85"/> -->
-		<Row Domain="DistantLandsMapSizes" MapSizeType="MAPSIZE_LUDICROUS" Name="LOC_MAPSIZE_LUDICROUS_NAME" Description="LOC_MAPSIZE_LUDICROUS_DESCRIPTION" MinPlayers="2" MaxPlayers="40" MaxHumans="5" DefaultPlayers="8" SortIndex="90"/>
+		<Row Domain="DistantLandsMapSizes" MapSizeType="MAPSIZE_LUDICROUS" Name="LOC_MAPSIZE_LUDICROUS_NAME" Description="LOC_MAPSIZE_LUDICROUS_DESCRIPTION" MinPlayers="2" MaxPlayers="40" MaxHumans="5" DefaultPlayers="12" SortIndex="90"/>
 	</MapSizes>
 	<Parameters>
 		<!-- Advanced Options -->

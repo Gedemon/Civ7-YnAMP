@@ -202,6 +202,7 @@ const civ6MapIDX = {
 }
 
 function getTerrainFromCiv6(sCiv6Terrain) {
+    //console.log("getTerrainFromCiv6 - terrain = " + sCiv6Terrain + " : " + typeof(sCiv6Terrain));
     if (sCiv6Terrain.search("MOUNTAIN") != -1) {
         return globals.g_MountainTerrain;
     } else if (sCiv6Terrain.search("HILLS") != -1) {
@@ -233,7 +234,7 @@ function getBiomeFromCiv6(sCiv6Terrain) {
 
 function getTerrainFromCiv6Row(row) {
     let terrain = row[civ6MapIDX.terrain];
-    //console.log("getTerrainFromCiv6Row - terrain = " + terrain);
+    //console.log("getTerrainFromCiv6Row - terrain = " + terrain + " : " + typeof(terrain));
     if (typeof(terrain) == 'number') {
         let sCiv6Terrain = civ6Terrain[terrain];
         return getTerrainFromCiv6(sCiv6Terrain);
@@ -291,6 +292,17 @@ function isCiv6RowSnow(row) {
     } else {
         return terrain.search("SNOW") != -1;
     }
+}
+
+export function isCiv6RowRiver(row) {
+    let river = row[civ6MapIDX.river];
+
+    // Check for rivers in all three directions
+    if (river[0][0] !== 0 || river[1][0] !== 0 || river[2][0] !== 0) {
+    return true;
+    }
+
+    return false;
 }
 
 
@@ -423,6 +435,7 @@ export function createBiomes(iWidth, iHeight, importedMap, mapType) {
     for (let iY = 0; iY < iHeight; iY++) {
         for (let iX = 0; iX < iWidth; iX++) {
             let biome = getBiomeFromRow(importedMap[iX][iY]);
+//            TerrainBuilder.setBiomeType(iX, iY, globals.g_MarineBiome);
             TerrainBuilder.setBiomeType(iX, iY, biome);
             //console.log("SetBiome (" + iX + "," + iY +") = " + importedMap[iX][iY][0] + " = " + biome);
         }
@@ -630,6 +643,98 @@ export function validate (iWidth, iHeight, iNumPlayers1, iNumPlayers2) {
             }
         }
     }
+}
+
+export function dumpElevationPrecise(iWidth, iHeight) {
+    // Dump it out as an ASCII map to "Scripting.log"
+    for (let iY = iHeight - 1; iY >= 0; iY--) {
+        let str = '';
+        if (iY % 2 == 1) {
+            str += '   ';
+        }
+        for (let iX = 0; iX < iWidth; iX++) {
+            if (GameplayMap.isWater(iX, iY) == false) {
+                let elevation = GameplayMap.getElevation(iX, iY);
+                let elevationToDisplay = ' ';
+                let iNumToDisplay = elevation;
+                if (iNumToDisplay < 100) {
+                    elevationToDisplay += ' ';
+                }
+                if (iNumToDisplay < 10) {
+                    elevationToDisplay += ' ';
+                }
+                elevationToDisplay += iNumToDisplay.toString();
+                str += elevationToDisplay + ' ';
+            }
+            else {
+                str += '     ';
+            }
+        }
+        console.log(str);
+    }
+}
+
+export function dumpRivers(iWidth, iHeight) {
+    // Dump it out as an ASCII map to "Scripting.log"
+    for (let iY = iHeight - 1; iY >= 0; iY--) {
+        let str = '';
+        if (iY % 2 == 1) {
+            str += ' ';
+        }
+        for (let iX = 0; iX < iWidth; iX++) {
+            if (GameplayMap.isWater(iX, iY) == false) {
+                let riverToDisplay = '.';
+                if (GameplayMap.isNavigableRiver(iX, iY)) {
+                    riverToDisplay = 'R';
+                }
+                else if (GameplayMap.isRiver(iX, iY)) {
+                    riverToDisplay = 'r';
+                }
+                str += riverToDisplay + ' ';
+            }
+            else {
+                str += '  ';
+            }
+        }
+        console.log(str);
+    }
+}
+
+export function dumpciv6ImportedRivers(iWidth, iHeight, map) {
+    // Dump it out as an ASCII map to "Scripting.log"
+    for (let iY = iHeight - 1; iY >= 0; iY--) {
+        let str = '';
+        if (iY % 2 == 1) {
+            str += ' ';
+        }
+        for (let iX = 0; iX < iWidth; iX++) {
+            const row = map[iX][iY];
+            if (getTerrainFromCiv6Row(row) != globals.g_OceanTerrain && getTerrainFromCiv6Row(row) != globals.g_CoastTerrain) {
+                let riverToDisplay = '.';
+                if (isCiv6RowRiver(row)) {
+                    riverToDisplay = 'r';
+                }
+                str += riverToDisplay + ' ';
+            }
+            else {
+                str += '  ';
+            }
+        }
+        console.log(str);
+    }
+}
+
+export function isAdjacentToTerrain(iX, iY, terrain) {
+    for (let iDirection = 0; iDirection < DirectionTypes.NUM_DIRECTION_TYPES; iDirection++) {
+        let iIndex = GameplayMap.getIndexFromXY(iX, iY);
+        let iLocation = GameplayMap.getLocationFromIndex(iIndex);
+        let iAdjacentX = GameplayMap.getAdjacentPlotLocation(iLocation, iDirection).x;
+        let iAdjacentY = GameplayMap.getAdjacentPlotLocation(iLocation, iDirection).y;
+        if (GameplayMap.getTerrainType(iAdjacentX, iAdjacentY) == terrain) {
+            return true;
+        }
+    }
+    return false;
 }
 
 console.log("Loaded YnAMP Utilities");

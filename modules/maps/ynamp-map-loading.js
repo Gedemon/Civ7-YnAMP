@@ -182,30 +182,108 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     //generateLakes(iWidth, iHeight, iTilesPerLake);
     console.log("recalculateAreas (2)");
     AreaBuilder.recalculateAreas();
-    console.log("buildElevation...");
-    TerrainBuilder.buildElevation();
-    console.log("addHills...");
+    //console.log("buildElevation...");
+    //TerrainBuilder.buildElevation();
+    //console.log("addHills...");
     //addHills(iWidth, iHeight);
-    console.log("buildRainfallMap...");
-    buildRainfallMap(iWidth, iHeight);
+    //console.log("buildRainfallMap...");
     // test high rainfall near Rome for river
     //if (mapName == 'GreatestEarthMap') {
     //    TerrainBuilder.setRainfall(50, 43, 1500);
     //}
     
     // debugging (crashes after river generation) 
-    console.log("validateAndFixTerrain (debug..")
-    TerrainBuilder.validateAndFixTerrain();
-    
-    console.log("modelRivers...");
-    TerrainBuilder.modelRivers(5, 15, globals.g_NavigableRiverTerrain);
-    console.log("validateAndFixTerrain (2)...");
-    // crashes here
-    //TerrainBuilder.validateAndFixTerrain();
+    console.log("validateAndFixTerrain (debug)...")
+    TerrainBuilder.validateAndFixTerrain();    
+
+    if (mapType == 'XCIV6') { // test to guide rivers generation
+
+        console.log("dump civ6 imported map river plots")
+        ynamp.dumpciv6ImportedRivers(iWidth, iHeight, importedMap)
+
+        // Save the current map terrain
+        let tempTerrain = [];    
+        for (let iY = 0; iY < iHeight; iY++) {
+            for (let iX = 0; iX < iWidth; iX++) {
+                if (!tempTerrain[iX]) tempTerrain[iX] = [];
+                tempTerrain[iX][iY] = GameplayMap.getTerrainType(iX, iY);
+                const row = importedMap[iX][iY];
+                if (GameplayMap.isWater(iX, iY) == false) {
+                    if (ynamp.isCiv6RowRiver(row) == false) {
+                    TerrainBuilder.setTerrainType(iX, iY, globals.g_MountainTerrain);
+                    } else {
+                    TerrainBuilder.setTerrainType(iX, iY, globals.g_FlatTerrain);
+                    TerrainBuilder.setRainfall(iX, iY, 1500);
+                    }
+                }
+            }
+        }
+        dumpTerrain(iWidth, iHeight);
+        
+        for (let iY = 0; iY < iHeight; iY++) {
+            for (let iX = 0; iX < iWidth; iX++) {
+                let numNonRiverPlots = 0;
+                for (let iDirection = 0; iDirection < DirectionTypes.NUM_DIRECTION_TYPES; iDirection++) {
+                    let iIndex = GameplayMap.getIndexFromXY(iX, iY);
+                    let iLocation = GameplayMap.getLocationFromIndex(iIndex);
+                    let iAdjacentX = GameplayMap.getAdjacentPlotLocation(iLocation, iDirection).x;
+                    let iAdjacentY = GameplayMap.getAdjacentPlotLocation(iLocation, iDirection).y;
+                    if (GameplayMap.getTerrainType(iAdjacentX, iAdjacentY) == globals.g_MountainTerrain || GameplayMap.isWater(iAdjacentX, iAdjacentY)) {
+                        numNonRiverPlots++;
+                    }
+                }
+                if (numNonRiverPlots == 5) {
+                    TerrainBuilder.setRainfall(iX, iY, 2500);
+                }
+            }
+        }
+        console.log("dumpRainfall...");
+        dumpRainfall(iWidth, iHeight);
+
+        //console.log("modelRivers...");
+        //TerrainBuilder.modelRivers(5, 15, globals.g_NavigableRiverTerrain);
+
+        // Restore the original terrain
+        for (let iY = 0; iY < iHeight; iY++) {
+            for (let iX = 0; iX < iWidth; iX++) {
+                TerrainBuilder.setTerrainType(iX, iY, tempTerrain[iX][iY]);
+            }
+        }
+        console.log("buildElevation...");
+        TerrainBuilder.buildElevation();
+        //console.log("buildRainfallMap...");
+        //buildRainfallMap(iWidth, iHeight);
+        //console.log("dumpRainfall...");
+        //dumpRainfall(iWidth, iHeight);
+
+        console.log("modelRivers...");
+        TerrainBuilder.modelRivers(5, 15, globals.g_NavigableRiverTerrain);
+        
+        // Reset rainfall
+        for (let iY = 0; iY < iHeight; iY++) {
+            for (let iX = 0; iX < iWidth; iX++) {
+                TerrainBuilder.setRainfall(iX, iY, 0);
+            }
+        }
+
+        console.log("(re)buildRainfallMap...");
+        buildRainfallMap(iWidth, iHeight);
+
+    } else {
+        
+        console.log("buildElevation...");
+        TerrainBuilder.buildElevation();
+        console.log("buildRainfallMap...");
+        buildRainfallMap(iWidth, iHeight);
+        console.log("modelRivers...");
+        TerrainBuilder.modelRivers(5, 15, globals.g_NavigableRiverTerrain);
+    }
+    ynamp.dumpRivers(iWidth, iHeight);
+    console.log("validateAndFixTerrain (2)...");    
+    TerrainBuilder.validateAndFixTerrain(); // crashes here ?
     console.log("defineNamedRivers...");
     TerrainBuilder.defineNamedRivers();
-    ynamp.createBiomes(iWidth, iHeight, importedMap, mapType);
-    //designateBiomes(iWidth, iHeight);
+    ynamp.createBiomes(iWidth, iHeight, importedMap, mapType); //designateBiomes(iWidth, iHeight);
     addNaturalWonders(iWidth, iHeight, iNumNaturalWonders, naturalWonderEvent);
     console.log("addFloodplains...");
     TerrainBuilder.addFloodplains(4, 10);
