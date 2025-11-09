@@ -141,7 +141,7 @@ function generateMap() {
     TerrainBuilder.addFloodplains(4, 10);
     addFeatures(iWidth, iHeight);
     TerrainBuilder.validateAndFixTerrain();
-    utilities.adjustOceanPlotTags(iNumPlayers1 > iNumPlayers2);
+    //utilities.adjustOceanPlotTags(iNumPlayers1 > iNumPlayers2);
     for (let iY = 0; iY < iHeight; iY++) {
         for (let iX = 0; iX < iWidth; iX++) {
             let terrain = GameplayMap.getTerrainType(iX, iY);

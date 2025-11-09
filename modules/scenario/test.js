@@ -7,14 +7,14 @@ console.log("Loading YNAMP test.js");
 function requestInitializationParameters(initParams) {
     // Gedemon <<<<
     console.log("**** YNAMP - requestInitializationParameters ****");
-....// Gedemon >>>>/
+    // Gedemon >>>>/
     //engine.call("SetAgeInitializationParameters", initParams);
 }
 function generateTransition() {
 
     // Gedemon <<<<
     console.log("*** YNAMP generateTransition ***");
-....// Gedemon >>>>
+    // Gedemon >>>>
 }
 
 function requestMapData(initParams) {

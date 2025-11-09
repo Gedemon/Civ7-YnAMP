@@ -295,8 +295,8 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     }
     console.log("validateAndFixTerrain (3)")
     //TerrainBuilder.validateAndFixTerrain();
-    console.log("adjustOceanPlotTags...");
-    utilities.adjustOceanPlotTags(iNumPlayers1 > iNumPlayers2);
+    //console.log("adjustOceanPlotTags...");
+    //utilities.adjustOceanPlotTags(iNumPlayers1 > iNumPlayers2);
     for (let iY = 0; iY < iHeight; iY++) {
         for (let iX = 0; iX < iWidth; iX++) {
             let terrain = GameplayMap.getTerrainType(iX, iY);
@@ -355,7 +355,7 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     // D:/Steam/steamapps/common/Sid Meier's Civilization VII/Base/modules/base-standard/maps/assign-starting-plots.js:847
     // for (let iY = region.south; iY <= region.north; iY++) {
     // disable for know, let gamecore handle placement of civs without TSL
-    /*
+    //*
     console.log("assignStartPositions... (iNumPlayers1=" + iNumPlayers1 + " iNumPlayers2=" + iNumPlayers2 + ")");
     startPositions = assignStartPositions(iNumPlayers1, iNumPlayers2, westContinent, eastContinent, iStartSectorRows, iStartSectorCols, startSectors);
 
@@ -380,8 +380,8 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     //*/
 
     // With this method civs with no TSL are placed by gamecore, not assignStartPositions (which means no bias AFAIK)
-    console.log("assignTSL... (no backup)");
-    trueStartPositions = assignTSL(mapName);
+    //console.log("assignTSL... (no backup)");
+    //trueStartPositions = assignTSL(mapName);
 
     generateDiscoveries(iWidth, iHeight, startPositions);
     ynamp.validate(iWidth, iHeight, iNumPlayers1, iNumPlayers2);
@@ -421,7 +421,7 @@ function placeVolcanoes(mapName) {
     return numPlaced;
 }
 
-/*//
+//*//
 // this function requires assignStartPositions to have been called first
 function assignTSL(mapName, defaultStartPositions) {
     console.log("Assigning YnAMP TSL for " + mapName);
@@ -471,6 +471,7 @@ function assignTSL(mapName, defaultStartPositions) {
 //*/
 
 // this function will only assign TSL
+/*/
 function assignTSL(mapName) {
     console.log("Assigning YnAMP TSL");
     const startPositions = []; // Plot indices for start positions chosen
@@ -509,5 +510,5 @@ function assignTSL(mapName) {
     }
     return startPositions;
 }
-
+//*/
 console.log("Loaded ynamp-map-loading.js");
