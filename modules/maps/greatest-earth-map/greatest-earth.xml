@@ -4,68 +4,72 @@
 	<!-- +++++++++++++++++++++++++++++++++++ -->
 	<!-- "Greatest Earth Map" start position -->
 	<!-- +++++++++++++++++++++++++++++++++++ -->
-	
+
 	<!-- Major Civilizations -->
 	<StartPosition>
 		<!-- Antiquity -->
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_AKSUM"			X="63"	Y="29" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_ASSYRIA"		    X="65"	Y="41" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_CARTHAGE"		X="48"	Y="36" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_EGYPT"			X="58"	Y="35" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_GREECE"			X="57"	Y="40" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_HAN"				X="82"	Y="50" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_KHMER"			X="83"	Y="37" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MAURYA"			X="78"	Y="39" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MAYA"			X="15"	Y="31" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MISSISSIPPIAN"	X="11"	Y="49" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_PERSIA"			X="67"	Y="41" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_ROME"			X="50"	Y="42" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_SILLA"			X="93"	Y="51" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_AKSUM"					X="63"	Y="29" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_ASSYRIA"		    		X="65"	Y="41" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_CARTHAGE"				X="48"	Y="36" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_EGYPT"					X="58"	Y="35" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_GREECE"					X="57"	Y="40" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_HAN"						X="82"	Y="50" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_KHMER"					X="83"	Y="37" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MAURYA"					X="78"	Y="39" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MAYA"					X="15"	Y="31" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MISSISSIPPIAN"			X="11"	Y="49" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_PERSIA"					X="67"	Y="41" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_ROME"					X="50"	Y="42" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_SILLA"					X="93"	Y="51" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_TONGA"					X="3"	Y="16" />
 		<!-- Exploration -->
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_ABBASID"			X="65"	Y="39" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_BULGARIA"		X="56"	Y="47" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_CHOLA"			X="77"	Y="32" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_DAI_VIET"		X="84"	Y="41" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_HAWAII"			X="102"	Y="36" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_INCA"			X="23"	Y="17" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MAJAPAHIT"		X="87"	Y="24" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MING"			X="87"	Y="48" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MONGOLIA"		X="81"	Y="57" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_NORMAN"			X="41"	Y="48" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_SHAWNEE"			X="17"	Y="48" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_SONGHAI"			X="47"	Y="26" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_SPAIN"			X="37"	Y="38" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_ABBASID"					X="65"	Y="39" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_BULGARIA"				X="56"	Y="47" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_CHOLA"					X="77"	Y="32" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_DAI_VIET"				X="84"	Y="41" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_HAWAII"					X="102"	Y="36" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_ICELAND"					X="31"	Y="61" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_INCA"					X="23"	Y="17" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MAJAPAHIT"				X="87"	Y="24" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MING"					X="87"	Y="48" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MONGOLIA"				X="81"	Y="57" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_NORMAN"					X="41"	Y="48" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_REPUBLIC_OF_PIRATES"		X="23"	Y="37" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_SHAWNEE"					X="17"	Y="48" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_SONGHAI"					X="47"	Y="26" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_SPAIN"					X="37"	Y="38" />
 		<!-- Modern -->
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_AMERICA"			X="19"	Y="47" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_BUGANDA"			X="59"	Y="19" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_FRENCH_EMPIRE"	X="42"	Y="48" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MEIJI"			X="98"	Y="48" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MEXICO"			X="11"	Y="34" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MUGHAL"			X="75"	Y="39" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_NEPAL"			X="76"	Y="41" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_GREAT_BRITAIN"	X="39"	Y="52" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_PRUSSIA"			X="56"	Y="56" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_QAJAR"			X="67"	Y="43" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_QING"			X="87"	Y="56" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_RUSSIA"			X="60"	Y="60" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_SIAM"			X="83"	Y="38" />
-		
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_AMERICA"					X="19"	Y="47" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_BUGANDA"					X="59"	Y="19" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_FRENCH_EMPIRE"			X="42"	Y="48" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_GREAT_BRITAIN"			X="39"	Y="52" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MEIJI"					X="98"	Y="48" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MEXICO"					X="11"	Y="34" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MUGHAL"					X="75"	Y="39" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_NEPAL"					X="76"	Y="41" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_OTTOMANS"				X="59"	Y="45" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_PRUSSIA"					X="56"	Y="56" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_QAJAR"					X="67"	Y="43" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_QING"					X="87"	Y="56" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_RUSSIA"					X="60"	Y="60" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_SIAM"					X="83"	Y="38" />
+
 	</StartPosition>
-	
+
 	<!-- City States -->
 	<StartPosition>
-	
+
 	</StartPosition>
-	
-	<!--     Regions Positions    -->	
+
+	<!--     Regions Positions    -->
 	<RegionPosition>
 		<Replace MapName="GreatestEarthMap" Region="GROENLAND"			X="23" Y="59" Width="7" Height="4" />
 		<Replace MapName="GreatestEarthMap" Region="NORTH_AMERICA"		X="0" Y="41" Width="27" Height="15" />
 		<Replace MapName="GreatestEarthMap" Region="ARCTIC_AMERICA"		X="0" Y="56" Width="27" Height="7" />
-		<Replace MapName="GreatestEarthMap" Region="CENTRAL_AMERICA"		X="0" Y="22" Width="31" Height="19" />
-		<Replace MapName="GreatestEarthMap" Region="SOUTH_AMERICA_WEST"		X="17" Y="5" Width="10" Height="16" />
-		<Replace MapName="GreatestEarthMap" Region="SOUTH_AMERICA_EAST" 	X="27" Y="5" Width="18" Height="16" />
-		<Replace MapName="GreatestEarthMap" Region="ANTARCTIC_AMERICA"		X="23" Y="0" Width="12" Height="5" />
+		<Replace MapName="GreatestEarthMap" Region="CENTRAL_AMERICA"	X="0" Y="22" Width="31" Height="19" />
+		<Replace MapName="GreatestEarthMap" Region="SOUTH_AMERICA_WEST"	X="17" Y="5" Width="10" Height="16" />
+		<Replace MapName="GreatestEarthMap" Region="SOUTH_AMERICA_EAST" X="27" Y="5" Width="18" Height="16" />
+		<Replace MapName="GreatestEarthMap" Region="ANTARCTIC_AMERICA"	X="23" Y="0" Width="12" Height="5" />
 		<Replace MapName="GreatestEarthMap" Region="AUSTRALIA"			X="90" Y="5" Width="12" Height="14" />
 		<Replace MapName="GreatestEarthMap" Region="OCEANIA"			X="89" Y="20" Width="14" Height="19" />
 		<Replace MapName="GreatestEarthMap" Region="SOUTH_ASIA"			X="73" Y="24" Width="16" Height="17" />
@@ -73,7 +77,7 @@
 		<Replace MapName="GreatestEarthMap" Region="EAST_ASIA"			X="84" Y="41" Width="17" Height="14" />
 		<Replace MapName="GreatestEarthMap" Region="NORTH_ASIA"			X="70" Y="52" Width="30" Height="11" />
 		<Replace MapName="GreatestEarthMap" Region="MIDDLE_EAST"		X="59" Y="29" Width="14" Height="13" />
-		<Replace MapName="GreatestEarthMap" Region="TURKEY"			X="58" Y="42" Width="8" Height="6" />
+		<Replace MapName="GreatestEarthMap" Region="TURKEY"				X="58" Y="42" Width="8" Height="6" />
 		<Replace MapName="GreatestEarthMap" Region="MEDITERRANEAN"		X="32" Y="33" Width="30" Height="12" />
 		<Replace MapName="GreatestEarthMap" Region="SOUTH_EUROPA"		X="32" Y="39" Width="26" Height="7" />
 		<Replace MapName="GreatestEarthMap" Region="WEST_EUROPA"		X="31" Y="45" Width="24" Height="7" />
@@ -84,13 +88,13 @@
 		<Replace MapName="GreatestEarthMap" Region="SOUTH_AFRICA"		X="49" Y="1" Width="13" Height="14" />
 		<Replace MapName="GreatestEarthMap" Region="MADAGASCAR"			X="64" Y="4" Width="8" Height="9" />
 	</RegionPosition>
-	
-	
+
+
 	<ExtraPlacement>
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_RAPA_NUI"	X="15"	Y="9" TerrainType="TERRAIN_GRASS" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_OTTOMAN"		X="58"	Y="45" TerrainType="TERRAIN_GRASS" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_BYZANTIUM"	X="58"	Y="45" TerrainType="TERRAIN_GRASS" />
-		
+
 		<!-- +++++++++++++++++++++++++++ -->
 		<!--  GreatestEarthMap Volcanos  -->
 		<!-- +++++++++++++++++++++++++++ -->
@@ -136,9 +140,9 @@
 		<Replace MapName="GreatestEarthMap" X="25" Y="7"	TerrainType="TERRAIN_MOUNTAIN" FeatureType="FEATURE_VOLCANO" />
 		<Replace MapName="GreatestEarthMap" X="26" Y="8"	TerrainType="TERRAIN_MOUNTAIN" FeatureType="FEATURE_VOLCANO" />
 
-	<!-- +++++++++++++++++++++++++++ -->
-	<!--   Giant Earth Geothermal    -->
-	<!-- +++++++++++++++++++++++++++ -->
+		<!-- +++++++++++++++++++++++++++ -->
+		<!--   Giant Earth Geothermal    -->
+		<!-- +++++++++++++++++++++++++++ -->
 
 		<Replace MapName="GreatestEarthMap" X="1" Y="47"	RuleSet="RULESET_EXPANSION_2" 	FeatureType="FEATURE_GEOTHERMAL_FISSURE" />
 		<Replace MapName="GreatestEarthMap" X="4" Y="42"	RuleSet="RULESET_EXPANSION_2" 	FeatureType="FEATURE_GEOTHERMAL_FISSURE" />
@@ -240,7 +244,7 @@
 
 	</ExtraPlacement>
 
-	
+
 	<!--     Natural Wonders    -->
 	<NaturalWonderPosition>
 		<Replace MapName="GreatestEarthMap" X="100" Y="50" FeatureType="FEATURE_SUK_FUJI" TerrainType="TERRAIN_GRASS" />
@@ -252,28 +256,28 @@
 
 		<Replace MapName="GreatestEarthMap" X="85" Y="40" FeatureType="FEATURE_HA_LONG_BAY" TerrainType="TERRAIN_COAST" />
 		<Replace MapName="GreatestEarthMap" X="85" Y="41" FeatureType="FEATURE_HA_LONG_BAY" TerrainType="TERRAIN_COAST" />
-		
+
 		<!-- ****************** -->
 		<!-- Gathering Storm NW -->
 		<!-- ****************** -->
-		
+
 		<Replace MapName="GreatestEarthMap" X="90" Y="32" FeatureType="FEATURE_CHOCOLATEHILLS" TerrainType="TERRAIN_GRASS_HILLS" />
 		<Replace MapName="GreatestEarthMap" X="90" Y="33" FeatureType="FEATURE_CHOCOLATEHILLS" TerrainType="TERRAIN_GRASS_HILLS" />
 		<Replace MapName="GreatestEarthMap" X="91" Y="32" FeatureType="FEATURE_CHOCOLATEHILLS" TerrainType="TERRAIN_GRASS_HILLS" />
 		<Replace MapName="GreatestEarthMap" X="91" Y="33" FeatureType="FEATURE_CHOCOLATEHILLS" TerrainType="TERRAIN_GRASS_HILLS" />
-		
+
 		<Replace MapName="GreatestEarthMap" X="65" Y="45" FeatureType="FEATURE_GOBUSTAN" TerrainType="TERRAIN_PLAINS" />
 		<Replace MapName="GreatestEarthMap" X="66" Y="46" FeatureType="FEATURE_GOBUSTAN" TerrainType="TERRAIN_PLAINS" />
 		<Replace MapName="GreatestEarthMap" X="66" Y="45" FeatureType="FEATURE_GOBUSTAN" TerrainType="TERRAIN_PLAINS" />
-		
+
 		<Replace MapName="GreatestEarthMap" X="60" Y="43" FeatureType="FEATURE_PAMUKKALE" TerrainType="TERRAIN_PLAINS_HILLS" />
 		<Replace MapName="GreatestEarthMap" X="61" Y="43" FeatureType="FEATURE_PAMUKKALE" TerrainType="TERRAIN_PLAINS_HILLS" />
-		
+
 		<Replace MapName="GreatestEarthMap" X="56" Y="32" FeatureType="FEATURE_WHITEDESERT" TerrainType="TERRAIN_DESERT" />
 		<Replace MapName="GreatestEarthMap" X="56" Y="33" FeatureType="FEATURE_WHITEDESERT" TerrainType="TERRAIN_DESERT" />
 		<Replace MapName="GreatestEarthMap" X="57" Y="33" FeatureType="FEATURE_WHITEDESERT" TerrainType="TERRAIN_DESERT" />
 		<Replace MapName="GreatestEarthMap" X="57" Y="32" FeatureType="FEATURE_WHITEDESERT" TerrainType="TERRAIN_DESERT" />
-		
+
 		<Replace MapName="GreatestEarthMap" X="8" Y="50" FeatureType="FEATURE_DEVILSTOWER" TerrainType="TERRAIN_PLAINS_MOUNTAIN" />
 		<Replace MapName="GreatestEarthMap" X="18" Y="36" FeatureType="FEATURE_IKKIL"  />
 		<Replace MapName="GreatestEarthMap" X="52" Y="40" FeatureType="FEATURE_VESUVIUS" TerrainType="TERRAIN_PLAINS_MOUNTAIN" />
