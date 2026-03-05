@@ -22,14 +22,38 @@
 		<Replace Tag="LOC_MAP_CONTINENTS_YNAMP_NAME">
 			<Text>Continents++ (YnAMP)</Text>
 		</Replace>
+		<Replace Tag="LOC_MAP_CONTINENTS_YNAMP_DESCRIPTION">
+			<Text>A continents-style script adapted for YnAMP map sizes and settings.</Text>
+		</Replace>
 		<Replace Tag="LOC_MAP_FRACTAL_YNAMP_NAME">
 			<Text>Fractal (YnAMP)</Text>
+		</Replace>
+		<Replace Tag="LOC_MAP_FRACTAL_YNAMP_DESCRIPTION">
+			<Text>A fractal-style script adapted for YnAMP map sizes and settings.</Text>
 		</Replace>
 		<Replace Tag="LOC_MAP_GIANT_EARTH_YNAMP_NAME">
 			<Text>Giant Earth Map (YnAMP)</Text>
 		</Replace>
+		<Replace Tag="LOC_MAP_GIANT_EARTH_YNAMP_DESCRIPTION">
+			<Text>A giant Earth map with fixed real-world geography and true-start support.</Text>
+		</Replace>
 		<Replace Tag="LOC_MAP_GREATEST_EARTH_YNAMP_NAME">
 			<Text>Greatest Earth Map (YnAMP)[n]Civ5 map by djvandyke</Text>
+		</Replace>
+		<Replace Tag="LOC_MAP_GREATEST_EARTH_YNAMP_DESCRIPTION">
+			<Text>A huge Earth map with fixed real-world geography and true-start support.</Text>
+		</Replace>
+		<Replace Tag="LOC_MAP_GREATEST_EARTH_SIZE_DESCRIPTION">
+			<Text>Custom huge map size used by Greatest Earth (104x64).</Text>
+		</Replace>
+		<Replace Tag="LOC_MAPSIZE_MASSIVE_DESCRIPTION">
+			<Text>Massive map size for YnAMP scenarios and scripts.</Text>
+		</Replace>
+		<Replace Tag="LOC_MAPSIZE_GIANT_DESCRIPTION">
+			<Text>Giant map size for YnAMP scenarios and scripts.</Text>
+		</Replace>
+		<Replace Tag="LOC_MAPSIZE_LUDICROUS_DESCRIPTION">
+			<Text>Ludicrous map size for YnAMP scenarios and scripts.</Text>
 		</Replace>
 	</EnglishText>
 </Database>
