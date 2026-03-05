@@ -17,6 +17,135 @@ import { generateDiscoveries } from '/base-standard/maps/discovery-generator.js'
 import { generateSnow, dumpPermanentSnow } from '/base-standard/maps/snow-generator.js';
 import { dumpStartSectors, dumpContinents, dumpTerrain, dumpElevation, dumpRainfall, dumpBiomes, dumpFeatures, dumpResources, dumpNoisePredicate } from '/base-standard/maps/map-debug-helpers.js';
 import * as ynamp from '/ged-ynamp/maps/ynamp-utilities.js';
+
+/**
+ * @typedef {Object} ContinentBounds
+ * @property {number} west
+ * @property {number} east
+ * @property {number} south
+ * @property {number} north
+ * @property {number} continent
+ */
+
+/**
+ * @typedef {Object} MapContext
+ * @property {string|number} version
+ * @property {boolean} naturalWonderEvent
+ * @property {number} iWidth
+ * @property {number} iHeight
+ * @property {number} uiMapSize
+ * @property {*} mapInfo
+ * @property {{westContinent: ContinentBounds, eastContinent: ContinentBounds, westContinent2: ContinentBounds, eastContinent2: ContinentBounds, fullMap: ContinentBounds}} continents
+ * @property {number} iNumPlayers1
+ * @property {number} iNumPlayers2
+ * @property {number} iNumNaturalWonders
+ * @property {number} iTilesPerLake
+ * @property {number} iStartSectorRows
+ * @property {number} iStartSectorCols
+ */
+
+const DEBUG = false;
+
+function phase(name, fn) {
+    if (!DEBUG) {
+        return fn();
+    }
+    let start = Date.now();
+    try {
+        let result = fn();
+        console.log("[YnAMP] Phase " + name + " completed in " + (Date.now() - start) + "ms");
+        return result;
+    } catch (err) {
+        console.log("[YnAMP] Phase " + name + " failed: " + err);
+        throw err;
+    }
+}
+
+/**
+ * @param {number} iWidth
+ * @param {number} iHeight
+ */
+function buildContinentBounds(iWidth, iHeight) {
+    let westContinent = {
+        west: (3 * globals.g_AvoidSeamOffset) + globals.g_IslandWidth,
+        east: (iWidth / 2) - globals.g_AvoidSeamOffset,
+        south: globals.g_PolarWaterRows,
+        north: iHeight - globals.g_PolarWaterRows,
+        continent: 0
+    };
+    let eastContinent = {
+        west: westContinent.east + (4 * globals.g_AvoidSeamOffset) + globals.g_IslandWidth,
+        east: iWidth - globals.g_AvoidSeamOffset,
+        south: globals.g_PolarWaterRows,
+        north: iHeight - globals.g_PolarWaterRows,
+        continent: 0
+    };
+    let westContinent2 = {
+        west: globals.g_AvoidSeamOffset,
+        east: globals.g_AvoidSeamOffset + globals.g_IslandWidth,
+        south: globals.g_PolarWaterRows,
+        north: iHeight - globals.g_PolarWaterRows,
+        continent: 0
+    };
+    let eastContinent2 = {
+        west: (iWidth / 2) + globals.g_AvoidSeamOffset,
+        east: (iWidth / 2) + globals.g_AvoidSeamOffset + globals.g_IslandWidth,
+        south: globals.g_PolarWaterRows,
+        north: iHeight - globals.g_PolarWaterRows,
+        continent: 0
+    };
+    let fullMap = {
+        west: globals.g_AvoidSeamOffset,
+        east: iWidth - globals.g_AvoidSeamOffset,
+        south: globals.g_PolarWaterRows,
+        north: iHeight - globals.g_PolarWaterRows,
+        continent: 0
+    };
+
+    return { westContinent, eastContinent, westContinent2, eastContinent2, fullMap };
+}
+
+/**
+ * @param {MapContext} ctx
+ */
+function buildMapContext(ctx) {
+    return ctx;
+}
+
+function getDiscoveryStartPositions(startPositions) {
+    return startPositions.length > 10 ? startPositions.slice(0, 10) : startPositions;
+}
+
+function tagWaterHemispherePlots(iWidth, iHeight, westContinent, eastContinent, iNumPlayers1, iNumPlayers2) {
+    for (let iY = 0; iY < iHeight; iY++) {
+        for (let iX = 0; iX < iWidth; iX++) {
+            let terrain = GameplayMap.getTerrainType(iX, iY);
+            if (terrain == globals.g_CoastTerrain) {
+                TerrainBuilder.setPlotTag(iX, iY, PlotTags.PLOT_TAG_WATER);
+                if (iNumPlayers1 > iNumPlayers2) {
+                    if (iX < westContinent.west - 2 || iX > westContinent.east + 2) {
+                        //console.log("Islands on the Coast: " + iX + ", " + iY)
+                        TerrainBuilder.addPlotTag(iX, iY, PlotTags.PLOT_TAG_EAST_WATER);
+                    }
+                    else {
+                        //console.log("Main Coast: " + iX + ", " + iY)
+                        TerrainBuilder.addPlotTag(iX, iY, PlotTags.PLOT_TAG_WEST_WATER);
+                    }
+                }
+                else {
+                    if (iX > eastContinent.east + 2 || iX < eastContinent.west - 2) {
+                        //console.log("Islands on the Coast2: " + iX + ", " + iY)
+                        TerrainBuilder.addPlotTag(iX, iY, PlotTags.PLOT_TAG_WEST_WATER);
+                    }
+                    else {
+                        //console.log("Main Coast2: " + iX + ", " + iY)
+                        TerrainBuilder.addPlotTag(iX, iY, PlotTags.PLOT_TAG_EAST_WATER);
+                    }
+                }
+            }
+        }
+    }
+}
 function requestMapData(initParams) {
     console.log(initParams.width);
     console.log(initParams.height);
@@ -59,41 +188,12 @@ function generateMap() {
     if (mapInfo == null)
         return;
     // Establish continent boundaries
-    let westContinent = {
-        west: (3 * globals.g_AvoidSeamOffset) + globals.g_IslandWidth,
-        east: (iWidth / 2) - globals.g_AvoidSeamOffset,
-        south: globals.g_PolarWaterRows,
-        north: iHeight - globals.g_PolarWaterRows,
-        continent: 0
-    };
-    let eastContinent = {
-        west: westContinent.east + (4 * globals.g_AvoidSeamOffset) + globals.g_IslandWidth,
-        east: iWidth - globals.g_AvoidSeamOffset,
-        south: globals.g_PolarWaterRows,
-        north: iHeight - globals.g_PolarWaterRows,
-        continent: 0
-    };
-    let westContinent2 = {
-        west: globals.g_AvoidSeamOffset,
-        east: globals.g_AvoidSeamOffset + globals.g_IslandWidth,
-        south: globals.g_PolarWaterRows,
-        north: iHeight - globals.g_PolarWaterRows,
-        continent: 0
-    };
-    let eastContinent2 = {
-        west: (iWidth / 2) + globals.g_AvoidSeamOffset,
-        east: (iWidth / 2) + globals.g_AvoidSeamOffset + globals.g_IslandWidth,
-        south: globals.g_PolarWaterRows,
-        north: iHeight - globals.g_PolarWaterRows,
-        continent: 0
-    };
-    let fullMap = {
-        west: globals.g_AvoidSeamOffset,
-        east: iWidth - globals.g_AvoidSeamOffset,
-        south: globals.g_PolarWaterRows,
-        north: iHeight - globals.g_PolarWaterRows,
-        continent: 0
-    };
+    let continents = buildContinentBounds(iWidth, iHeight);
+    let westContinent = continents.westContinent;
+    let eastContinent = continents.eastContinent;
+    let westContinent2 = continents.westContinent2;
+    let eastContinent2 = continents.eastContinent2;
+    let fullMap = continents.fullMap;
     console.log(westContinent.west, ", ", westContinent.east, ", ", eastContinent.west, ", ", eastContinent.east, ", ", westContinent2.west, ", ", westContinent2.east, ", ", eastContinent2.west, ", ", eastContinent2.east, ", ");
     let startSectors;
     let iNumPlayers1 = mapInfo.PlayersLandmass1;
@@ -102,6 +202,21 @@ function generateMap() {
     let iTilesPerLake = mapInfo.LakeGenerationFrequency;
     let iStartSectorRows = mapInfo.StartSectorRows;
     let iStartSectorCols = mapInfo.StartSectorCols;
+    let ctx = buildMapContext({
+        version,
+        naturalWonderEvent,
+        iWidth,
+        iHeight,
+        uiMapSize,
+        mapInfo,
+        continents,
+        iNumPlayers1,
+        iNumPlayers2,
+        iNumNaturalWonders,
+        iTilesPerLake,
+        iStartSectorRows,
+        iStartSectorCols
+    });
     let iRandom = !naturalWonderEvent ? TerrainBuilder.getRandomNumber(2, "East or West") : 0; // don't want random hemisphere shuffle for live event
     console.log("Random Hemisphere: " + iRandom);
     if (iRandom == 1) {
@@ -118,10 +233,6 @@ function generateMap() {
     utilities.createIslands(iWidth, iHeight, westContinent2, eastContinent2, 4);
     //utilities.createIslands(iWidth, iHeight, westContinent2, eastContinent2, 5);
     //utilities.createIslands(iWidth, iHeight, westContinent2, eastContinent2, 6);
-    TerrainBuilder.validateAndFixTerrain();
-    expandCoastsPlus(westContinent.west, westContinent.east, iHeight);
-    expandCoastsPlus(eastContinent.west, eastContinent.east, iHeight);
-    expandCoastsPlus(0, westContinent.west - globals.g_OceanWaterColumns, iHeight);
     expandCoastsPlus(westContinent.east + globals.g_OceanWaterColumns, eastContinent.west - globals.g_OceanWaterColumns, iHeight);
     expandCoastsPlus(eastContinent.east + globals.g_OceanWaterColumns, 0, iHeight);
     AreaBuilder.recalculateAreas();
@@ -142,34 +253,7 @@ function generateMap() {
     addFeatures(iWidth, iHeight);
     TerrainBuilder.validateAndFixTerrain();
     //utilities.adjustOceanPlotTags(iNumPlayers1 > iNumPlayers2);
-    for (let iY = 0; iY < iHeight; iY++) {
-        for (let iX = 0; iX < iWidth; iX++) {
-            let terrain = GameplayMap.getTerrainType(iX, iY);
-            if (terrain == globals.g_CoastTerrain) {
-                TerrainBuilder.setPlotTag(iX, iY, PlotTags.PLOT_TAG_WATER);
-                if (iNumPlayers1 > iNumPlayers2) {
-                    if (iX < westContinent.west - 2 || iX > westContinent.east + 2) {
-                        //console.log("Islands on the Coast: " + iX + ", " + iY)
-                        TerrainBuilder.addPlotTag(iX, iY, PlotTags.PLOT_TAG_EAST_WATER);
-                    }
-                    else {
-                        //console.log("Main Coast: " + iX + ", " + iY)
-                        TerrainBuilder.addPlotTag(iX, iY, PlotTags.PLOT_TAG_WEST_WATER);
-                    }
-                }
-                else {
-                    if (iX > eastContinent.east + 2 || iX < eastContinent.west - 2) {
-                        //console.log("Islands on the Coast2: " + iX + ", " + iY)
-                        TerrainBuilder.addPlotTag(iX, iY, PlotTags.PLOT_TAG_WEST_WATER);
-                    }
-                    else {
-                        //console.log("Main Coast2: " + iX + ", " + iY)
-                        TerrainBuilder.addPlotTag(iX, iY, PlotTags.PLOT_TAG_EAST_WATER);
-                    }
-                }
-            }
-        }
-    }
+    tagWaterHemispherePlots(iWidth, iHeight, westContinent, eastContinent, iNumPlayers1, iNumPlayers2);
     AreaBuilder.recalculateAreas();
     TerrainBuilder.storeWaterData();
     generateSnow(iWidth, iHeight);
@@ -182,8 +266,12 @@ function generateMap() {
     dumpFeatures(iWidth, iHeight);
     dumpPermanentSnow(iWidth, iHeight);
     generateResources(iWidth, iHeight, westContinent, eastContinent, iNumPlayers1, iNumPlayers2);
-    startPositions = assignStartPositions(iNumPlayers1, iNumPlayers2, westContinent, eastContinent, iStartSectorRows, iStartSectorCols, startSectors);
-    generateDiscoveries(iWidth, iHeight, startPositions);
+    startPositions = phase("assignStartPositions", () => assignStartPositions(iNumPlayers1, iNumPlayers2, westContinent, eastContinent, iStartSectorRows, iStartSectorCols, startSectors));
+    phase("generateDiscoveries", () => {
+        // Limit to 10 players for discoveries (base game limitation)
+        let discoveryStartPositions = getDiscoveryStartPositions(startPositions);
+        generateDiscoveries(iWidth, iHeight, discoveryStartPositions);
+    });
     dumpResources(iWidth, iHeight);
     FertilityBuilder.recalculate(); // Must be after features are added.
     let seed = GameplayMap.getRandomSeed(); // can use any seed you want for different noises
