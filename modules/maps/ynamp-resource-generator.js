@@ -40,68 +40,109 @@ export function generateResourcesYnAMP(iWidth, iHeight, continent1, continent2, 
         resourceWeight[resourceIdx] = 0;
         resourceRunningWeight[resourceIdx] = 0;
     }
-    // Find all resources
+    // Find all resources using base game's getGeneratedMapResources (filters for map type)
     let aResourceTypes = [];
-    GameInfo.Resources.forEach((o) => {
-        var resourceInfo = o;
+    let debugHemisphereCount = 0;
+    const resources = ResourceBuilder.getGeneratedMapResources(3);
+    console.log("generateResourcesYnAMP: getGeneratedMapResources returned " + resources.length + " resources");
+    
+    for (let ridx = 0; ridx < resources.length; ++ridx) {
+        const resourceInfo = GameInfo.Resources.lookup(resources[ridx]);
         if (resourceInfo && resourceInfo.Tradeable) {
-            if (ResourceBuilder.isResourceValidForAge(resourceInfo.ResourceType, uiStartAgeHash)) {
-                resourceWeight[resourceInfo.$index] = resourceInfo.Weight;
-                resourceHemisphere[resourceInfo.$index] = resourceInfo.Hemispheres;
-                aResourceTypes.push(resourceInfo.$index);
+            resourceWeight[resourceInfo.$index] = resourceInfo.Weight;
+            resourceHemisphere[resourceInfo.$index] = resourceInfo.Hemispheres;
+            
+            // Manual hemisphere assignment for distant-land conversion
+            // These resources will be converted to distant-land equivalents in validate()
+            // Mark as "2" (both hemispheres) so they're placed everywhere, then validate() converts the ones in distant lands
+            if (resourceInfo.ResourceType === "RESOURCE_KAOLIN") {  // → COCOA in distant lands
+                resourceHemisphere[resourceInfo.$index] = 2;  // place in both hemispheres
+            } else if (resourceInfo.ResourceType === "RESOURCE_IVORY") {  // → SPICES in distant lands
+                resourceHemisphere[resourceInfo.$index] = 2;  // place in both hemispheres
+            } else if (resourceInfo.ResourceType === "RESOURCE_COTTON") {  // → SUGAR in distant lands
+                resourceHemisphere[resourceInfo.$index] = 2;  // place in both hemispheres
+            } else if (resourceInfo.ResourceType === "RESOURCE_HIDES") {  // → TEA in distant lands
+                resourceHemisphere[resourceInfo.$index] = 2;  // place in both hemispheres
+            }
+            
+            aResourceTypes.push(resourceInfo.$index);
+            if (resourceHemisphere[resourceInfo.$index] && resourceHemisphere[resourceInfo.$index] !== 0) {
+                debugHemisphereCount++;
+                console.log("generateResourcesYnAMP: Found hemisphere-restricted resource: " + resourceInfo.ResourceType + " (Hemispheres=" + resourceHemisphere[resourceInfo.$index] + ")");
             }
         }
-    });
+    }
+    console.log("generateResourcesYnAMP: Total resources=" + aResourceTypes.length + " hemisphere-restricted=" + debugHemisphereCount);
     //Generate Poisson Map
     let seed = GameplayMap.getRandomSeed();
     let avgDistanceBetweenPoints = 3;
     let normalizedRangeSmoothing = 2;
     let poisson = TerrainBuilder.generatePoissonMap(seed, avgDistanceBetweenPoints, normalizedRangeSmoothing);
+    
+    // Debug: track resource placement
+    let placedCounts = { total: 0, homeland: 0, distant: 0 };
+    let poissonTilesChecked = 0;
+    let poissonTilesPassed = 0;
+    let resourceCandidatesGenerated = 0;
+    let hemisphereXcounts = { 0: 0, 1: 0 };
+    let canHaveResourceCount = 0;
+    
     for (let iY = iHeight - 1; iY >= 0; iY--) {
         for (let iX = 0; iX < iWidth; iX++) {
             let index = iY * iWidth + iX;
+            poissonTilesChecked++;
             if (poisson[index] >= 1) {
+                poissonTilesPassed++;
                 //Generate a list of valid resources at this plot
                 let resources = [];
                 aResourceTypes.forEach(resourceIdx => {
-                    let iBuffer = Math.floor(iWidth / 28.0);
-
-                    //console.log("GameplayMap.getHemisphere(" + iX + ") = " + GameplayMap.getHemisphere(iX));
-                   // console.log("GameplayMap.getHemisphereYnAMP(" + iX + ") = " + getHemisphereYnAMP(iX, continent1, continent2, bEastBias));
-
-                    let hemisphereX = getHemisphereYnAMP(iX, continent1, continent2, bEastBias);
-
-                    if (resourceHemisphere[resourceIdx] == 0) {
-                        if ((hemisphereX == 0 && bEastBias == false) || (hemisphereX == 1 && bEastBias == true)) {
+                    let hemisphere = resourceHemisphere[resourceIdx];
+                    
+                    // Resources without hemisphere restrictions (undefined or 2) - place everywhere
+                    if (hemisphere === undefined || hemisphere === 2) {
+                        if (canHaveFlowerPlot(iX, iY, resourceIdx)) {
+                            canHaveResourceCount++;
+                            resources.push(resourceIdx);
+                        }
+                    }
+                    // Homeland-only resources (hemisphere == 0) - place in player's starting hemisphere
+                    else if (hemisphere === 0) {
+                        let hemisphereX = getHemisphereYnAMP(iX, continent1, continent2, bEastBias);
+                        hemisphereXcounts[hemisphereX]++;
+                        
+                        // Place in homeland: west if player starts west, east if player starts east
+                        if ((hemisphereX === 0 && bEastBias === false) || (hemisphereX === 1 && bEastBias === true)) {
                             if (canHaveFlowerPlot(iX, iY, resourceIdx)) {
+                                canHaveResourceCount++;
                                 resources.push(resourceIdx);
-                                //console.log("Foreign Hemishpere: " + iX + ", " + iY);
                             }
                         }
                     }
-                    else if (resourceHemisphere[resourceIdx] == 1) {
-                        if ((hemisphereX == 0 && bEastBias) || (hemisphereX == 1 && bEastBias == false)) {
+                    // Distant-land resources (hemisphere == 1) - place in opposite hemisphere
+                    else if (hemisphere === 1) {
+                        let iBuffer = Math.floor(iWidth / 28.0);
+                        let hemisphereX = getHemisphereYnAMP(iX, continent1, continent2, bEastBias);
+                        hemisphereXcounts[hemisphereX]++;
+                        
+                        // Place in distant lands or islands
+                        if ((hemisphereX === 1 && bEastBias === false) || (hemisphereX === 0 && bEastBias === true)) {
                             if (canHaveFlowerPlot(iX, iY, resourceIdx)) {
+                                canHaveResourceCount++;
                                 resources.push(resourceIdx);
-                                //console.log("Foreign Hemishpere: " + iX + ", " + iY);
                             }
                         }
                         else if (iX < continent1.west - iBuffer || iX >= continent2.east + iBuffer ||
                             (iX >= continent1.east + iBuffer && iX < continent2.west - iBuffer)) {
                             if (canHaveFlowerPlot(iX, iY, resourceIdx)) {
+                                canHaveResourceCount++;
                                 resources.push(resourceIdx);
-                                //console.log("Island: " + iX + ", " + iY);
                             }
-                        }
-                    }
-                    else if (resourceHemisphere[resourceIdx] == 2) {
-                        if (canHaveFlowerPlot(iX, iY, resourceIdx)) {
-                            resources.push(resourceIdx);
                         }
                     }
                 });
                 //Select the heighest weighted (ties are a coin flip) resource
                 if (resources.length > 0) {
+                    resourceCandidatesGenerated++;
                     let resourceChosen = ResourceTypes.NO_RESOURCE;
                     let resourceChosenIndex = 0;
                     for (let iI = 0; iI < resources.length; iI++) {
@@ -132,6 +173,14 @@ export function generateResourcesYnAMP(iWidth, iHeight, continent1, continent2, 
                             let iResourceY = iLocation.y;
                             ResourceBuilder.setResourceType(iResourceX, iResourceY, resourceChosen);
                             resourceRunningWeight[resourceChosenIndex] -= resourceWeight[resourceChosenIndex];
+                            
+                            // Debug: track placed resources
+                            placedCounts.total++;
+                            if (resourceHemisphere[resourceChosen] === 0) {
+                                placedCounts.homeland++;
+                            } else if (resourceHemisphere[resourceChosen] === 1) {
+                                placedCounts.distant++;
+                            }
                         }
                         else {
                             console.log("Resource Index Failure");
@@ -144,10 +193,14 @@ export function generateResourcesYnAMP(iWidth, iHeight, continent1, continent2, 
             }
         }
     }
+    console.log("generateResourcesYnAMP: Hemisphere counts - hemisphereX_0=" + hemisphereXcounts[0] + " hemisphereX_1=" + hemisphereXcounts[1] + " canHaveResource=" + canHaveResourceCount);
+    console.log("generateResourcesYnAMP: Poisson tiles - checked=" + poissonTilesChecked + " passed=" + poissonTilesPassed + " candidates=" + resourceCandidatesGenerated + " placed=" + placedCounts.total);
+    console.log("generateResourcesYnAMP: Placed resources total=" + placedCounts.total + " homeland=" + placedCounts.homeland + " distant=" + placedCounts.distant);
 }
+
 //Can I have a resource in this flower?
 export function canHaveFlowerPlot(iX, iY, resourceType) {
-    if (ResourceBuilder.canHaveResource(iX, iY, resourceType)) {
+    if (ResourceBuilder.canHaveResource(iX, iY, resourceType, false)) {
         return true;
     }
     for (let iDirection = 0; iDirection < DirectionTypes.NUM_DIRECTION_TYPES; iDirection++) {
@@ -155,7 +208,7 @@ export function canHaveFlowerPlot(iX, iY, resourceType) {
         let iLocation = GameplayMap.getLocationFromIndex(iIndex);
         let iAdjacentX = GameplayMap.getAdjacentPlotLocation(iLocation, iDirection).x;
         let iAdjacentY = GameplayMap.getAdjacentPlotLocation(iLocation, iDirection).y;
-        if (ResourceBuilder.canHaveResource(iAdjacentX, iAdjacentY, resourceType)) {
+        if (ResourceBuilder.canHaveResource(iAdjacentX, iAdjacentY, resourceType, false)) {
             return true;
         }
     }

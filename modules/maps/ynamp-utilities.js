@@ -402,6 +402,7 @@ export function createMapTerrains(iWidth, iHeight, continent1, continent2, impor
                 //utilities.addLandmassPlotTags(iX, iY, continent2.west);
             }
             TerrainBuilder.setTerrainType(iX, iY, terrain);
+
             //console.log("createLandmasses (" + iX + "," + iY +") = " + importedMap[iX][iY][0] + " = " + terrain + " / " + GameplayMap.getTerrainType(iX, iY));
         }
     }
@@ -566,79 +567,376 @@ export function extraJungle(iWidth, iHeight, importedMap) {
     }
 }
 
-export function validate (iWidth, iHeight, iNumPlayers1, iNumPlayers2) {
+export function validate (iWidth, iHeight, iNumPlayers1, iNumPlayers2, westContinent, eastContinent, startPositions, mapName) {
+    // Validation function - renamed to differentiate from the old validate() that handled resource conversion
+    // This is a minimal stub for backward compatibility - actual homeland/distant lands classification 
+    // is now handled by overrideHomelandsWithXMLRegions() using the superregion system
+    console.log("validate: mapName=" + mapName);
+    console.log("validate: Homeland/distant lands are now assigned via overrideHomelandsWithXMLRegions()");
+}
+
+
+// Helper function to get neighboring tiles (with wrap-around on X axis)
+/**
+ * @param {number} x
+ * @param {number} y
+ * @param {number} mapWidth
+ * @param {number} mapHeight
+ * @returns {{x:number,y:number}[]}
+ */
+function getNeighbors(x, y, mapWidth, mapHeight) {
+    let neighbors = [];
+    let directions = [
+        {dx: 0, dy: 1},   // North
+        {dx: 1, dy: 0},   // East
+        {dx: 0, dy: -1},  // South
+        {dx: -1, dy: 0},  // West
+    ];
     
-    // Fix for distant land resources on homeland
-    // (generateResources hemispheres are hardcoded, on Earth map with the old world / new world ratio being != 1/2 it causes issues )
-    let uiStartAgeHash = Configuration.getGameValue("StartAge");
-    let resourceReplace = {};
-    GameInfo.Resources.forEach((o) => {
-        var resourceInfo = o;
-        if (resourceInfo && resourceInfo.Tradeable) {
-            if (ResourceBuilder.isResourceValidForAge(resourceInfo.ResourceType, uiStartAgeHash)) {
-                let sResourceType = resourceInfo.ResourceType;
-                switch (sResourceType) {
-                    case "RESOURCE_SILVER":
-                        resourceReplace["RESOURCE_SILVER_DISTANT_LANDS"] = GameInfo.Resources.find(t => t.ResourceType == sResourceType).$index;
-                        break;
-                    case "RESOURCE_GOLD":
-                        resourceReplace["RESOURCE_GOLD_DISTANT_LANDS"] = GameInfo.Resources.find(t => t.ResourceType == sResourceType).$index;
-                        break;
-                    case "RESOURCE_KAOLIN":
-                        resourceReplace["RESOURCE_COCOA"] = GameInfo.Resources.find(t => t.ResourceType == sResourceType).$index;
-                        break;
-                    case "RESOURCE_IVORY":
-                        resourceReplace["RESOURCE_SPICES"] = GameInfo.Resources.find(t => t.ResourceType == sResourceType).$index;
-                        break;
-                    case "RESOURCE_COTTON":
-                        resourceReplace["RESOURCE_SUGAR"] = GameInfo.Resources.find(t => t.ResourceType == sResourceType).$index;
-                        break;
-                    case "RESOURCE_HIDES":
-                        resourceReplace["RESOURCE_TEA"] = GameInfo.Resources.find(t => t.ResourceType == sResourceType).$index;
-                        break;
-                    default:
+    for (let dir of directions) {
+        let newX = (x + dir.dx + mapWidth) % mapWidth; // Wrap around horizontally
+        let newY = y + dir.dy;
+        
+        // Check vertical bounds (no wrap on Y axis)
+        if (newY >= 0 && newY < mapHeight) {
+            neighbors.push({x: newX, y: newY});
+        }
+    }
+    
+    return neighbors;
+}
+
+// Superregion groupings - maps individual XML regions to continents
+/**
+ * @returns {{[region:string]: string}}
+ */
+function getSuperregionMapping() {
+    return {
+        // EurAsia (Europe + Asia)
+        "GROENLAND": "EURASIA",
+        "NORTH_EUROPA": "EURASIA",
+        "WEST_EUROPA": "EURASIA",
+        "SOUTH_EUROPA": "EURASIA",
+        "EAST_EUROPA": "EURASIA",
+        "MEDITERRANEAN": "EURASIA",
+        "TURKEY": "EURASIA",
+        "MIDDLE_EAST": "EURASIA",
+        "NORTH_AFRICA": "EURASIA",  // Connected to Mediterranean
+        "CENTRAL_ASIA": "EURASIA",
+        "NORTH_ASIA": "EURASIA",
+        "EAST_ASIA": "EURASIA",
+        "SOUTH_ASIA": "EURASIA",
+        
+        // Africa (merged into EURASIA superregion)
+        "CENTRAL_AFRICA": "EURASIA",
+        "SOUTH_AFRICA": "EURASIA",
+        "MADAGASCAR": "EURASIA",
+        
+        // Americas (North, Central, South)
+        "NORTH_AMERICA": "AMERICAS",
+        "ARCTIC_AMERICA": "AMERICAS",
+        "CENTRAL_AMERICA": "AMERICAS",
+        "SOUTH_AMERICA_WEST": "AMERICAS",
+        "SOUTH_AMERICA_EAST": "AMERICAS",
+        "ANTARCTIC_AMERICA": "AMERICAS",
+        
+        // Oceania
+        "AUSTRALIA": "OCEANIA",
+        "OCEANIA": "OCEANIA"
+    };
+}
+
+/**
+ * @param {number} iWidth
+ * @param {number} iHeight
+ * @param {string} mapName
+ * @returns {(string|null)[][] | null}
+ */
+function buildRegionGrid(iWidth, iHeight, mapName) {
+    let regionRows = GameInfo.RegionPosition;
+    if (!regionRows) {
+        return null;
+    }
+
+    let regionByTile = [];
+    for (let iX = 0; iX < iWidth; iX++) {
+        regionByTile[iX] = [];
+        for (let iY = 0; iY < iHeight; iY++) {
+            regionByTile[iX][iY] = null;
+        }
+    }
+
+    regionRows.forEach((row) => {
+        if (row.MapName != mapName) {
+            return;
+        }
+        let startX = row.X;
+        let startY = row.Y;
+        let endX = row.X + row.Width - 1;
+        let endY = row.Y + row.Height - 1;
+        for (let x = startX; x <= endX; x++) {
+            for (let y = startY; y <= endY; y++) {
+                if (x >= 0 && x < iWidth && y >= 0 && y < iHeight) {
+                    regionByTile[x][y] = row.Region;
                 }
             }
         }
     });
+
+    return regionByTile;
+}
+
+/**
+ * @param {number} iWidth
+ * @param {number} iHeight
+ * @param {string} mapName
+ */
+export function overrideHomelandsWithXMLRegions(iWidth, iHeight, mapName) {
+    console.log("overrideHomelandsWithXMLRegions: Starting for mapName=" + mapName);
     
+    // Build region grid from XML
+    let regionByTile = buildRegionGrid(iWidth, iHeight, mapName);
+    if (!regionByTile) {
+        console.log("overrideHomelandsWithXMLRegions: No RegionPosition data found");
+        return;
+    }
     
+    // Find the human player
+    let humanPlayerId = -1;
+    let aliveMajorIds = Players.getAliveMajorIds();
+    for (let i = 0; i < aliveMajorIds.length; i++) {
+        if (Players.isHuman(aliveMajorIds[i])) {
+            humanPlayerId = aliveMajorIds[i];
+            console.log("overrideHomelandsWithXMLRegions: Found human player ID=" + humanPlayerId);
+            break;
+        }
+    }
+    
+    if (humanPlayerId == -1) {
+        console.log("overrideHomelandsWithXMLRegions: No human player found");
+        return;
+    }
+    
+    // Get human player's start position
+    let humanStartPlot = StartPositioner.getStartPosition(humanPlayerId);
+    if (humanStartPlot === undefined || humanStartPlot === null || humanStartPlot < 0) {
+        console.log("overrideHomelandsWithXMLRegions: Invalid start position for human player: " + humanStartPlot);
+        return;
+    }
+    
+    let humanStartX = humanStartPlot % iWidth;
+    let humanStartY = Math.floor(humanStartPlot / iWidth);
+    if (humanStartX < 0 || humanStartX >= iWidth || humanStartY < 0 || humanStartY >= iHeight || !regionByTile[humanStartX]) {
+        console.log("overrideHomelandsWithXMLRegions: Human start position out of bounds: (" + humanStartX + "," + humanStartY + ")");
+        return;
+    }
+    let humanRegion = regionByTile[humanStartX][humanStartY];
+    
+    console.log("overrideHomelandsWithXMLRegions: Human player at (" + humanStartX + "," + humanStartY + ") in region " + humanRegion);
+    
+    if (!humanRegion) {
+        console.log("overrideHomelandsWithXMLRegions: Human start position not in any XML region");
+        return;
+    }
+    
+    // Map XML region to superregion (continent)
+    let superregionMap = getSuperregionMapping();
+    let humanSuperregion = superregionMap[humanRegion];
+    
+    if (!humanSuperregion) {
+        console.log("overrideHomelandsWithXMLRegions: Region '" + humanRegion + "' not found in superregion mapping");
+        return;
+    }
+    
+    console.log("overrideHomelandsWithXMLRegions: Human player in superregion " + humanSuperregion);
+    
+    // First pass: mark all tiles in the human's superregion as homeland
+    let isHomeland = [];
+    for (let iY = 0; iY < iHeight; iY++) {
+        isHomeland[iY] = [];
+        for (let iX = 0; iX < iWidth; iX++) {
+            let regionName = regionByTile[iX][iY];
+            let tileSuperregion = regionName ? superregionMap[regionName] : null;
+            isHomeland[iY][iX] = tileSuperregion === humanSuperregion;
+        }
+    }
+    
+    // Second pass: flood fill to include all contiguous land tiles in the same superregion
+    // This ensures that land tiles not covered by XML regions but connected to the superregion are correctly classified
+    let queue = [];
     for (let iY = 0; iY < iHeight; iY++) {
         for (let iX = 0; iX < iWidth; iX++) {
-            let terrain = GameplayMap.getTerrainType(iX, iY);
-            const terrainRow = GameInfo.Terrains.lookup(terrain);
-            let rainfall = GameplayMap.getRainfall(iX, iY);
-            let iElevation = GameplayMap.getElevation(iX, iY);
-            let plotTag = "WEST";
-            if (GameplayMap.hasPlotTag(iX, iY, PlotTags.PLOT_TAG_EAST_LANDMASS) || GameplayMap.hasPlotTag(iX, iY, PlotTags.PLOT_TAG_EAST_WATER)) {
-                plotTag = "EAST";
+            if (isHomeland[iY][iX]) {
+                queue.push({x: iX, y: iY});
             }
-            //console.log("Validate (" + iX + "," + iY + ") - Elevation = " + iElevation + ", rainfall = " + rainfall + ", terrain = " + terrainRow.TerrainType + ", plotTag = " + plotTag + " num1 > num2 = " + (iNumPlayers1 > iNumPlayers2));
-            let bIsDistantLand = false;
-            if (iNumPlayers1 > iNumPlayers2) { // "EAST" is Distant Land
-                bIsDistantLand = plotTag == "EAST";
-            } else {
-                bIsDistantLand = plotTag == "WEST";
-            }
-            if (!bIsDistantLand) {
-                let iResource = GameplayMap.getResourceType(iX, iY);
-                if (iResource != ResourceTypes.NO_RESOURCE) {
-                    let resourceInfo = GameInfo.Resources.lookup(iResource);
-                    if (resourceInfo != null && resourceInfo.Hemispheres == 1) {
-                        console.log("  - FOUND DISTANT LAND RESOURCE IN HOME LAND : " + resourceInfo.ResourceType);
-                        let iResource = resourceReplace[resourceInfo.ResourceType];
-                        ResourceBuilder.setResourceType(iX, iY, ResourceTypes.NO_RESOURCE); // Remove distant land resources
-                        if (typeof resourceReplace[resourceInfo.ResourceType] !== 'undefined' && ResourceBuilder.canHaveResource(iX, iY, iResource)) {
-                            ResourceBuilder.setResourceType(iX, iY, iResource);
-                            console.log("    - replaced");
-                        } else {
-                            console.log("    - can't replace, removed");
-                        }
-                    }
+        }
+    }
+    
+    while (queue.length > 0) {
+        let tile = queue.shift();
+        let neighbors = getNeighbors(tile.x, tile.y, iWidth, iHeight);
+        
+        for (let neighbor of neighbors) {
+            let nX = neighbor.x;
+            let nY = neighbor.y;
+            
+            // If it's land and not yet marked as homeland
+            if (!GameplayMap.isWater(nX, nY) && !isHomeland[nY][nX]) {
+                // Check if it's in a different superregion
+                let neighborRegion = regionByTile[nX][nY];
+                let neighborSuperregion = neighborRegion ? superregionMap[neighborRegion] : null;
+                
+                // Only expand if tile is not explicitly in a different superregion
+                if (!neighborSuperregion || neighborSuperregion === humanSuperregion) {
+                    isHomeland[nY][nX] = true;
+                    queue.push({x: nX, y: nY});
                 }
             }
         }
     }
+    
+    // Final pass: apply landmass region IDs
+    let tagCounts = { homeland: 0, distant: 0 };
+    let homelandLandPlots = [];
+    let distantLandPlots = [];
+    for (let iY = 0; iY < iHeight; iY++) {
+        for (let iX = 0; iX < iWidth; iX++) {
+            if (!GameplayMap.isWater(iX, iY)) {
+                if (isHomeland[iY][iX]) {
+                    TerrainBuilder.setLandmassRegionId(iX, iY, LandmassRegion.LANDMASS_REGION_WEST);
+                    tagCounts.homeland++;
+                    homelandLandPlots.push({ x: iX, y: iY });
+                } else {
+                    TerrainBuilder.setLandmassRegionId(iX, iY, LandmassRegion.LANDMASS_REGION_EAST);
+                    tagCounts.distant++;
+                    distantLandPlots.push({ x: iX, y: iY });
+                }
+            }
+        }
+    }
+
+    function getNearestDistanceToPlots(iX, iY, plots) {
+        if (!plots || plots.length === 0) {
+            return Number.MAX_SAFE_INTEGER;
+        }
+
+        let minDistance = Number.MAX_SAFE_INTEGER;
+        for (let i = 0; i < plots.length; i++) {
+            let plot = plots[i];
+            let distance = GameplayMap.getPlotDistance(iX, iY, plot.x, plot.y);
+            if (distance < minDistance) {
+                minDistance = distance;
+                if (minDistance <= 1) {
+                    break;
+                }
+            }
+        }
+        return minDistance;
+    }
+
+    // Water retagging for XML maps:
+    // Classify every water tile by nearest homeland-vs-distant land to keep tooltip data consistent.
+    let waterTagCounts = { homeland: 0, distant: 0 };
+    for (let iY = 0; iY < iHeight; iY++) {
+        for (let iX = 0; iX < iWidth; iX++) {
+            if (!GameplayMap.isWater(iX, iY)) {
+                continue;
+            }
+
+            let nearestHomelandDistance = getNearestDistanceToPlots(iX, iY, homelandLandPlots);
+            let nearestDistantDistance = getNearestDistanceToPlots(iX, iY, distantLandPlots);
+            let isHomelandWater = nearestHomelandDistance <= nearestDistantDistance;
+
+            if (distantLandPlots.length === 0) {
+                isHomelandWater = true;
+            }
+            if (homelandLandPlots.length === 0) {
+                isHomelandWater = false;
+            }
+
+            if (isHomelandWater) {
+                TerrainBuilder.setPlotTag(iX, iY, PlotTags.PLOT_TAG_WATER);
+                TerrainBuilder.addPlotTag(iX, iY, PlotTags.PLOT_TAG_WEST_WATER);
+                TerrainBuilder.setLandmassRegionId(iX, iY, LandmassRegion.LANDMASS_REGION_WEST);
+                waterTagCounts.homeland++;
+            } else {
+                TerrainBuilder.setPlotTag(iX, iY, PlotTags.PLOT_TAG_WATER);
+                TerrainBuilder.addPlotTag(iX, iY, PlotTags.PLOT_TAG_EAST_WATER);
+                TerrainBuilder.setLandmassRegionId(iX, iY, LandmassRegion.LANDMASS_REGION_EAST);
+                waterTagCounts.distant++;
+            }
+        }
+    }
+    
+    console.log("overrideHomelandsWithXMLRegions: Applied landmass region IDs - homeland=" + tagCounts.homeland + " distant=" + tagCounts.distant);
+    console.log("overrideHomelandsWithXMLRegions: Retagged coastal water - homeland=" + waterTagCounts.homeland + " distant=" + waterTagCounts.distant);
+}
+
+/**
+ * @param {number} iWidth
+ * @param {number} iHeight
+ * @param {number[]} startPositions
+ * @param {string} mapName
+ */
+export function applyRegionBasedLandmassTags(iWidth, iHeight, startPositions, mapName) {
+    console.log("applyRegionBasedLandmassTags: Starting with mapName=" + mapName);
+    console.log("applyRegionBasedLandmassTags: startPositions type=" + typeof startPositions + " length=" + (Array.isArray(startPositions) ? startPositions.length : "not array"));
+    if (Array.isArray(startPositions) && startPositions.length > 0) {
+        console.log("applyRegionBasedLandmassTags: startPositions[0]=" + startPositions[0]);
+    }
+    
+    // Build region grid from XML
+    let regionByTile = buildRegionGrid(iWidth, iHeight, mapName);
+    if (!regionByTile) {
+        console.log("applyRegionBasedLandmassTags: No RegionPosition data found");
+        return;
+    }
+    
+    // Identify human player's starting region
+    let homelandRegions = {};
+    if (Array.isArray(startPositions) && startPositions.length > 0) {
+        let startIndex = startPositions[0]; // Human player is always index 0
+        console.log("applyRegionBasedLandmassTags: Processing startIndex=" + startIndex);
+        if (typeof startIndex === 'number' && !isNaN(startIndex)) {
+            let startX = startIndex % iWidth;
+            let startY = Math.floor(startIndex / iWidth);
+            console.log("applyRegionBasedLandmassTags: Converted to (" + startX + "," + startY + ")");
+            if (startX >= 0 && startX < iWidth && startY >= 0 && startY < iHeight) {
+                let regionName = regionByTile[startX][startY];
+                console.log("applyRegionBasedLandmassTags: regionByTile[" + startX + "][" + startY + "]=" + regionName);
+                if (regionName) {
+                    homelandRegions[regionName] = true;
+                    console.log("applyRegionBasedLandmassTags: Human player in region " + regionName + " at (" + startX + "," + startY + ")");
+                } else {
+                    console.log("applyRegionBasedLandmassTags: No region name found at this position");
+                }
+            } else {
+                console.log("applyRegionBasedLandmassTags: Coordinates out of bounds");
+            }
+        }
+    }
+    
+    // Apply landmass tags based on regions
+    // Tag ALL land tiles - homeland regions get WEST_LANDMASS, everything else (including unassigned) gets EAST_LANDMASS
+    let tagCounts = { homeland: 0, distant: 0 };
+    for (let iY = 0; iY < iHeight; iY++) {
+        for (let iX = 0; iX < iWidth; iX++) {
+            if (!GameplayMap.isWater(iX, iY)) {
+                let regionName = regionByTile[iX][iY];
+                let isHomeland = regionName ? homelandRegions[regionName] : false;
+                if (isHomeland) {
+                    TerrainBuilder.setPlotTag(iX, iY, PlotTags.PLOT_TAG_WEST_LANDMASS);
+                    tagCounts.homeland++;
+                } else {
+                    // All non-homeland tiles (including unassigned) are distant lands
+                    TerrainBuilder.setPlotTag(iX, iY, PlotTags.PLOT_TAG_EAST_LANDMASS);
+                    tagCounts.distant++;
+                }
+            }
+        }
+    }
+    
+    console.log("applyRegionBasedLandmassTags: Applied tags - homeland=" + tagCounts.homeland + " distant=" + tagCounts.distant);
 }
 
 export function dumpElevationPrecise(iWidth, iHeight) {
