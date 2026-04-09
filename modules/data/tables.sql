@@ -91,6 +91,24 @@ CREATE TABLE IF NOT EXISTS RegionPosition
 		Width INT default 0,
 		Height INT default 0);
 
+-- Maps each geographic region name to a continental superregion grouping.
+-- Used by getSuperregionMapping() in ynamp-utilities.js (data-driven replacement of the
+-- hardcoded table) and by the "Cultural Region" start-position option.
+-- Intended superregion values and their homeland/distant-lands assignment:
+--   EURASIA  → assigned to the "homeland" landmass regionID on two-continent maps
+--   AMERICAS → assigned to the "distant-lands" landmass regionID on two-continent maps
+--   OCEANIA  → spawns on islands (belonging to either homeland or distant-lands regionID)
+CREATE TABLE IF NOT EXISTS ContinentsRegion
+	(	Region		TEXT NOT NULL,
+		SuperRegion	TEXT NOT NULL);
+
+-- Maps each geographic region to a Civ6-ethnicity-style cultural group.
+-- Used by the "Cultural Region" start-position option to score intra-continental
+-- placement: same-group civs cluster together, adjacent groups placed nearby.
+CREATE TABLE IF NOT EXISTS CulturalRegion
+	(	Region		 TEXT NOT NULL,
+		CultureGroup TEXT NOT NULL);
+
 -- City Map		
 CREATE TABLE IF NOT EXISTS CityMap
 	(	MapName TEXT,

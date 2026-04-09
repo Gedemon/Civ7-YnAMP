@@ -20,6 +20,7 @@
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_PERSIA"		X="45" Y="49" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_ROME"			X="20" Y="57" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_SILLA"			X="91" Y="60" />
+		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_TONGA"			X="116"	Y="27" />
 
 		<!-- Exploration -->
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_ABBASID"		X="36" Y="42" />
@@ -27,6 +28,7 @@
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_CHOLA"			X="61"  Y="36" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_DAI_VIET"		X="76" Y="47" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_HAWAII"		X="115" Y="52" />
+		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_ICELAND"		X="2"	Y="84" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_INCA"			X="155" Y="25" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_MAJAPAHIT"		X="83" Y="25" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_MING"			X="78" Y="60" />
@@ -40,11 +42,12 @@
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_AMERICA"		X="155" Y="64" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_BUGANDA"		X="31"  Y="30" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_FRENCH_EMPIRE"	X="13" Y="67" />
+		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_GREAT_BRITAIN"	X="12" Y="72" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_MEIJI"			X="96" Y="58" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_MEXICO"		X="138" Y="49" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_MUGHAL"		X="60" Y="52" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_NEPAL"			X="68" Y="52" />
-		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_GREAT_BRITAIN"	X="12" Y="72" />
+		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_OTTOMANS"		X="31"	Y="58" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_PRUSSIA"		X="22" Y="71" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_QAJAR"			X="45" Y="49" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_QING"			X="87" Y="56" />
@@ -69,9 +72,9 @@
 		<Replace MapName="GiantEarth" Region="SOUTH_AMERICA_WEST"	X="143" Y="12" Width="18" Height="26" />
 		<Replace MapName="GiantEarth" Region="SOUTH_AMERICA_EAST"	X="162" Y="12" Width="14" Height="26" />
 		<Replace MapName="GiantEarth" Region="ANTARCTIC_AMERICA"	X="151" Y="0" Width="22" Height="12" />
-		<Replace MapName="GiantEarth" Region="AUSTRALIA"			X="83" Y="0" Width="33" Height="25" />
-		<Replace MapName="GiantEarth" Region="OCEANIA"				X="77" Y="19" Width="52" Height="24" />
-		<Replace MapName="GiantEarth" Region="SOUTH_ASIA"			X="57" Y="30" Width="25" Height="17" />
+		<Replace MapName="GiantEarth" Region="AUSTRALIA"			X="79" Y="0" Width="36" Height="25" />
+		<Replace MapName="GiantEarth" Region="OCEANIA"				X="96" Y="26" Width="34" Height="28" />
+		<Replace MapName="GiantEarth" Region="SOUTH_ASIA"			X="57" Y="24" Width="31" Height="17" />
 		<Replace MapName="GiantEarth" Region="CENTRAL_ASIA"			X="47" Y="48" Width="29" Height="20" />
 		<Replace MapName="GiantEarth" Region="EAST_ASIA"			X="73" Y="48" Width="27" Height="19" />
 		<Replace MapName="GiantEarth" Region="NORTH_ASIA"			X="51" Y="61" Width="60" Height="32" />

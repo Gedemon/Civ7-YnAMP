@@ -55,5 +55,42 @@
 		<Replace Tag="LOC_MAPSIZE_LUDICROUS_DESCRIPTION">
 			<Text>Ludicrous map size for YnAMP scenarios and scripts.</Text>
 		</Replace>
+		<Replace Tag="LOC_YNAMP_REGION_MODE_NAME">
+			<Text>Region Tagging Mode (for YnAMP maps)</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_REGION_MODE_DESC">
+			<Text>Controls how homeland and distant-lands regions are classified. Landmass uses ocean separation from player starts. East-West uses a simple column split. Region uses XML-defined superregions (Earth maps only; falls back to East-West).</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_REGION_MODE_LANDMASS_NAME">
+			<Text>Landmass (default)</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_REGION_MODE_LANDMASS_DESC">
+			<Text>Homeland and distant lands are determined by ocean-blocked connectivity from player start positions. Isolated islands and ocean remain neutral.</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_REGION_MODE_EAST_WEST_NAME">
+			<Text>East-West Split</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_REGION_MODE_EAST_WEST_DESC">
+			<Text>Homeland and distant lands are separated by a simple vertical column boundary, matching the original YnAMP behavior.</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_REGION_MODE_REGION_NAME">
+			<Text>Region (XML)</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_REGION_MODE_REGION_DESC">
+			<Text>Uses XML-defined superregion data (EurAsia, Africa, Americas, Oceania) for Earth maps. Falls back to East-West if no XML data is available for the selected map.</Text>
+		</Replace>
+
+		<Replace Tag="LOC_YNAMP_START_POSITION_RELATIVE_DISTANCE_NAME">
+			<Text>Relative Distance</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_START_POSITION_RELATIVE_DISTANCE_DESC">
+			<Text>After placing start positions, shuffles civilizations so that those historically close to each other (using Giant Earth map coordinates as real-world anchors) are placed near each other on the game map. Has no effect on imported Earth maps, which already use true start locations. This will ignore civilization starting biases.</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_START_POSITION_REGION_NAME">
+			<Text>Cultural Region</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_START_POSITION_REGION_DESC">
+			<Text>After placing start positions, groups civilizations by continental region: Old World civilizations start on the homeland continent, New World civilizations on the distant-lands continent. Within each continent, culturally adjacent groups are placed near one another. Pacific civilizations spawn on islands in either region. Ignores civilization starting biases.</Text>
+		</Replace>
 	</EnglishText>
 </Database>

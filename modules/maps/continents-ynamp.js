@@ -143,6 +143,32 @@ function tagWaterHemispherePlots(iWidth, iHeight, westContinent, eastContinent, 
                     }
                 }
             }
+            // Tag land tiles for hemisphere assignment so the 1.3.0+ resource generator
+            // (which uses getLandmassRegionId) can enforce hemisphere-specific resources.
+            else if (!GameplayMap.isWater(iX, iY)) {
+                if (iNumPlayers1 > iNumPlayers2) {
+                    // West continent is homeland, East continent is distant land
+                    if (iX < westContinent.west - 2 || iX > westContinent.east + 2) {
+                        TerrainBuilder.setPlotTag(iX, iY, PlotTags.PLOT_TAG_EAST_LANDMASS);
+                        TerrainBuilder.setLandmassRegionId(iX, iY, LandmassRegion.LANDMASS_REGION_EAST);
+                    }
+                    else {
+                        TerrainBuilder.setPlotTag(iX, iY, PlotTags.PLOT_TAG_WEST_LANDMASS);
+                        TerrainBuilder.setLandmassRegionId(iX, iY, LandmassRegion.LANDMASS_REGION_WEST);
+                    }
+                }
+                else {
+                    // East continent is homeland, West continent is distant land
+                    if (iX > eastContinent.east + 2 || iX < eastContinent.west - 2) {
+                        TerrainBuilder.setPlotTag(iX, iY, PlotTags.PLOT_TAG_WEST_LANDMASS);
+                        TerrainBuilder.setLandmassRegionId(iX, iY, LandmassRegion.LANDMASS_REGION_EAST);
+                    }
+                    else {
+                        TerrainBuilder.setPlotTag(iX, iY, PlotTags.PLOT_TAG_EAST_LANDMASS);
+                        TerrainBuilder.setLandmassRegionId(iX, iY, LandmassRegion.LANDMASS_REGION_WEST);
+                    }
+                }
+            }
         }
     }
 }
@@ -265,7 +291,7 @@ function generateMap() {
     dumpBiomes(iWidth, iHeight);
     dumpFeatures(iWidth, iHeight);
     dumpPermanentSnow(iWidth, iHeight);
-    generateResources(iWidth, iHeight, westContinent, eastContinent, iNumPlayers1, iNumPlayers2);
+    generateResources(iWidth, iHeight);
     startPositions = phase("assignStartPositions", () => assignStartPositions(iNumPlayers1, iNumPlayers2, westContinent, eastContinent, iStartSectorRows, iStartSectorCols, startSectors));
     phase("generateDiscoveries", () => {
         // Limit to 10 players for discoveries (base game limitation)

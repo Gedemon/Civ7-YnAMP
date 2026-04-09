@@ -606,44 +606,20 @@ function getNeighbors(x, y, mapWidth, mapHeight) {
     return neighbors;
 }
 
-// Superregion groupings - maps individual XML regions to continents
+// Superregion groupings - maps individual XML regions to continental superregions.
+// Data is loaded from the ContinentsRegion table (populated in maps.xml).
+// Fallback: if the table is empty (e.g. data not loaded yet), returns an empty map.
 /**
  * @returns {{[region:string]: string}}
  */
 function getSuperregionMapping() {
-    return {
-        // EurAsia (Europe + Asia)
-        "GROENLAND": "EURASIA",
-        "NORTH_EUROPA": "EURASIA",
-        "WEST_EUROPA": "EURASIA",
-        "SOUTH_EUROPA": "EURASIA",
-        "EAST_EUROPA": "EURASIA",
-        "MEDITERRANEAN": "EURASIA",
-        "TURKEY": "EURASIA",
-        "MIDDLE_EAST": "EURASIA",
-        "NORTH_AFRICA": "EURASIA",  // Connected to Mediterranean
-        "CENTRAL_ASIA": "EURASIA",
-        "NORTH_ASIA": "EURASIA",
-        "EAST_ASIA": "EURASIA",
-        "SOUTH_ASIA": "EURASIA",
-        
-        // Africa (merged into EURASIA superregion)
-        "CENTRAL_AFRICA": "EURASIA",
-        "SOUTH_AFRICA": "EURASIA",
-        "MADAGASCAR": "EURASIA",
-        
-        // Americas (North, Central, South)
-        "NORTH_AMERICA": "AMERICAS",
-        "ARCTIC_AMERICA": "AMERICAS",
-        "CENTRAL_AMERICA": "AMERICAS",
-        "SOUTH_AMERICA_WEST": "AMERICAS",
-        "SOUTH_AMERICA_EAST": "AMERICAS",
-        "ANTARCTIC_AMERICA": "AMERICAS",
-        
-        // Oceania
-        "AUSTRALIA": "OCEANIA",
-        "OCEANIA": "OCEANIA"
-    };
+    const map = {};
+    const rows = GameInfo.ContinentsRegion;
+    if (!rows) return map;
+    for (let i = 0; i < rows.length; i++) {
+        map[rows[i].Region] = rows[i].SuperRegion;
+    }
+    return map;
 }
 
 /**
@@ -684,6 +660,21 @@ function buildRegionGrid(iWidth, iHeight, mapName) {
     });
 
     return regionByTile;
+}
+
+export function hasRegionPositionData(mapName) {
+    let regionRows = GameInfo.RegionPosition;
+    if (!regionRows) {
+        return false;
+    }
+
+    for (let i = 0; i < regionRows.length; i++) {
+        if (regionRows[i].MapName == mapName) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 /**
@@ -873,6 +864,187 @@ export function overrideHomelandsWithXMLRegions(iWidth, iHeight, mapName) {
 }
 
 /**
+ * Tags landmass region IDs based on connectivity from player start positions.
+ * Mirrors continents-voronoi.js behavior:
+ *   - Human's connected landmass (through land+coast, blocked by ocean) → WEST (homeland)
+ *   - Other player starts' connected landmasses → EAST (distant)
+ *   - Ocean-isolated uninhabited islands → PLOT_TAG_ISLAND, no region ID (DEFAULT)
+ *   - Single continent (all players reachable from human) → raw 1 (pangaea-voronoi style)
+ *   - Coast water: tagged by nearest land group; ocean water: left at DEFAULT
+ * @param {number} iWidth
+ * @param {number} iHeight
+ */
+export function overrideHomelandsWithLandmass(iWidth, iHeight) {
+    console.log("overrideHomelandsWithLandmass: Starting");
+
+    // Find human player and their start position
+    let humanPlayerId = -1;
+    let aliveMajorIds = Players.getAliveMajorIds();
+    for (let i = 0; i < aliveMajorIds.length; i++) {
+        if (Players.isHuman(aliveMajorIds[i])) {
+            humanPlayerId = aliveMajorIds[i];
+            break;
+        }
+    }
+    if (humanPlayerId == -1) {
+        console.log("overrideHomelandsWithLandmass: No human player found");
+        humanPlayerId = aliveMajorIds[0]; // fallback on first alive player if there is no human (autoplay ?)
+    }
+
+    let humanStartPlot = StartPositioner.getStartPosition(humanPlayerId);
+    if (humanStartPlot === undefined || humanStartPlot === null || humanStartPlot < 0) {
+        console.log("overrideHomelandsWithLandmass: Invalid start position for human player: " + humanStartPlot);
+        return;
+    }
+
+    let humanStartX = humanStartPlot % iWidth;
+    let humanStartY = Math.floor(humanStartPlot / iWidth);
+
+    // BFS from human start through non-ocean tiles (coast tiles are passable bridges)
+    // Only g_OceanTerrain blocks the spread — a landmass accessible via coast is still homeland
+    let homelandReachable = new Set();
+    let homelandQueue = [{x: humanStartX, y: humanStartY}];
+    homelandReachable.add(humanStartX + humanStartY * iWidth);
+
+    while (homelandQueue.length > 0) {
+        let tile = homelandQueue.shift();
+        let neighbors = getNeighbors(tile.x, tile.y, iWidth, iHeight);
+        for (let neighbor of neighbors) {
+            let key = neighbor.x + neighbor.y * iWidth;
+            if (!homelandReachable.has(key)) {
+                if (GameplayMap.getTerrainType(neighbor.x, neighbor.y) != globals.g_OceanTerrain) {
+                    homelandReachable.add(key);
+                    homelandQueue.push({x: neighbor.x, y: neighbor.y});
+                }
+            }
+        }
+    }
+
+    // BFS from each non-homeland player's start to find distinct distant landmass(es)
+    let distantReachable = new Set();
+    for (let i = 0; i < aliveMajorIds.length; i++) {
+        let playerId = aliveMajorIds[i];
+        if (Players.isHuman(playerId)) continue;
+        let startPlot = StartPositioner.getStartPosition(playerId);
+        if (startPlot === undefined || startPlot === null || startPlot < 0) continue;
+        let startX = startPlot % iWidth;
+        let startY = Math.floor(startPlot / iWidth);
+        let startKey = startX + startY * iWidth;
+        if (homelandReachable.has(startKey)) continue; // AI is also on homeland
+
+        let queue = [{x: startX, y: startY}];
+        distantReachable.add(startKey);
+        while (queue.length > 0) {
+            let tile = queue.shift();
+            let neighbors = getNeighbors(tile.x, tile.y, iWidth, iHeight);
+            for (let neighbor of neighbors) {
+                let key = neighbor.x + neighbor.y * iWidth;
+                if (!distantReachable.has(key) && !homelandReachable.has(key)) {
+                    if (GameplayMap.getTerrainType(neighbor.x, neighbor.y) != globals.g_OceanTerrain) {
+                        distantReachable.add(key);
+                        queue.push({x: neighbor.x, y: neighbor.y});
+                    }
+                }
+            }
+        }
+    }
+
+    let isSingleContinent = distantReachable.size === 0;
+    if (isSingleContinent) {
+        console.log("overrideHomelandsWithLandmass: Single continent — tagging non-ocean tiles as raw 1 (pangaea style)");
+    }
+
+    // Classify and tag non-water (land) tiles
+    let homelandLandPlots = [];
+    let distantLandPlots = [];
+    let isolatedLandPlots = [];
+
+    for (let iY = 0; iY < iHeight; iY++) {
+        for (let iX = 0; iX < iWidth; iX++) {
+            if (GameplayMap.isWater(iX, iY)) continue; // land tiles only
+            let key = iX + iY * iWidth;
+            if (homelandReachable.has(key)) {
+                if (isSingleContinent) {
+                    // Pangaea-voronoi style: raw 1 so modulo check passes for all resource types
+                    TerrainBuilder.setLandmassRegionId(iX, iY, 1);
+                } else {
+                    TerrainBuilder.setPlotTag(iX, iY, PlotTags.PLOT_TAG_WEST_LANDMASS);
+                    TerrainBuilder.setLandmassRegionId(iX, iY, LandmassRegion.LANDMASS_REGION_WEST);
+                }
+                homelandLandPlots.push({x: iX, y: iY});
+            } else if (!isSingleContinent && distantReachable.has(key)) {
+                TerrainBuilder.setPlotTag(iX, iY, PlotTags.PLOT_TAG_EAST_LANDMASS);
+                TerrainBuilder.setLandmassRegionId(iX, iY, LandmassRegion.LANDMASS_REGION_EAST);
+                distantLandPlots.push({x: iX, y: iY});
+            } else {
+                // Ocean-isolated uninhabited island — no setLandmassRegionId → stays DEFAULT
+                // Matches continents-voronoi behavior for landmassId 0/3/4+
+                TerrainBuilder.addPlotTag(iX, iY, PlotTags.PLOT_TAG_ISLAND);
+                isolatedLandPlots.push({x: iX, y: iY});
+            }
+        }
+    }
+
+    // Helper: brute-force nearest-plot-distance scan (same as overrideHomelandsWithXMLRegions)
+    function getNearestDistanceToPlots(iX, iY, plots) {
+        if (!plots || plots.length === 0) return Number.MAX_SAFE_INTEGER;
+        let minDistance = Number.MAX_SAFE_INTEGER;
+        for (let i = 0; i < plots.length; i++) {
+            let distance = GameplayMap.getPlotDistance(iX, iY, plots[i].x, plots[i].y);
+            if (distance < minDistance) {
+                minDistance = distance;
+                if (minDistance <= 1) break;
+            }
+        }
+        return minDistance;
+    }
+
+    // Tag coast water tiles by nearest land group; leave ocean tiles at DEFAULT
+    let waterTagCounts = { homeland: 0, distant: 0, island: 0, ocean: 0 };
+    for (let iY = 0; iY < iHeight; iY++) {
+        for (let iX = 0; iX < iWidth; iX++) {
+            let terrainType = GameplayMap.getTerrainType(iX, iY);
+            if (terrainType == globals.g_CoastTerrain) {
+                let nearestHomeland  = getNearestDistanceToPlots(iX, iY, homelandLandPlots);
+                let nearestDistant   = getNearestDistanceToPlots(iX, iY, distantLandPlots);
+                let nearestIsolated  = getNearestDistanceToPlots(iX, iY, isolatedLandPlots);
+
+                if (isSingleContinent) {
+                    // Single continent: coast near mainland gets raw 1; coast near isolated island stays PLOT_TAG_ISLAND
+                    if (nearestHomeland <= nearestIsolated) {
+                        TerrainBuilder.setLandmassRegionId(iX, iY, 1);
+                        waterTagCounts.homeland++;
+                    } else {
+                        TerrainBuilder.addPlotTag(iX, iY, PlotTags.PLOT_TAG_ISLAND);
+                        waterTagCounts.island++;
+                    }
+                } else if (nearestHomeland <= nearestDistant && nearestHomeland <= nearestIsolated) {
+                    TerrainBuilder.setPlotTag(iX, iY, PlotTags.PLOT_TAG_WATER);
+                    TerrainBuilder.addPlotTag(iX, iY, PlotTags.PLOT_TAG_WEST_WATER);
+                    TerrainBuilder.setLandmassRegionId(iX, iY, LandmassRegion.LANDMASS_REGION_WEST);
+                    waterTagCounts.homeland++;
+                } else if (nearestDistant <= nearestIsolated) {
+                    TerrainBuilder.setPlotTag(iX, iY, PlotTags.PLOT_TAG_WATER);
+                    TerrainBuilder.addPlotTag(iX, iY, PlotTags.PLOT_TAG_EAST_WATER);
+                    TerrainBuilder.setLandmassRegionId(iX, iY, LandmassRegion.LANDMASS_REGION_EAST);
+                    waterTagCounts.distant++;
+                } else {
+                    // Nearest land is an isolated island → island tag, no LandmassRegionId (DEFAULT)
+                    TerrainBuilder.addPlotTag(iX, iY, PlotTags.PLOT_TAG_ISLAND);
+                    waterTagCounts.island++;
+                }
+            } else if (terrainType == globals.g_OceanTerrain) {
+                // Ocean: leave at DEFAULT — no tags, no region ID (consistent with voronoi ocean tiles)
+                waterTagCounts.ocean++;
+            }
+        }
+    }
+
+    console.log("overrideHomelandsWithLandmass: Land — homeland=" + homelandLandPlots.length + " distant=" + distantLandPlots.length + " isolated=" + isolatedLandPlots.length);
+    console.log("overrideHomelandsWithLandmass: Coast water — homeland=" + waterTagCounts.homeland + " distant=" + waterTagCounts.distant + " island=" + waterTagCounts.island + " (ocean untouched: " + waterTagCounts.ocean + ")");
+}
+
+/**
  * @param {number} iWidth
  * @param {number} iHeight
  * @param {number[]} startPositions
@@ -1032,4 +1204,91 @@ export function isAdjacentToTerrain(iX, iY, terrain) {
 }
 
 console.log("Loaded YnAMP Utilities");
+
+// ── Plot helpers (shared between ynamp-map-loading.js and ynamp-cultural-start.js) ──
+
+export function isValidPlot(plotIndex) {
+    return plotIndex !== undefined && plotIndex !== null && !isNaN(plotIndex) && plotIndex >= 0;
+}
+
+export function isSettlablePlot(x, y) {
+    return !GameplayMap.isWater(x, y) &&
+           !GameplayMap.isMountain(x, y) &&
+           !GameplayMap.isNaturalWonder(x, y) &&
+           GameplayMap.getResourceType(x, y) === ResourceTypes.NO_RESOURCE;
+}
+
+/**
+ * @param {number} plotIndex
+ * @param {Set<number>} usedPlots
+ * @param {number} iWidth
+ * @param {number} minDistance
+ */
+export function isPlotTooCloseToUsed(plotIndex, usedPlots, iWidth, minDistance) {
+    if (!isValidPlot(plotIndex)) return true;
+    const x = plotIndex % iWidth;
+    const y = Math.floor(plotIndex / iWidth);
+    for (const usedPlot of usedPlots) {
+        const ux = usedPlot % iWidth;
+        const uy = Math.floor(usedPlot / iWidth);
+        if (GameplayMap.getPlotDistance(x, y, ux, uy) < minDistance) return true;
+    }
+    return false;
+}
+
+/**
+ * Finds the best available start plot, optionally restricted to a specific landmass regionID.
+ *
+ * @param {number}  defaultPlot      Preferred plot index to try first; pass -1 to skip.
+ * @param {Set<number>} usedPlots    Set of already-occupied plot indices.
+ * @param {number}  iWidth
+ * @param {number}  iHeight
+ * @param {number}  minDistance      Minimum hex distance from any used plot.
+ * @param {number}  [requiredRegionId=-1]
+ *   When >= 0, only candidates whose GameplayMap.getLandmassRegionId() matches this value
+ *   are considered. Pass -1 (default) to accept candidates from any region.
+ * @returns {number} Plot index, or -1 if none found.
+ */
+export function findFallbackStartPlot(defaultPlot, usedPlots, iWidth, iHeight, minDistance, requiredRegionId = -1) {
+    const regionFilter = requiredRegionId >= 0;
+
+    if (isValidPlot(defaultPlot)) {
+        const x = defaultPlot % iWidth;
+        const y = Math.floor(defaultPlot / iWidth);
+        const regionOk = !regionFilter || GameplayMap.getLandmassRegionId(x, y) === requiredRegionId;
+        if (regionOk && isSettlablePlot(x, y) && !usedPlots.has(defaultPlot) &&
+                !isPlotTooCloseToUsed(defaultPlot, usedPlots, iWidth, minDistance)) {
+            return defaultPlot;
+        }
+    }
+
+    // Build a scored list of all candidate plots, sorted by fertility (best first).
+    // FertilityBuilder.recalculate() must have been called before this function.
+    const candidates = [];
+    for (let y = 0; y < iHeight; y++) {
+        for (let x = 0; x < iWidth; x++) {
+            if (!isSettlablePlot(x, y)) continue;
+            if (regionFilter && GameplayMap.getLandmassRegionId(x, y) !== requiredRegionId) continue;
+            const plot = y * iWidth + x;
+            if (usedPlots.has(plot)) continue;
+            const score = StartPositioner.getStartPositionScore(x, y);
+            if (score > 0) {
+                candidates.push({ plot, x, y, score });
+            }
+        }
+    }
+    candidates.sort((a, b) => b.score - a.score);
+
+    // First pass: respect minimum distance
+    for (let i = 0; i < candidates.length; i++) {
+        if (!isPlotTooCloseToUsed(candidates[i].plot, usedPlots, iWidth, minDistance)) {
+            return candidates[i].plot;
+        }
+    }
+
+    // Last resort: best-scored plot regardless of distance
+    if (candidates.length > 0) return candidates[0].plot;
+
+    return -1;
+}
 

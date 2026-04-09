@@ -49,4 +49,83 @@
 		<Row AgeProgressionEventType="AGE_PROGRESSION_PLAYER_ELIMINATED" MapSizeType="MAPSIZE_GIANT" Points="0"/>
 		<Row AgeProgressionEventType="AGE_PROGRESSION_PLAYER_ELIMINATED" MapSizeType="MAPSIZE_LUDICROUS" Points="0"/>
 	</AgeProgressionEventMapSizeOverrides>
+
+	<!-- ═══════════════════════════════════════════════════════════════════
+	     Continental superregion mapping (data-driven getSuperregionMapping)
+	     EURASIA  → homeland regionID on two-continent maps
+	     AMERICAS → distant-lands regionID on two-continent maps
+	     OCEANIA  → islands (either regionID; no forced hemisphere)
+	     ═══════════════════════════════════════════════════════════════════ -->
+	<ContinentsRegion>
+		<!-- EurAsia — Europe -->
+		<Row Region="GROENLAND"        SuperRegion="EURASIA"/>
+		<Row Region="NORTH_EUROPA"     SuperRegion="EURASIA"/>
+		<Row Region="WEST_EUROPA"      SuperRegion="EURASIA"/>
+		<Row Region="SOUTH_EUROPA"     SuperRegion="EURASIA"/>
+		<Row Region="EAST_EUROPA"      SuperRegion="EURASIA"/>
+		<!-- EurAsia — Mediterranean / Middle East -->
+		<Row Region="MEDITERRANEAN"    SuperRegion="EURASIA"/>
+		<Row Region="TURKEY"           SuperRegion="EURASIA"/>
+		<Row Region="MIDDLE_EAST"      SuperRegion="EURASIA"/>
+		<!-- EurAsia — Asia -->
+		<Row Region="CENTRAL_ASIA"     SuperRegion="EURASIA"/>
+		<Row Region="NORTH_ASIA"       SuperRegion="EURASIA"/>
+		<Row Region="EAST_ASIA"        SuperRegion="EURASIA"/>
+		<Row Region="SOUTH_ASIA"       SuperRegion="EURASIA"/>
+		<!-- Africa — merged into EURASIA superregion -->
+		<Row Region="NORTH_AFRICA"     SuperRegion="EURASIA"/>
+		<Row Region="CENTRAL_AFRICA"   SuperRegion="EURASIA"/>
+		<Row Region="SOUTH_AFRICA"     SuperRegion="EURASIA"/>
+		<Row Region="MADAGASCAR"       SuperRegion="EURASIA"/>
+		<!-- Americas -->
+		<Row Region="NORTH_AMERICA"       SuperRegion="AMERICAS"/>
+		<Row Region="ARCTIC_AMERICA"      SuperRegion="AMERICAS"/>
+		<Row Region="CENTRAL_AMERICA"     SuperRegion="AMERICAS"/>
+		<Row Region="SOUTH_AMERICA_WEST"  SuperRegion="AMERICAS"/>
+		<Row Region="SOUTH_AMERICA_EAST"  SuperRegion="AMERICAS"/>
+		<Row Region="ANTARCTIC_AMERICA"   SuperRegion="AMERICAS"/>
+		<!-- Oceania — islands, spawn on either regionID -->
+		<Row Region="AUSTRALIA"        SuperRegion="OCEANIA"/>
+		<Row Region="OCEANIA"          SuperRegion="OCEANIA"/>
+	</ContinentsRegion>
+
+	<!-- ═══════════════════════════════════════════════════════════════════
+	     Cultural region grouping (Civ6 ETHNICITY_ style)
+	     Used by the "Cultural Region" start-position option for intra-
+	     continental placement scoring within each landmass regionID.
+	     ═══════════════════════════════════════════════════════════════════ -->
+	<CulturalRegion>
+		<!-- ETHNICITY_EURO — Northern / Western / Eastern Europe -->
+		<Row Region="GROENLAND"        CultureGroup="ETHNICITY_EURO"/>
+		<Row Region="NORTH_EUROPA"     CultureGroup="ETHNICITY_EURO"/>
+		<Row Region="WEST_EUROPA"      CultureGroup="ETHNICITY_EURO"/>
+		<Row Region="EAST_EUROPA"      CultureGroup="ETHNICITY_EURO"/>
+		<!-- ETHNICITY_MEDIT — Southern Europe, Mediterranean rim -->
+		<Row Region="SOUTH_EUROPA"     CultureGroup="ETHNICITY_MEDIT"/>
+		<Row Region="MEDITERRANEAN"    CultureGroup="ETHNICITY_MEDIT"/>
+		<Row Region="TURKEY"           CultureGroup="ETHNICITY_MEDIT"/>
+		<Row Region="NORTH_AFRICA"     CultureGroup="ETHNICITY_MEDIT"/>
+		<!-- ETHNICITY_MIDEAST — Middle East (bridge between MEDIT and ASIAN) -->
+		<Row Region="MIDDLE_EAST"      CultureGroup="ETHNICITY_MIDEAST"/>
+		<!-- ETHNICITY_AFRICAN — Sub-Saharan Africa -->
+		<Row Region="CENTRAL_AFRICA"   CultureGroup="ETHNICITY_AFRICAN"/>
+		<Row Region="SOUTH_AFRICA"     CultureGroup="ETHNICITY_AFRICAN"/>
+		<Row Region="MADAGASCAR"       CultureGroup="ETHNICITY_AFRICAN"/>
+		<!-- ETHNICITY_ASIAN — Asia (Central, East, South, Siberia) -->
+		<Row Region="CENTRAL_ASIA"     CultureGroup="ETHNICITY_ASIAN"/>
+		<Row Region="NORTH_ASIA"       CultureGroup="ETHNICITY_ASIAN"/>
+		<Row Region="EAST_ASIA"        CultureGroup="ETHNICITY_ASIAN"/>
+		<Row Region="SOUTH_ASIA"       CultureGroup="ETHNICITY_ASIAN"/>
+		<!-- ETHNICITY_OCEANIA — Pacific islands and Australia -->
+		<Row Region="AUSTRALIA"        CultureGroup="ETHNICITY_OCEANIA"/>
+		<Row Region="OCEANIA"          CultureGroup="ETHNICITY_OCEANIA"/>
+		<!-- ETHNICITY_NAM — North and Central America -->
+		<Row Region="NORTH_AMERICA"    CultureGroup="ETHNICITY_NAM"/>
+		<Row Region="ARCTIC_AMERICA"   CultureGroup="ETHNICITY_NAM"/>
+		<Row Region="CENTRAL_AMERICA"  CultureGroup="ETHNICITY_NAM"/>
+		<!-- ETHNICITY_SOUTHAM — South America -->
+		<Row Region="SOUTH_AMERICA_WEST"   CultureGroup="ETHNICITY_SOUTHAM"/>
+		<Row Region="SOUTH_AMERICA_EAST"   CultureGroup="ETHNICITY_SOUTHAM"/>
+		<Row Region="ANTARCTIC_AMERICA"    CultureGroup="ETHNICITY_SOUTHAM"/>
+	</CulturalRegion>
 </Database>
