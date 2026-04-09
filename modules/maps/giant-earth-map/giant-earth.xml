@@ -34,6 +34,7 @@
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_MING"			X="78" Y="60" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_MONGOLIA"		X="73" Y="71" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_NORMAN"		X="13"  Y="68" />
+		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_PIRATE_REPUBLIC"	X="151"	Y="50" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_SHAWNEE"		X="150"  Y="64" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_SONGHAI"		X="7"  Y="39" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_SPAIN"			X="7"  Y="57" />

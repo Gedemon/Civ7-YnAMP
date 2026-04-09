@@ -34,7 +34,7 @@
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MING"					X="87"	Y="48" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_MONGOLIA"				X="81"	Y="57" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_NORMAN"					X="41"	Y="48" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_REPUBLIC_OF_PIRATES"		X="23"	Y="37" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_PIRATE_REPUBLIC"			X="23"	Y="37" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_SHAWNEE"					X="17"	Y="48" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_SONGHAI"					X="47"	Y="26" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_SPAIN"					X="37"	Y="38" />
