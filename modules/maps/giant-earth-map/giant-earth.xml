@@ -337,147 +337,71 @@
 	
 	<NaturalWonderPosition>
 
-		<!-- FEATURE_BARRIER_REEF : 2 plots, coast, 1st plot is SOUTHEAST -->
-		<Replace MapName="GiantEarth" X="101" Y="23" FeatureType="FEATURE_BARRIER_REEF" TerrainType="TERRAIN_COAST" />
-		<Replace MapName="GiantEarth" X="101" Y="24" FeatureType="FEATURE_BARRIER_REEF" TerrainType="TERRAIN_COAST" />
-		
-		<!-- FEATURE_CLIFFS_DOVER : 2 plots, hills on coast, 1st plot is WEST -->
-		<Replace MapName="GiantEarth" X="11" Y="71" FeatureType="FEATURE_CLIFFS_DOVER" TerrainType="TERRAIN_GRASS_HILLS" />
-		<Replace MapName="GiantEarth" X="12" Y="71" FeatureType="FEATURE_CLIFFS_DOVER" TerrainType="TERRAIN_GRASS_HILLS" />
-		
-		<!-- FEATURE_CRATER_LAKE : 1 plot -->
-		<Replace MapName="GiantEarth" X="131" Y="66" FeatureType="FEATURE_CRATER_LAKE" TerrainType="TERRAIN_COAST" />
-		
-		<!-- FEATURE_DEAD_SEA : 2 plots, flat desert surrounded by desert, 1st plot is SOUTHWEST -->
-		<Replace MapName="GiantEarth" X="37" Y="50" FeatureType="FEATURE_DEAD_SEA" TerrainType="TERRAIN_DESERT" />
-		<Replace MapName="GiantEarth" X="37" Y="51" FeatureType="FEATURE_DEAD_SEA" TerrainType="TERRAIN_DESERT" />
-		
-		<!-- FEATURE_EVEREST : 3 plots, mountains, 1st plot is WEST -->
-		<Replace MapName="GiantEarth" X="64" Y="54" FeatureType="FEATURE_EVEREST" TerrainType="TERRAIN_TUNDRA_MOUNTAIN" />
-		<Replace MapName="GiantEarth" X="65" Y="54" FeatureType="FEATURE_EVEREST" TerrainType="TERRAIN_TUNDRA_MOUNTAIN" />
-		<Replace MapName="GiantEarth" X="64" Y="53" FeatureType="FEATURE_EVEREST" TerrainType="TERRAIN_TUNDRA_MOUNTAIN" />
-		
-		<!-- FEATURE_GALAPAGOS : 2 plots, coast, surrounded by coast, 1st plot is SOUTHEAST -->
-		<Replace MapName="GiantEarth" X="146" Y="35" FeatureType="FEATURE_GALAPAGOS" TerrainType="TERRAIN_COAST" />
-		<Replace MapName="GiantEarth" X="146" Y="36" FeatureType="FEATURE_GALAPAGOS" TerrainType="TERRAIN_COAST" />
-		
-		<!-- FEATURE_KILIMANJARO : 1 plot -->
-		<Replace MapName="GiantEarth" X="32" Y="27" FeatureType="FEATURE_KILIMANJARO" TerrainType="TERRAIN_GRASS" />
-		
-		<!-- FEATURE_PANTANAL : 4 plots, flat grass/plains without features, 1st plot is SOUTHWEST -->
-		<Replace MapName="GiantEarth" X="159" Y="27" FeatureType="FEATURE_PANTANAL" TerrainType="TERRAIN_GRASS" />
-		<Replace MapName="GiantEarth" X="159" Y="28" FeatureType="FEATURE_PANTANAL" TerrainType="TERRAIN_GRASS" />
-		<Replace MapName="GiantEarth" X="160" Y="28" FeatureType="FEATURE_PANTANAL" TerrainType="TERRAIN_GRASS" />
-		<Replace MapName="GiantEarth" X="160" Y="29" FeatureType="FEATURE_PANTANAL" TerrainType="TERRAIN_GRASS" />
-		
-		<!-- FEATURE_PIOPIOTAHI : 3 plots, flat grass near coast, 1st plot is WEST -->
-		<Replace MapName="GiantEarth" X="107" Y="3" FeatureType="FEATURE_PIOPIOTAHI" TerrainType="TERRAIN_GRASS" />
-		<Replace MapName="GiantEarth" X="108" Y="3" FeatureType="FEATURE_PIOPIOTAHI" TerrainType="TERRAIN_GRASS" />
-		<Replace MapName="GiantEarth" X="108" Y="4" FeatureType="FEATURE_PIOPIOTAHI" TerrainType="TERRAIN_GRASS" />
-		
-		<!-- FEATURE_TORRES_DEL_PAINE : 2 plots EAST-WEST without features, 1st plot is WEST -->
-		<Replace MapName="GiantEarth" X="154" Y="7" FeatureType="FEATURE_TORRES_DEL_PAINE" TerrainType="TERRAIN_TUNDRA" />
-		<Replace MapName="GiantEarth" X="155" Y="7" FeatureType="FEATURE_TORRES_DEL_PAINE" TerrainType="TERRAIN_TUNDRA" />
-		
-		<!-- FEATURE_TSINGY : 1 plot -->
-		<Replace MapName="GiantEarth" X="36" Y="18" FeatureType="FEATURE_TSINGY" TerrainType="TERRAIN_GRASS" />
-		
-		<!-- FEATURE_YOSEMITE : 2 plots EAST-WEST, flat tundra/plains without features, 1st plot is WEST -->
-		<Replace MapName="GiantEarth" X="132" Y="62" FeatureType="FEATURE_YOSEMITE" TerrainType="TERRAIN_TUNDRA" />
-		<Replace MapName="GiantEarth" X="133" Y="62" FeatureType="FEATURE_YOSEMITE" TerrainType="TERRAIN_TUNDRA" />
-		
-		<!-- **************** -->
-		<!--     DLC NW       -->
-		<!-- **************** -->
-		
-		<!-- FEATURE_EYJAFJALLAJOKULL : 2 plots EAST-WEST, flat tundra/plains without features, 1st plot is WEST -->
-		<Replace MapName="GiantEarth" X="2" Y="83" FeatureType="FEATURE_EYJAFJALLAJOKULL" TerrainType="TERRAIN_TUNDRA" />
-		<Replace MapName="GiantEarth" X="3" Y="83" FeatureType="FEATURE_EYJAFJALLAJOKULL" TerrainType="TERRAIN_TUNDRA" />
-		
-		<!-- FEATURE_LYSEFJORDEN : 3 plots, , flat grass near coast, 1st plot is EAST -->
-		<Replace MapName="GiantEarth" X="17" Y="79" FeatureType="FEATURE_LYSEFJORDEN" TerrainType="TERRAIN_GRASS" />
-		<Replace MapName="GiantEarth" X="18" Y="79" FeatureType="FEATURE_LYSEFJORDEN" TerrainType="TERRAIN_GRASS" />
-		<Replace MapName="GiantEarth" X="18" Y="78" FeatureType="FEATURE_LYSEFJORDEN" TerrainType="TERRAIN_GRASS" />
-		
-		<!-- FEATURE_GIANTS_CAUSEWAY : 2 plots, one on coastal land and one in water, 1st plot is land, SOUTHEAST -->
-		<Replace MapName="GiantEarth" X="6" Y="77" FeatureType="FEATURE_GIANTS_CAUSEWAY" TerrainType="TERRAIN_GRASS" />
-		<Replace MapName="GiantEarth" X="6" Y="78" FeatureType="FEATURE_GIANTS_CAUSEWAY" TerrainType="TERRAIN_COAST" />		
-		
-		<!-- FEATURE_ULURU : 1 plot -->
-		<Replace MapName="GiantEarth" X="93" Y="16" FeatureType="FEATURE_ULURU" TerrainType="TERRAIN_DESERT" />
+		<!-- ================================ -->
+		<!-- BASE GAME NATURAL WONDERS (CIV7) -->
+		<!-- ================================ -->
 
-		<!-- FEATURE_HA_LONG_BAY -->
-		<Replace MapName="GiantEarth" X="78" Y="45" FeatureType="FEATURE_HA_LONG_BAY" TerrainType="TERRAIN_COAST" />
-		<Replace MapName="GiantEarth" X="79" Y="46" FeatureType="FEATURE_HA_LONG_BAY" TerrainType="TERRAIN_COAST" />
-		
-		<!-- **************** -->
-		<!-- Rise and Fall NW -->
-		<!-- **************** -->		
-		
-		<Replace MapName="GiantEarth" X="161" Y="35" FeatureType="FEATURE_RORAIMA" TerrainType="TERRAIN_GRASS_HILLS" />
-		<Replace MapName="GiantEarth" X="162" Y="36" FeatureType="FEATURE_RORAIMA" TerrainType="TERRAIN_GRASS_HILLS" />
-		<Replace MapName="GiantEarth" X="161" Y="36" FeatureType="FEATURE_RORAIMA" TerrainType="TERRAIN_GRASS_HILLS" />
-		<Replace MapName="GiantEarth" X="162" Y="37" FeatureType="FEATURE_RORAIMA" TerrainType="TERRAIN_GRASS_HILLS" />
-		
-		<Replace MapName="GiantEarth" X="71" Y="58" FeatureType="FEATURE_ZHANGYE_DANXIA" TerrainType="TERRAIN_TUNDRA_MOUNTAIN" />
-		<Replace MapName="GiantEarth" X="72" Y="58" FeatureType="FEATURE_ZHANGYE_DANXIA" TerrainType="TERRAIN_TUNDRA_MOUNTAIN" />
-		<Replace MapName="GiantEarth" X="73" Y="58" FeatureType="FEATURE_ZHANGYE_DANXIA" TerrainType="TERRAIN_TUNDRA_MOUNTAIN" />
-		
-		<Replace MapName="GiantEarth" X="70" Y="72" FeatureType="FEATURE_UBSUNUR_HOLLOW" TerrainType="TERRAIN_GRASS" />
-		<Replace MapName="GiantEarth" X="71" Y="72" FeatureType="FEATURE_UBSUNUR_HOLLOW" TerrainType="TERRAIN_GRASS" />
-		<Replace MapName="GiantEarth" X="70" Y="73" FeatureType="FEATURE_UBSUNUR_HOLLOW" TerrainType="TERRAIN_GRASS" />
-		<Replace MapName="GiantEarth" X="71" Y="73" FeatureType="FEATURE_UBSUNUR_HOLLOW" TerrainType="TERRAIN_GRASS" />
-		
-		<Replace MapName="GiantEarth" X="4" Y="39" FeatureType="FEATURE_LAKE_RETBA" TerrainType="TERRAIN_GRASS" />
-		<Replace MapName="GiantEarth" X="5" Y="39" FeatureType="FEATURE_LAKE_RETBA" TerrainType="TERRAIN_GRASS" />
-		
-		<Replace MapName="GiantEarth" X="17" Y="64" FeatureType="FEATURE_MATTERHORN" TerrainType="TERRAIN_PLAINS_MOUNTAIN" /> 
-		<Replace MapName="GiantEarth" X="136" Y="61" FeatureType="FEATURE_DELICATE_ARCH" />
-		<Replace MapName="GiantEarth" X="8" Y="43" FeatureType="FEATURE_EYE_OF_THE_SAHARA" TerrainType="TERRAIN_DESERT" />
-		
-		<!-- ****************** -->
-		<!-- Gathering Storm NW -->
-		<!-- ****************** -->
-		
-		<Replace MapName="GiantEarth" X="89" Y="39" FeatureType="FEATURE_CHOCOLATEHILLS" TerrainType="TERRAIN_GRASS_HILLS" />
-		<Replace MapName="GiantEarth" X="90" Y="40" FeatureType="FEATURE_CHOCOLATEHILLS" TerrainType="TERRAIN_GRASS_HILLS" />
-		<Replace MapName="GiantEarth" X="90" Y="39" FeatureType="FEATURE_CHOCOLATEHILLS" TerrainType="TERRAIN_GRASS_HILLS" />
-		<Replace MapName="GiantEarth" X="90" Y="38" FeatureType="FEATURE_CHOCOLATEHILLS" TerrainType="TERRAIN_GRASS_HILLS" />
-		
-		<Replace MapName="GiantEarth" X="44" Y="60" FeatureType="FEATURE_GOBUSTAN" TerrainType="TERRAIN_PLAINS" />
-		<Replace MapName="GiantEarth" X="44" Y="61" FeatureType="FEATURE_GOBUSTAN" TerrainType="TERRAIN_PLAINS" />
-		<Replace MapName="GiantEarth" X="45" Y="60" FeatureType="FEATURE_GOBUSTAN" TerrainType="TERRAIN_PLAINS" />
-		
-		<Replace MapName="GiantEarth" X="32" Y="57" FeatureType="FEATURE_PAMUKKALE" TerrainType="TERRAIN_PLAINS_HILLS" />
-		<Replace MapName="GiantEarth" X="33" Y="57" FeatureType="FEATURE_PAMUKKALE" TerrainType="TERRAIN_PLAINS_HILLS" />
-		
-		<Replace MapName="GiantEarth" X="27" Y="45" FeatureType="FEATURE_WHITEDESERT" TerrainType="TERRAIN_DESERT" />
-		<Replace MapName="GiantEarth" X="28" Y="45" FeatureType="FEATURE_WHITEDESERT" TerrainType="TERRAIN_DESERT" />
-		<Replace MapName="GiantEarth" X="28" Y="46" FeatureType="FEATURE_WHITEDESERT" TerrainType="TERRAIN_DESERT" />
-		<Replace MapName="GiantEarth" X="29" Y="46" FeatureType="FEATURE_WHITEDESERT" TerrainType="TERRAIN_DESERT" />
-		
-		<Replace MapName="GiantEarth" X="138" Y="68" FeatureType="FEATURE_DEVILSTOWER" TerrainType="TERRAIN_PLAINS_MOUNTAIN" />
-		<Replace MapName="GiantEarth" X="146" Y="49" FeatureType="FEATURE_IKKIL"  />
-		<Replace MapName="GiantEarth" X="22" Y="56" FeatureType="FEATURE_VESUVIUS" TerrainType="TERRAIN_PLAINS_MOUNTAIN" />
-		
-		<!-- ****************** -->
-		<!-- New Horizon Pack   -->
-		<!-- ****************** -->
+		<!-- FEATURE_BARRIER_REEF : shape=FOURADJACENT | terrain=COAST | biome=MARINE | tags: ADJACENTTOLAND, SHALLOWWATER, NOTADJACENTTOICE — NE Australia (reused from Civ6 GE) -->
+		<Replace MapName="GiantEarth" X="101" Y="23" FeatureType="FEATURE_BARRIER_REEF" />
 
-		<Replace MapName="GiantEarth" X="155" Y="53" FeatureType="FEATURE_BERMUDA_TRIANGLE" TerrainType="TERRAIN_OCEAN" />
-		<Replace MapName="GiantEarth" X="156" Y="53" FeatureType="FEATURE_BERMUDA_TRIANGLE" TerrainType="TERRAIN_OCEAN" />
-		<Replace MapName="GiantEarth" X="156" Y="54" FeatureType="FEATURE_BERMUDA_TRIANGLE" TerrainType="TERRAIN_OCEAN" />
-		
-		<!-- **************** -->
-		<!--    Modded NW     -->
-		<!-- **************** -->
-		
-		<Replace MapName="GiantEarth" X="98" Y="58" FeatureType="FEATURE_SUK_FUJI" TerrainType="TERRAIN_GRASS" />
+		<!-- FEATURE_VALLEY_OF_FLOWERS : shape=TWOADJACENT | terrain=FLAT | biome=PLAINS | tags: NOTNEARCOAST, ADJACENTMOUNTAIN — Valley of Flowers, Uttarakhand, India -->
+		<Replace MapName="GiantEarth" X="61" Y="52" FeatureType="FEATURE_VALLEY_OF_FLOWERS" />
 
-		<!--
-		<Replace MapName="GiantEarth" X="76" Y="41" FeatureType="FEATURE_SUK_TONLESAP" TerrainType="TERRAIN_COAST" />
-		<Replace MapName="GiantEarth" X="77" Y="40" FeatureType="FEATURE_SUK_TONLESAP" TerrainType="TERRAIN_COAST" />
-		-->
+		<!-- FEATURE_REDWOOD_FOREST : shape=THREETRIANGLE | terrain=FLAT | biome=GRASSLAND | tags: FEATURE_FOREST — N California, USA -->
+		<Replace MapName="GiantEarth" X="132" Y="63" FeatureType="FEATURE_REDWOOD_FOREST" />
+
+		<!-- FEATURE_GRAND_CANYON : shape=FOURPARALLELAGRM | terrain=FLAT | biome=DESERT | tags: NOTNEARCOAST, NOTADJACENTTORIVER — Arizona, USA (desert confirmed in map data) -->
+		<Replace MapName="GiantEarth" X="136" Y="57" FeatureType="FEATURE_GRAND_CANYON" />
+
+		<!-- FEATURE_GULLFOSS : shape=ONE | terrain=HILL | biome=TUNDRA | tags: WATERFALL — Iceland (plains_hills confirmed, near ICELAND TSL 2,84) -->
+		<Replace MapName="GiantEarth" X="2" Y="83" FeatureType="FEATURE_GULLFOSS" />
+
+		<!-- FEATURE_HOERIKWAGGO : shape=FOURL | terrain=MOUNTAIN | biome=GRASSLAND | tags: (none) — Cape of Good Hope, South Africa -->
+		<Replace MapName="GiantEarth" X="25" Y="10" FeatureType="FEATURE_HOERIKWAGGO" />
+
+		<!-- FEATURE_IGUAZU_FALLS : shape=ONE | terrain=HILL | biome=TROPICAL | tags: WATERFALL — Iguazu Falls, Argentina/Brazil (plains_hills confirmed) -->
+		<Replace MapName="GiantEarth" X="157" Y="22" FeatureType="FEATURE_IGUAZU_FALLS" />
+
+		<!-- FEATURE_KILIMANJARO : shape=THREETRIANGLE | terrain=MOUNTAIN | biome=PLAINS | tags: VOLCANO — Tanzania (reused from Civ6 GE) -->
+		<Replace MapName="GiantEarth" X="32" Y="27" FeatureType="FEATURE_KILIMANJARO" />
+
+		<!-- FEATURE_ZHANGJIAJIE : shape=TWOADJACENT | terrain=MOUNTAIN | biome=TROPICAL | tags: (none) — Hunan, China (mountain confirmed) -->
+		<Replace MapName="GiantEarth" X="88" Y="48" FeatureType="FEATURE_ZHANGJIAJIE" />
+
+		<!-- FEATURE_THERA : shape=FOURPARALLELAGRM | terrain=COAST | biome=MARINE | tags: ADJACENTTOLAND, VOLCANO, SHALLOWWATER, NOTADJACENTTOICE — Santorini/Thera, Aegean Sea (coast confirmed) -->
+		<Replace MapName="GiantEarth" X="28" Y="53" FeatureType="FEATURE_THERA" />
+
+		<!-- FEATURE_TORRES_DEL_PAINE : shape=THREETRIANGLE | terrain=MOUNTAIN | biome=TUNDRA | tags: (none) — Patagonia, Chile (tundra_mountain confirmed) -->
+		<Replace MapName="GiantEarth" X="155" Y="6" FeatureType="FEATURE_TORRES_DEL_PAINE" />
+
+		<!-- FEATURE_ULURU : shape=ONE | terrain=HILL | biome=DESERT | tags: ADJACENTTOSAMEBIOME, NOTADJACENTMOUNTAIN — Northern Territory, Australia (desert confirmed at 93,16) -->
+		<Replace MapName="GiantEarth" X="93" Y="16" FeatureType="FEATURE_ULURU" />
+
+		<!-- =================================== -->
+		<!-- MOUNTAIN WONDERS DLC NATURAL WONDERS -->
+		<!-- =================================== -->
+
+		<!-- FEATURE_MOUNT_FUJI : shape=THREETRIANGLE | terrain=MOUNTAIN | biome=GRASSLAND | tags: VOLCANO — Honshu, Japan (near MEIJI TSL 96,58) -->
+		<Replace MapName="GiantEarth" X="97" Y="57" FeatureType="FEATURE_MOUNT_FUJI" />
+
+		<!-- FEATURE_MACHAPUCHARE : shape=THREETRIANGLE | terrain=MOUNTAIN | biome=TROPICAL | tags: (none) — Annapurna, Nepal (snow_mountain at 67,53-54, near NEPAL TSL 68,52) -->
+		<Replace MapName="GiantEarth" X="67" Y="53" FeatureType="FEATURE_MACHAPUCHARE" />
+
+		<!-- FEATURE_VIHREN : shape=THREETRIANGLE | terrain=MOUNTAIN | biome=PLAINS | tags: (none) — Pirin Mountains, Bulgaria (near BULGARIA TSL 30,62) -->
+		<Replace MapName="GiantEarth" X="28" Y="62" FeatureType="FEATURE_VIHREN" />
+
+		<!-- FEATURE_VINICUNCA : shape=FOURPARALLELAGRM | terrain=MOUNTAIN | biome=DESERT | tags: (none) — Rainbow Mountain, Peru (plains_mountain confirmed at 154,23-24) -->
+		<Replace MapName="GiantEarth" X="154" Y="23" FeatureType="FEATURE_VINICUNCA" />
+
+		<!-- =================================== -->
+		<!-- WATER WONDERS DLC NATURAL WONDERS   -->
+		<!-- =================================== -->
+
+		<!-- FEATURE_GREAT_BLUE_HOLE : shape=ONE | terrain=COAST | biome=MARINE | tags: SHALLOWWATER, NOTADJACENTTOICE, ADJACENTTOSAMETERRAIN — Belize, Caribbean (near MAYA TSL 145,47) -->
+		<Replace MapName="GiantEarth" X="148" Y="45" FeatureType="FEATURE_GREAT_BLUE_HOLE" />
+
+		<!-- FEATURE_MAPU_A_VAEA_BLOWHOLES : shape=TWO | terrain=COAST | biome=MARINE | tags: ADJACENTCLIFF, ADJACENTTOLAND, SHALLOWWATER, NOTADJACENTTOICE, NOLANDOPPOSITECLIFF — Tonga (near TONGA TSL 116,27) -->
+		<Replace MapName="GiantEarth" X="115" Y="25" FeatureType="FEATURE_MAPU_A_VAEA_BLOWHOLES" PreservePlacementRule="1" />
 
 	</NaturalWonderPosition>
 

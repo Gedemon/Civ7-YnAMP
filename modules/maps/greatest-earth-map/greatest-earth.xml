@@ -21,7 +21,7 @@
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_PERSIA"					X="67"	Y="41" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_ROME"					X="50"	Y="42" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_SILLA"					X="93"	Y="51" />
-		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_TONGA"					X="3"	Y="16" />
+		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_TONGA"					X="2"	Y="21" />
 		<!-- Exploration -->
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_ABBASID"					X="65"	Y="39" />
 		<Replace MapName="GreatestEarthMap" Civilization="CIVILIZATION_BULGARIA"				X="56"	Y="47" />
@@ -71,7 +71,7 @@
 		<Replace MapName="GreatestEarthMap" Region="SOUTH_AMERICA_EAST" X="27" Y="5" Width="18" Height="16" />
 		<Replace MapName="GreatestEarthMap" Region="ANTARCTIC_AMERICA"	X="23" Y="0" Width="12" Height="5" />
 		<Replace MapName="GreatestEarthMap" Region="AUSTRALIA"			X="90" Y="5" Width="12" Height="14" />
-		<Replace MapName="GreatestEarthMap" Region="OCEANIA"			X="89" Y="20" Width="14" Height="19" />
+		<Replace MapName="GreatestEarthMap" Region="OCEANIA"			X="89" Y="20" Width="20" Height="19" />
 		<Replace MapName="GreatestEarthMap" Region="SOUTH_ASIA"			X="73" Y="24" Width="16" Height="17" />
 		<Replace MapName="GreatestEarthMap" Region="CENTRAL_ASIA"		X="73" Y="41" Width="9" Height="11" />
 		<Replace MapName="GreatestEarthMap" Region="EAST_ASIA"			X="84" Y="41" Width="17" Height="14" />
@@ -111,7 +111,6 @@
 		<Replace MapName="GreatestEarthMap" X="103" Y="61"	TerrainType="TERRAIN_MOUNTAIN" FeatureType="FEATURE_VOLCANO" />
 		<Replace MapName="GreatestEarthMap" X="25" Y="13"	TerrainType="TERRAIN_MOUNTAIN" FeatureType="FEATURE_VOLCANO" />
 		<Replace MapName="GreatestEarthMap" X="50" Y="38"	TerrainType="TERRAIN_MOUNTAIN" FeatureType="FEATURE_VOLCANO" />
-		<Replace MapName="GreatestEarthMap" X="59" Y="40"	TerrainType="TERRAIN_MOUNTAIN" FeatureType="FEATURE_VOLCANO" />
 		<Replace MapName="GreatestEarthMap" X="3" Y="53"	TerrainType="TERRAIN_MOUNTAIN" FeatureType="FEATURE_VOLCANO" />
 		<Replace MapName="GreatestEarthMap" X="8" Y="35"	TerrainType="TERRAIN_MOUNTAIN" FeatureType="FEATURE_VOLCANO" />
 		<Replace MapName="GreatestEarthMap" X="2" Y="31"	TerrainType="TERRAIN_MOUNTAIN" FeatureType="FEATURE_VOLCANO" />
@@ -247,47 +246,72 @@
 
 	<!--     Natural Wonders    -->
 	<NaturalWonderPosition>
-		<Replace MapName="GreatestEarthMap" X="100" Y="50" FeatureType="FEATURE_SUK_FUJI" TerrainType="TERRAIN_GRASS" />
 
-		<!--
-		<Replace MapName="GreatestEarthMap" X="83" Y="38" FeatureType="FEATURE_SUK_TONLESAP"  TerrainType="TERRAIN_COAST" />
-		<Replace MapName="GreatestEarthMap" X="83" Y="37" FeatureType="FEATURE_SUK_TONLESAP"  TerrainType="TERRAIN_COAST" />
-		-->
+		<!-- ================================ -->
+		<!-- BASE GAME NATURAL WONDERS (CIV7) -->
+		<!-- ================================ -->
 
-		<Replace MapName="GreatestEarthMap" X="85" Y="40" FeatureType="FEATURE_HA_LONG_BAY" TerrainType="TERRAIN_COAST" />
-		<Replace MapName="GreatestEarthMap" X="85" Y="41" FeatureType="FEATURE_HA_LONG_BAY" TerrainType="TERRAIN_COAST" />
+		<!-- FEATURE_BARRIER_REEF : shape=FOURADJACENT | terrain=COAST | biome=MARINE | tags: ADJACENTTOLAND, SHALLOWWATER, NOTADJACENTTOICE — NE Australia -->
+		<Replace MapName="GreatestEarthMap" X="101" Y="18" FeatureType="FEATURE_BARRIER_REEF" Direction="2"/>
 
-		<!-- ****************** -->
-		<!-- Gathering Storm NW -->
-		<!-- ****************** -->
+		<!-- FEATURE_VALLEY_OF_FLOWERS : shape=TWOADJACENT | terrain=FLAT | biome=PLAINS | tags: NOTNEARCOAST, ADJACENTMOUNTAIN — Uttarakhand, India -->
+		<Replace MapName="GreatestEarthMap" X="78" Y="39" FeatureType="FEATURE_VALLEY_OF_FLOWERS" />
 
-		<Replace MapName="GreatestEarthMap" X="90" Y="32" FeatureType="FEATURE_CHOCOLATEHILLS" TerrainType="TERRAIN_GRASS_HILLS" />
-		<Replace MapName="GreatestEarthMap" X="90" Y="33" FeatureType="FEATURE_CHOCOLATEHILLS" TerrainType="TERRAIN_GRASS_HILLS" />
-		<Replace MapName="GreatestEarthMap" X="91" Y="32" FeatureType="FEATURE_CHOCOLATEHILLS" TerrainType="TERRAIN_GRASS_HILLS" />
-		<Replace MapName="GreatestEarthMap" X="91" Y="33" FeatureType="FEATURE_CHOCOLATEHILLS" TerrainType="TERRAIN_GRASS_HILLS" />
+		<!-- FEATURE_REDWOOD_FOREST : shape=THREETRIANGLE | terrain=FLAT | biome=GRASSLAND | tags: FEATURE_FOREST — N California, USA -->
+		<Replace MapName="GreatestEarthMap" X="3" Y="50" FeatureType="FEATURE_REDWOOD_FOREST" />
 
-		<Replace MapName="GreatestEarthMap" X="65" Y="45" FeatureType="FEATURE_GOBUSTAN" TerrainType="TERRAIN_PLAINS" />
-		<Replace MapName="GreatestEarthMap" X="66" Y="46" FeatureType="FEATURE_GOBUSTAN" TerrainType="TERRAIN_PLAINS" />
-		<Replace MapName="GreatestEarthMap" X="66" Y="45" FeatureType="FEATURE_GOBUSTAN" TerrainType="TERRAIN_PLAINS" />
+		<!-- FEATURE_GRAND_CANYON : shape=FOURPARALLELAGRM | terrain=FLAT | biome=DESERT | tags: NOTNEARCOAST, NOTADJACENTTORIVER — Arizona, USA -->
+		<Replace MapName="GreatestEarthMap" X="8" Y="47" FeatureType="FEATURE_GRAND_CANYON" SearchRadius="2" />
 
-		<Replace MapName="GreatestEarthMap" X="60" Y="43" FeatureType="FEATURE_PAMUKKALE" TerrainType="TERRAIN_PLAINS_HILLS" />
-		<Replace MapName="GreatestEarthMap" X="61" Y="43" FeatureType="FEATURE_PAMUKKALE" TerrainType="TERRAIN_PLAINS_HILLS" />
+		<!-- FEATURE_GULLFOSS : shape=ONE | terrain=HILL | biome=TUNDRA | tags: WATERFALL — Iceland (near ICELAND TSL 31,61) -->
+		<Replace MapName="GreatestEarthMap" X="32" Y="61" FeatureType="FEATURE_GULLFOSS" SearchRadius="2" />
 
-		<Replace MapName="GreatestEarthMap" X="56" Y="32" FeatureType="FEATURE_WHITEDESERT" TerrainType="TERRAIN_DESERT" />
-		<Replace MapName="GreatestEarthMap" X="56" Y="33" FeatureType="FEATURE_WHITEDESERT" TerrainType="TERRAIN_DESERT" />
-		<Replace MapName="GreatestEarthMap" X="57" Y="33" FeatureType="FEATURE_WHITEDESERT" TerrainType="TERRAIN_DESERT" />
-		<Replace MapName="GreatestEarthMap" X="57" Y="32" FeatureType="FEATURE_WHITEDESERT" TerrainType="TERRAIN_DESERT" />
+		<!-- FEATURE_HOERIKWAGGO : shape=FOURL | terrain=MOUNTAIN | biome=GRASSLAND | tags: (none) — Cape of Good Hope, South Africa -->
+		<Replace MapName="GreatestEarthMap" X="54" Y="5" FeatureType="FEATURE_HOERIKWAGGO" SearchRadius="3" />
 
-		<Replace MapName="GreatestEarthMap" X="8" Y="50" FeatureType="FEATURE_DEVILSTOWER" TerrainType="TERRAIN_PLAINS_MOUNTAIN" />
-		<Replace MapName="GreatestEarthMap" X="18" Y="36" FeatureType="FEATURE_IKKIL"  />
-		<Replace MapName="GreatestEarthMap" X="52" Y="40" FeatureType="FEATURE_VESUVIUS" TerrainType="TERRAIN_PLAINS_MOUNTAIN" />
+		<!-- FEATURE_IGUAZU_FALLS : shape=ONE | terrain=HILL | biome=TROPICAL | tags: WATERFALL — Iguazu Falls, Argentina/Brazil -->
+		<Replace MapName="GreatestEarthMap" X="28" Y="12" FeatureType="FEATURE_IGUAZU_FALLS" SearchRadius="6" />
 
-		<!-- ****************** -->
-		<!-- New Horizon Pack   -->
-		<!-- ****************** -->
+		<!-- FEATURE_KILIMANJARO : shape=THREETRIANGLE | terrain=MOUNTAIN | biome=PLAINS | tags: VOLCANO — Tanzania (near BUGANDA TSL 59,19) -->
+		<Replace MapName="GreatestEarthMap" X="61" Y="17" FeatureType="FEATURE_KILIMANJARO" />
 
-		<Replace MapName="GreatestEarthMap" X="23" Y="40" FeatureType="FEATURE_BERMUDA_TRIANGLE" TerrainType="TERRAIN_OCEAN" />
-		<Replace MapName="GreatestEarthMap" X="24" Y="40" FeatureType="FEATURE_BERMUDA_TRIANGLE" TerrainType="TERRAIN_OCEAN" />
-		<Replace MapName="GreatestEarthMap" X="23" Y="41" FeatureType="FEATURE_BERMUDA_TRIANGLE" TerrainType="TERRAIN_OCEAN" />
+		<!-- FEATURE_ZHANGJIAJIE : shape=TWOADJACENT | terrain=MOUNTAIN | biome=TROPICAL | tags: (none) — Hunan, China -->
+		<Replace MapName="GreatestEarthMap" X="86" Y="46" FeatureType="FEATURE_ZHANGJIAJIE" />
+
+		<!-- FEATURE_THERA : shape=FOURPARALLELAGRM | terrain=COAST | biome=MARINE | tags: ADJACENTTOLAND, VOLCANO, SHALLOWWATER, NOTADJACENTTOICE — Santorini/Thera, Aegean Sea -->
+		<Replace MapName="GreatestEarthMap" X="60" Y="40" FeatureType="FEATURE_THERA"  Direction="3" />
+
+		<!-- FEATURE_TORRES_DEL_PAINE : shape=THREETRIANGLE | terrain=MOUNTAIN | biome=TUNDRA | tags: (none) — Patagonia, Chile -->
+		<Replace MapName="GreatestEarthMap" X="24" Y="3" FeatureType="FEATURE_TORRES_DEL_PAINE" />
+
+		<!-- FEATURE_ULURU : shape=ONE | terrain=HILL | biome=DESERT | tags: ADJACENTTOSAMEBIOME, NOTADJACENTMOUNTAIN — Northern Territory, Australia -->
+		<Replace MapName="GreatestEarthMap" X="95" Y="13" FeatureType="FEATURE_ULURU" />
+
+		<!-- =================================== -->
+		<!-- MOUNTAIN WONDERS DLC NATURAL WONDERS -->
+		<!-- =================================== -->
+
+		<!-- FEATURE_MOUNT_FUJI : shape=THREETRIANGLE | terrain=MOUNTAIN | biome=GRASSLAND | tags: VOLCANO — Honshu, Japan (near MEIJI TSL 98,48) -->
+		<Replace MapName="GreatestEarthMap" X="98" Y="49" FeatureType="FEATURE_MOUNT_FUJI" Direction="2" SearchRadius="1" />
+
+		<!-- FEATURE_MACHAPUCHARE : shape=THREETRIANGLE | terrain=MOUNTAIN | biome=TROPICAL | tags: (none) — Annapurna, Nepal (near NEPAL TSL 76,41) -->
+		<Replace MapName="GreatestEarthMap" X="76" Y="41" FeatureType="FEATURE_MACHAPUCHARE" SearchRadius="1" />
+
+		<!-- FEATURE_VIHREN : shape=THREETRIANGLE | terrain=MOUNTAIN | biome=PLAINS | tags: (none) — Pirin Mountains, Bulgaria (near BULGARIA TSL 56,47) -->
+		<Replace MapName="GreatestEarthMap" X="55" Y="48" FeatureType="FEATURE_VIHREN" SearchRadius="1" />
+
+		<!-- FEATURE_VINICUNCA : shape=FOURPARALLELAGRM | terrain=MOUNTAIN | biome=DESERT | tags: (none) — Rainbow Mountain, Peru (near INCA TSL 23,17) -->
+		<Replace MapName="GreatestEarthMap" X="24" Y="16" FeatureType="FEATURE_VINICUNCA"  Direction="0" SearchRadius="1" />
+
+		<!-- =================================== -->
+		<!-- WATER WONDERS DLC NATURAL WONDERS   -->
+		<!-- =================================== -->
+
+		<!-- FEATURE_GREAT_BLUE_HOLE : shape=ONE | terrain=COAST | biome=MARINE | tags: SHALLOWWATER, NOTADJACENTTOICE, ADJACENTTOSAMETERRAIN — Belize, Caribbean (near MAYA TSL 15,31) -->
+		<Replace MapName="GreatestEarthMap" X="19" Y="33" FeatureType="FEATURE_GREAT_BLUE_HOLE" />
+
+		<!-- FEATURE_MAPU_A_VAEA_BLOWHOLES : shape=TWO | terrain=COAST | biome=MARINE | tags: ADJACENTCLIFF, ADJACENTTOLAND, SHALLOWWATER, NOTADJACENTTOICE, NOLANDOPPOSITECLIFF — Tonga, Pacific (near TONGA TSL 3,16) -->
+		<Replace MapName="GreatestEarthMap" X="2" Y="15" FeatureType="FEATURE_MAPU_A_VAEA_BLOWHOLES" PreservePlacementRule="1" Direction="5" SearchRadius="12" />
+
 	</NaturalWonderPosition>
 </Database>

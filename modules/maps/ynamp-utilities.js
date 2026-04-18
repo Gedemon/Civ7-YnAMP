@@ -586,24 +586,131 @@ export function validate (iWidth, iHeight, iNumPlayers1, iNumPlayers2, westConti
  */
 function getNeighbors(x, y, mapWidth, mapHeight) {
     let neighbors = [];
-    let directions = [
-        {dx: 0, dy: 1},   // North
-        {dx: 1, dy: 0},   // East
-        {dx: 0, dy: -1},  // South
-        {dx: -1, dy: 0},  // West
-    ];
-    
-    for (let dir of directions) {
-        let newX = (x + dir.dx + mapWidth) % mapWidth; // Wrap around horizontally
-        let newY = y + dir.dy;
-        
-        // Check vertical bounds (no wrap on Y axis)
-        if (newY >= 0 && newY < mapHeight) {
+    let seen = new Set();
+    let iIndex = GameplayMap.getIndexFromXY(x, y);
+    let iLocation = GameplayMap.getLocationFromIndex(iIndex);
+
+    for (let iDirection = 0; iDirection < DirectionTypes.NUM_DIRECTION_TYPES; iDirection++) {
+        let adjacent = GameplayMap.getAdjacentPlotLocation(iLocation, iDirection);
+        if (!adjacent) {
+            continue;
+        }
+
+        let newY = adjacent.y;
+        if (newY < 0 || newY >= mapHeight) {
+            continue;
+        }
+
+        let newX = (adjacent.x + mapWidth) % mapWidth;
+        let key = newX + newY * mapWidth;
+        if (!seen.has(key)) {
+            seen.add(key);
             neighbors.push({x: newX, y: newY});
         }
     }
-    
+
     return neighbors;
+}
+
+function collectConnectedNonOceanComponent(startX, startY, mapWidth, mapHeight) {
+    if (GameplayMap.getTerrainType(startX, startY) == globals.g_OceanTerrain) {
+        return { tiles: [], keys: new Set(), spansWrap: false };
+    }
+
+    let startKey = startX + startY * mapWidth;
+    let queue = [{x: startX, y: startY}];
+    let tiles = [];
+    let keys = new Set([startKey]);
+    let touchesWestEdge = startX == 0;
+    let touchesEastEdge = startX == mapWidth - 1;
+
+    while (queue.length > 0) {
+        let tile = queue.shift();
+        tiles.push(tile);
+
+        let neighbors = getNeighbors(tile.x, tile.y, mapWidth, mapHeight);
+        for (let neighbor of neighbors) {
+            let key = neighbor.x + neighbor.y * mapWidth;
+            if (keys.has(key)) {
+                continue;
+            }
+            if (GameplayMap.getTerrainType(neighbor.x, neighbor.y) == globals.g_OceanTerrain) {
+                continue;
+            }
+
+            keys.add(key);
+            queue.push({x: neighbor.x, y: neighbor.y});
+            touchesWestEdge = touchesWestEdge || neighbor.x == 0;
+            touchesEastEdge = touchesEastEdge || neighbor.x == mapWidth - 1;
+        }
+    }
+
+    return { tiles, keys, spansWrap: touchesWestEdge && touchesEastEdge };
+}
+
+function collectAdjacentCoastRing(componentTiles, componentKeys, mapWidth, mapHeight) {
+    let coastTiles = [];
+    let coastKeys = new Set();
+
+    for (let tile of componentTiles) {
+        let neighbors = getNeighbors(tile.x, tile.y, mapWidth, mapHeight);
+        for (let neighbor of neighbors) {
+            let key = neighbor.x + neighbor.y * mapWidth;
+            if (componentKeys.has(key) || coastKeys.has(key)) {
+                continue;
+            }
+            if (GameplayMap.getTerrainType(neighbor.x, neighbor.y) != globals.g_CoastTerrain) {
+                continue;
+            }
+
+            coastKeys.add(key);
+            coastTiles.push({x: neighbor.x, y: neighbor.y});
+        }
+    }
+
+    return coastTiles;
+}
+
+function hasMixedEastWestRegionIds(componentTiles) {
+    let hasWest = false;
+    let hasEast = false;
+
+    for (let tile of componentTiles) {
+        let regionId = GameplayMap.getLandmassRegionId(tile.x, tile.y);
+        hasWest = hasWest || regionId == LandmassRegion.LANDMASS_REGION_WEST;
+        hasEast = hasEast || regionId == LandmassRegion.LANDMASS_REGION_EAST;
+        if (hasWest && hasEast) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function applyEastWestRegionTag(iX, iY, targetRegionId, useEastTags) {
+    let terrainType = GameplayMap.getTerrainType(iX, iY);
+    if (terrainType == globals.g_CoastTerrain) {
+        TerrainBuilder.setPlotTag(iX, iY, PlotTags.PLOT_TAG_WATER);
+        if (useEastTags) {
+            TerrainBuilder.addPlotTag(iX, iY, PlotTags.PLOT_TAG_EAST_WATER);
+        } else {
+            TerrainBuilder.addPlotTag(iX, iY, PlotTags.PLOT_TAG_WEST_WATER);
+        }
+        TerrainBuilder.setLandmassRegionId(iX, iY, targetRegionId);
+        return "coast";
+    }
+
+    if (!GameplayMap.isWater(iX, iY)) {
+        if (useEastTags) {
+            TerrainBuilder.setPlotTag(iX, iY, PlotTags.PLOT_TAG_EAST_LANDMASS);
+        } else {
+            TerrainBuilder.setPlotTag(iX, iY, PlotTags.PLOT_TAG_WEST_LANDMASS);
+        }
+        TerrainBuilder.setLandmassRegionId(iX, iY, targetRegionId);
+        return "land";
+    }
+
+    return "ignored";
 }
 
 // Superregion groupings - maps individual XML regions to continental superregions.
@@ -648,9 +755,9 @@ function buildRegionGrid(iWidth, iHeight, mapName) {
         }
         let startX = row.X;
         let startY = row.Y;
-        let endX = row.X + row.Width - 1;
         let endY = row.Y + row.Height - 1;
-        for (let x = startX; x <= endX; x++) {
+        for (let xOffset = 0; xOffset < row.Width; xOffset++) {
+            let x = (startX + xOffset + iWidth) % iWidth;
             for (let y = startY; y <= endY; y++) {
                 if (x >= 0 && x < iWidth && y >= 0 && y < iHeight) {
                     regionByTile[x][y] = row.Region;
@@ -688,7 +795,8 @@ export function overrideHomelandsWithXMLRegions(iWidth, iHeight, mapName) {
     // Build region grid from XML
     let regionByTile = buildRegionGrid(iWidth, iHeight, mapName);
     if (!regionByTile) {
-        console.log("overrideHomelandsWithXMLRegions: No RegionPosition data found");
+        console.log("overrideHomelandsWithXMLRegions: No RegionPosition data found, falling back to landmass mode");
+        overrideHomelandsWithLandmass(iWidth, iHeight);
         return;
     }
     
@@ -704,21 +812,24 @@ export function overrideHomelandsWithXMLRegions(iWidth, iHeight, mapName) {
     }
     
     if (humanPlayerId == -1) {
-        console.log("overrideHomelandsWithXMLRegions: No human player found");
+        console.log("overrideHomelandsWithXMLRegions: No human player found, falling back to landmass mode");
+        overrideHomelandsWithLandmass(iWidth, iHeight);
         return;
     }
     
     // Get human player's start position
     let humanStartPlot = StartPositioner.getStartPosition(humanPlayerId);
     if (humanStartPlot === undefined || humanStartPlot === null || humanStartPlot < 0) {
-        console.log("overrideHomelandsWithXMLRegions: Invalid start position for human player: " + humanStartPlot);
+        console.log("overrideHomelandsWithXMLRegions: Invalid start position for human player: " + humanStartPlot + ", falling back to landmass mode");
+        overrideHomelandsWithLandmass(iWidth, iHeight);
         return;
     }
     
     let humanStartX = humanStartPlot % iWidth;
     let humanStartY = Math.floor(humanStartPlot / iWidth);
     if (humanStartX < 0 || humanStartX >= iWidth || humanStartY < 0 || humanStartY >= iHeight || !regionByTile[humanStartX]) {
-        console.log("overrideHomelandsWithXMLRegions: Human start position out of bounds: (" + humanStartX + "," + humanStartY + ")");
+        console.log("overrideHomelandsWithXMLRegions: Human start position out of bounds: (" + humanStartX + "," + humanStartY + "), falling back to landmass mode");
+        overrideHomelandsWithLandmass(iWidth, iHeight);
         return;
     }
     let humanRegion = regionByTile[humanStartX][humanStartY];
@@ -726,7 +837,8 @@ export function overrideHomelandsWithXMLRegions(iWidth, iHeight, mapName) {
     console.log("overrideHomelandsWithXMLRegions: Human player at (" + humanStartX + "," + humanStartY + ") in region " + humanRegion);
     
     if (!humanRegion) {
-        console.log("overrideHomelandsWithXMLRegions: Human start position not in any XML region");
+        console.log("overrideHomelandsWithXMLRegions: Human start position not in any XML region, falling back to landmass mode");
+        overrideHomelandsWithLandmass(iWidth, iHeight);
         return;
     }
     
@@ -735,7 +847,8 @@ export function overrideHomelandsWithXMLRegions(iWidth, iHeight, mapName) {
     let humanSuperregion = superregionMap[humanRegion];
     
     if (!humanSuperregion) {
-        console.log("overrideHomelandsWithXMLRegions: Region '" + humanRegion + "' not found in superregion mapping");
+        console.log("overrideHomelandsWithXMLRegions: Region '" + humanRegion + "' not found in superregion mapping, falling back to landmass mode");
+        overrideHomelandsWithLandmass(iWidth, iHeight);
         return;
     }
     
@@ -863,11 +976,235 @@ export function overrideHomelandsWithXMLRegions(iWidth, iHeight, mapName) {
     console.log("overrideHomelandsWithXMLRegions: Retagged coastal water - homeland=" + waterTagCounts.homeland + " distant=" + waterTagCounts.distant);
 }
 
+export function overrideEastWestSeamIslandStarts(iWidth, iHeight) {
+    console.log("overrideEastWestSeamIslandStarts: Starting");
+
+    let aliveMajorIds = Players.getAliveMajorIds();
+    let processedKeys = new Set();
+    let retaggedComponents = 0;
+    let retaggedLandPlots = 0;
+    let retaggedCoastPlots = 0;
+
+    for (let i = 0; i < aliveMajorIds.length; i++) {
+        let playerId = aliveMajorIds[i];
+        let startPlot = StartPositioner.getStartPosition(playerId);
+        if (startPlot === undefined || startPlot === null || startPlot < 0) {
+            continue;
+        }
+
+        let startX = startPlot % iWidth;
+        let startY = Math.floor(startPlot / iWidth);
+        let startKey = startX + startY * iWidth;
+        if (processedKeys.has(startKey)) {
+            continue;
+        }
+
+        let component = collectConnectedNonOceanComponent(startX, startY, iWidth, iHeight);
+        component.keys.forEach((key) => processedKeys.add(key));
+
+        if (component.tiles.length === 0 || !component.spansWrap || !hasMixedEastWestRegionIds(component.tiles)) {
+            continue;
+        }
+
+        let targetRegionId = GameplayMap.getLandmassRegionId(startX, startY);
+        if (targetRegionId != LandmassRegion.LANDMASS_REGION_WEST && targetRegionId != LandmassRegion.LANDMASS_REGION_EAST) {
+            console.log("overrideEastWestSeamIslandStarts: Skipping player " + playerId + " at (" + startX + "," + startY + ") because start tile has non-east-west regionId=" + targetRegionId);
+            continue;
+        }
+        let useEastTags = GameplayMap.hasPlotTag(startX, startY, PlotTags.PLOT_TAG_EAST_LANDMASS);
+
+        let coastRing = collectAdjacentCoastRing(component.tiles, component.keys, iWidth, iHeight);
+        retaggedComponents++;
+
+        for (let tile of component.tiles) {
+            let result = applyEastWestRegionTag(tile.x, tile.y, targetRegionId, useEastTags);
+            if (result == "land") {
+                retaggedLandPlots++;
+            } else if (result == "coast") {
+                retaggedCoastPlots++;
+            }
+        }
+
+        for (let coastTile of coastRing) {
+            let result = applyEastWestRegionTag(coastTile.x, coastTile.y, targetRegionId, useEastTags);
+            if (result == "coast") {
+                retaggedCoastPlots++;
+            }
+        }
+
+        console.log("overrideEastWestSeamIslandStarts: Retagged seam-spanning component for player " + playerId + " at (" + startX + "," + startY + ") with " + component.tiles.length + " non-ocean tiles and " + coastRing.length + " adjacent coast tiles");
+    }
+
+    console.log("overrideEastWestSeamIslandStarts: Retagged components=" + retaggedComponents + " land=" + retaggedLandPlots + " coast=" + retaggedCoastPlots);
+}
+
+function collectConnectedLandSubcomponent(startX, startY, mapWidth, mapHeight, allowedKeys, visitedLandKeys) {
+    if (GameplayMap.isWater(startX, startY)) {
+        return { tiles: [], keys: new Set(), depth: 0 };
+    }
+
+    let startKey = startX + startY * mapWidth;
+    let queue = [{x: startX, y: startY, depth: 0}];
+    let tiles = [];
+    let keys = new Set([startKey]);
+    let maxDepth = 0;
+    visitedLandKeys.add(startKey);
+
+    while (queue.length > 0) {
+        let tile = queue.shift();
+        tiles.push({x: tile.x, y: tile.y});
+        maxDepth = Math.max(maxDepth, tile.depth);
+
+        let neighbors = getNeighbors(tile.x, tile.y, mapWidth, mapHeight);
+        for (let neighbor of neighbors) {
+            let key = neighbor.x + neighbor.y * mapWidth;
+            if (visitedLandKeys.has(key) || !allowedKeys.has(key) || GameplayMap.isWater(neighbor.x, neighbor.y)) {
+                continue;
+            }
+
+            visitedLandKeys.add(key);
+            keys.add(key);
+            queue.push({x: neighbor.x, y: neighbor.y, depth: tile.depth + 1});
+        }
+    }
+
+    return { tiles, keys, depth: maxDepth };
+}
+
+function getLandOnlyStatsForComponent(component, mapWidth, mapHeight) {
+    let landTiles = [];
+    let visitedLandKeys = new Set();
+    let largestLandCoreSize = 0;
+    let largestLandCoreDepth = 0;
+
+    for (let tile of component.tiles) {
+        if (!GameplayMap.isWater(tile.x, tile.y)) {
+            landTiles.push({x: tile.x, y: tile.y});
+        }
+    }
+
+    for (let tile of landTiles) {
+        let key = tile.x + tile.y * mapWidth;
+        if (visitedLandKeys.has(key)) {
+            continue;
+        }
+
+        let landSubcomponent = collectConnectedLandSubcomponent(tile.x, tile.y, mapWidth, mapHeight, component.keys, visitedLandKeys);
+        if (landSubcomponent.tiles.length > largestLandCoreSize ||
+            (landSubcomponent.tiles.length == largestLandCoreSize && landSubcomponent.depth > largestLandCoreDepth)) {
+            largestLandCoreSize = landSubcomponent.tiles.length;
+            largestLandCoreDepth = landSubcomponent.depth;
+        }
+    }
+
+    return {
+        landTiles,
+        landTileCount: landTiles.length,
+        largestLandCoreSize,
+        largestLandCoreDepth
+    };
+}
+
+function getMainlandCoreThreshold(mapWidth, mapHeight) {
+    return Math.max(36, Math.floor((mapWidth * mapHeight) / 150));
+}
+
+function isMainlandStartComponent(component, mapWidth, mapHeight) {
+    return component.largestLandCoreSize >= getMainlandCoreThreshold(mapWidth, mapHeight);
+}
+
+function getComponentAttachmentPlots(component) {
+    if (component.coastRing.length > 0) {
+        return component.coastRing;
+    }
+    if (component.landTiles.length > 0) {
+        return component.landTiles;
+    }
+    return component.tiles;
+}
+
+function getMinimumPlotDistanceBetweenSets(sourcePlots, targetPlots) {
+    if (!sourcePlots || sourcePlots.length === 0 || !targetPlots || targetPlots.length === 0) {
+        return Number.MAX_SAFE_INTEGER;
+    }
+
+    let minDistance = Number.MAX_SAFE_INTEGER;
+    for (let sourcePlot of sourcePlots) {
+        for (let targetPlot of targetPlots) {
+            let distance = GameplayMap.getPlotDistance(sourcePlot.x, sourcePlot.y, targetPlot.x, targetPlot.y);
+            if (distance < minDistance) {
+                minDistance = distance;
+                if (minDistance <= 1) {
+                    return minDistance;
+                }
+            }
+        }
+    }
+
+    return minDistance;
+}
+
+function addComponentKeysToSet(component, targetSet) {
+    component.keys.forEach((key) => targetSet.add(key));
+}
+
+function collectPlayerStartComponents(iWidth, iHeight, aliveMajorIds) {
+    let components = [];
+    let componentByTileKey = new Map();
+
+    for (let i = 0; i < aliveMajorIds.length; i++) {
+        let playerId = aliveMajorIds[i];
+        let startPlot = StartPositioner.getStartPosition(playerId);
+        if (startPlot === undefined || startPlot === null || startPlot < 0) {
+            continue;
+        }
+
+        let startX = startPlot % iWidth;
+        let startY = Math.floor(startPlot / iWidth);
+        let startKey = startX + startY * iWidth;
+        let component = componentByTileKey.get(startKey);
+
+        if (!component) {
+            let connectedComponent = collectConnectedNonOceanComponent(startX, startY, iWidth, iHeight);
+            let landStats = getLandOnlyStatsForComponent(connectedComponent, iWidth, iHeight);
+            component = {
+                id: components.length + 1,
+                tiles: connectedComponent.tiles,
+                keys: connectedComponent.keys,
+                spansWrap: connectedComponent.spansWrap,
+                coastRing: collectAdjacentCoastRing(connectedComponent.tiles, connectedComponent.keys, iWidth, iHeight),
+                landTiles: landStats.landTiles,
+                landTileCount: landStats.landTileCount,
+                largestLandCoreSize: landStats.largestLandCoreSize,
+                largestLandCoreDepth: landStats.largestLandCoreDepth,
+                playerIds: [],
+                playerOrders: []
+            };
+
+            components.push(component);
+            component.keys.forEach((key) => componentByTileKey.set(key, component));
+        }
+
+        if (component.playerIds.indexOf(playerId) == -1) {
+            component.playerIds.push(playerId);
+            component.playerOrders.push(i);
+        }
+    }
+
+    for (let component of components) {
+        component.firstPlayerOrder = component.playerOrders.length > 0 ? Math.min(...component.playerOrders) : Number.MAX_SAFE_INTEGER;
+        component.isMainland = isMainlandStartComponent(component, iWidth, iHeight);
+    }
+
+    return components;
+}
+
 /**
  * Tags landmass region IDs based on connectivity from player start positions.
  * Mirrors continents-voronoi.js behavior:
- *   - Human's connected landmass (through land+coast, blocked by ocean) → WEST (homeland)
- *   - Other player starts' connected landmasses → EAST (distant)
+ *   - Human's start component remains homeland when it is mainland-classified
+ *   - If the human starts on islands, homeland is anchored to the first mainland-classified player component
+ *   - Player-start island components are attached to a mainland root before WEST/EAST tagging
  *   - Ocean-isolated uninhabited islands → PLOT_TAG_ISLAND, no region ID (DEFAULT)
  *   - Single continent (all players reachable from human) → raw 1 (pangaea-voronoi style)
  *   - Coast water: tagged by nearest land group; ocean water: left at DEFAULT
@@ -877,7 +1214,6 @@ export function overrideHomelandsWithXMLRegions(iWidth, iHeight, mapName) {
 export function overrideHomelandsWithLandmass(iWidth, iHeight) {
     console.log("overrideHomelandsWithLandmass: Starting");
 
-    // Find human player and their start position
     let humanPlayerId = -1;
     let aliveMajorIds = Players.getAliveMajorIds();
     for (let i = 0; i < aliveMajorIds.length; i++) {
@@ -888,64 +1224,155 @@ export function overrideHomelandsWithLandmass(iWidth, iHeight) {
     }
     if (humanPlayerId == -1) {
         console.log("overrideHomelandsWithLandmass: No human player found");
-        humanPlayerId = aliveMajorIds[0]; // fallback on first alive player if there is no human (autoplay ?)
+        humanPlayerId = aliveMajorIds[0];
     }
 
-    let humanStartPlot = StartPositioner.getStartPosition(humanPlayerId);
-    if (humanStartPlot === undefined || humanStartPlot === null || humanStartPlot < 0) {
-        console.log("overrideHomelandsWithLandmass: Invalid start position for human player: " + humanStartPlot);
+    let playerComponents = collectPlayerStartComponents(iWidth, iHeight, aliveMajorIds);
+    if (playerComponents.length === 0) {
+        console.log("overrideHomelandsWithLandmass: No valid player start components found");
         return;
     }
 
-    let humanStartX = humanStartPlot % iWidth;
-    let humanStartY = Math.floor(humanStartPlot / iWidth);
-
-    // BFS from human start through non-ocean tiles (coast tiles are passable bridges)
-    // Only g_OceanTerrain blocks the spread — a landmass accessible via coast is still homeland
-    let homelandReachable = new Set();
-    let homelandQueue = [{x: humanStartX, y: humanStartY}];
-    homelandReachable.add(humanStartX + humanStartY * iWidth);
-
-    while (homelandQueue.length > 0) {
-        let tile = homelandQueue.shift();
-        let neighbors = getNeighbors(tile.x, tile.y, iWidth, iHeight);
-        for (let neighbor of neighbors) {
-            let key = neighbor.x + neighbor.y * iWidth;
-            if (!homelandReachable.has(key)) {
-                if (GameplayMap.getTerrainType(neighbor.x, neighbor.y) != globals.g_OceanTerrain) {
-                    homelandReachable.add(key);
-                    homelandQueue.push({x: neighbor.x, y: neighbor.y});
-                }
-            }
+    let componentByPlayerId = new Map();
+    for (let component of playerComponents) {
+        for (let playerId of component.playerIds) {
+            componentByPlayerId.set(playerId, component);
         }
     }
 
-    // BFS from each non-homeland player's start to find distinct distant landmass(es)
-    let distantReachable = new Set();
-    for (let i = 0; i < aliveMajorIds.length; i++) {
-        let playerId = aliveMajorIds[i];
-        if (Players.isHuman(playerId)) continue;
-        let startPlot = StartPositioner.getStartPosition(playerId);
-        if (startPlot === undefined || startPlot === null || startPlot < 0) continue;
-        let startX = startPlot % iWidth;
-        let startY = Math.floor(startPlot / iWidth);
-        let startKey = startX + startY * iWidth;
-        if (homelandReachable.has(startKey)) continue; // AI is also on homeland
+    let humanComponent = componentByPlayerId.get(humanPlayerId);
+    if (!humanComponent) {
+        console.log("overrideHomelandsWithLandmass: Human player start was invalid; falling back to the first valid player component");
+        for (let i = 0; i < aliveMajorIds.length; i++) {
+            let fallbackComponent = componentByPlayerId.get(aliveMajorIds[i]);
+            if (fallbackComponent) {
+                humanPlayerId = aliveMajorIds[i];
+                humanComponent = fallbackComponent;
+                break;
+            }
+        }
+    }
+    if (!humanComponent) {
+        console.log("overrideHomelandsWithLandmass: Could not resolve a homeland root component");
+        return;
+    }
 
-        let queue = [{x: startX, y: startY}];
-        distantReachable.add(startKey);
-        while (queue.length > 0) {
-            let tile = queue.shift();
-            let neighbors = getNeighbors(tile.x, tile.y, iWidth, iHeight);
-            for (let neighbor of neighbors) {
-                let key = neighbor.x + neighbor.y * iWidth;
-                if (!distantReachable.has(key) && !homelandReachable.has(key)) {
-                    if (GameplayMap.getTerrainType(neighbor.x, neighbor.y) != globals.g_OceanTerrain) {
-                        distantReachable.add(key);
-                        queue.push({x: neighbor.x, y: neighbor.y});
+    let mainlandRootCandidates = [];
+    let mainlandRootIds = new Set();
+    for (let i = 0; i < aliveMajorIds.length; i++) {
+        let component = componentByPlayerId.get(aliveMajorIds[i]);
+        if (!component || !component.isMainland || mainlandRootIds.has(component.id)) {
+            continue;
+        }
+
+        mainlandRootIds.add(component.id);
+        mainlandRootCandidates.push(component);
+    }
+
+    let homelandRootComponent = humanComponent;
+    if (!humanComponent.isMainland) {
+        for (let i = 0; i < aliveMajorIds.length; i++) {
+            let candidate = componentByPlayerId.get(aliveMajorIds[i]);
+            if (!candidate || !candidate.isMainland || candidate.id == humanComponent.id) {
+                continue;
+            }
+
+            homelandRootComponent = candidate;
+            break;
+        }
+
+        if (homelandRootComponent.id != humanComponent.id) {
+            console.log("overrideHomelandsWithLandmass: Human start component " + humanComponent.id + " is island-classified; anchoring homeland to component " + homelandRootComponent.id + " via player " + homelandRootComponent.playerIds[0]);
+        } else {
+            console.log("overrideHomelandsWithLandmass: No mainland player component found; keeping human component " + humanComponent.id + " as homeland root");
+        }
+    }
+
+    let distantRootComponents = [];
+    let distantRootIds = new Set();
+    if (mainlandRootCandidates.length > 0) {
+        for (let component of mainlandRootCandidates) {
+            if (component.id == homelandRootComponent.id || distantRootIds.has(component.id)) {
+                continue;
+            }
+
+            distantRootIds.add(component.id);
+            distantRootComponents.push(component);
+        }
+    } else {
+        for (let i = 0; i < aliveMajorIds.length; i++) {
+            let component = componentByPlayerId.get(aliveMajorIds[i]);
+            if (!component || component.id == homelandRootComponent.id || distantRootIds.has(component.id)) {
+                continue;
+            }
+
+            distantRootIds.add(component.id);
+            distantRootComponents.push(component);
+        }
+    }
+
+    let componentAssignments = new Map();
+    componentAssignments.set(homelandRootComponent.id, "homeland");
+    for (let component of distantRootComponents) {
+        componentAssignments.set(component.id, "distant");
+    }
+
+    let mainlandAttachmentRoots = [];
+    let mainlandAttachmentRootIds = new Set();
+    let orderedAttachmentRoots = [homelandRootComponent].concat(distantRootComponents);
+    for (let component of orderedAttachmentRoots) {
+        if (!component.isMainland || mainlandAttachmentRootIds.has(component.id)) {
+            continue;
+        }
+
+        mainlandAttachmentRootIds.add(component.id);
+        mainlandAttachmentRoots.push(component);
+    }
+
+    let startAttachments = 0;
+    if (mainlandAttachmentRoots.length > 0) {
+        for (let component of playerComponents) {
+            if (componentAssignments.has(component.id) || component.isMainland) {
+                continue;
+            }
+
+            let targetRoot = null;
+            if (component.id == humanComponent.id && homelandRootComponent.id != humanComponent.id && homelandRootComponent.isMainland) {
+                targetRoot = homelandRootComponent;
+            } else {
+                let sourcePlots = getComponentAttachmentPlots(component);
+                let bestDistance = Number.MAX_SAFE_INTEGER;
+                for (let root of mainlandAttachmentRoots) {
+                    if (root.id == component.id) {
+                        continue;
+                    }
+
+                    let distance = getMinimumPlotDistanceBetweenSets(sourcePlots, getComponentAttachmentPlots(root));
+                    if (distance < bestDistance || (distance == bestDistance && root.id == homelandRootComponent.id)) {
+                        bestDistance = distance;
+                        targetRoot = root;
                     }
                 }
             }
+
+            if (!targetRoot) {
+                continue;
+            }
+
+            componentAssignments.set(component.id, targetRoot.id == homelandRootComponent.id ? "homeland" : "distant");
+            startAttachments++;
+            console.log("overrideHomelandsWithLandmass: Attached start-island component " + component.id + " (land=" + component.landTileCount + ", depth=" + component.largestLandCoreDepth + ") to anchor component " + targetRoot.id + " (land=" + targetRoot.landTileCount + ", depth=" + targetRoot.largestLandCoreDepth + ")");
+        }
+    }
+
+    let homelandReachable = new Set();
+    let distantReachable = new Set();
+    for (let component of playerComponents) {
+        let assignment = componentAssignments.get(component.id);
+        if (assignment == "homeland") {
+            addComponentKeysToSet(component, homelandReachable);
+        } else if (assignment == "distant") {
+            addComponentKeysToSet(component, distantReachable);
         }
     }
 
@@ -953,6 +1380,12 @@ export function overrideHomelandsWithLandmass(iWidth, iHeight) {
     if (isSingleContinent) {
         console.log("overrideHomelandsWithLandmass: Single continent — tagging non-ocean tiles as raw 1 (pangaea style)");
     }
+
+    let distantRootIdList = [];
+    for (let component of distantRootComponents) {
+        distantRootIdList.push(component.id);
+    }
+    console.log("overrideHomelandsWithLandmass: Components=" + playerComponents.length + " startAttachments=" + startAttachments + " homelandRoot=" + homelandRootComponent.id + " distantRoots=" + distantRootIdList.length + (distantRootIdList.length > 0 ? " [" + distantRootIdList.join(",") + "]" : ""));
 
     // Classify and tag non-water (land) tiles
     let homelandLandPlots = [];

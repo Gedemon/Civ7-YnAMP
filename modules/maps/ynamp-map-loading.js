@@ -1,4 +1,4 @@
-// Continents.ts
+﻿// Continents.ts
 /**
  * ynamp-map-loading
  * 
@@ -18,6 +18,7 @@ import { generateSnow, dumpPermanentSnow } from '/base-standard/maps/snow-genera
 import { dumpStartSectors, dumpContinents, dumpTerrain, dumpElevation, dumpRainfall, dumpBiomes, dumpFeatures, dumpResources, dumpNoisePredicate } from '/base-standard/maps/map-debug-helpers.js';
 import * as ynamp from '/ged-ynamp/maps/ynamp-utilities.js';
 import { isValidPlot, isSettlablePlot, isPlotTooCloseToUsed, findFallbackStartPlot } from '/ged-ynamp/maps/ynamp-utilities.js';
+import { getNWPlacementMode, placeCustomNaturalWonders } from '/ged-ynamp/maps/ynamp-natural-wonders.js';
 
 /**
  * @typedef {Object} ContinentBounds
@@ -310,14 +311,14 @@ function getAlivePlayersWithoutStartPositions() {
 
 /**
  * Reads the RegionTaggingMode map option and returns the effective mode string.
- * Falls back gracefully: 'region' → 'east-west' if no XML data for the map.
+ * Falls back gracefully: 'region' â†’ 'east-west' if no XML data for the map.
  * @param {string} mapName
  * @returns {'landmass'|'east-west'|'region'}
  */
 function getEffectiveRegionMode(mapName) {
     let rawMode = Configuration.getMapValue("RegionTaggingMode");
     if (rawMode == null) {
-        console.log("RegionTaggingMode: landmass (default — no option set)");
+        console.log("RegionTaggingMode: landmass (default â€” no option set)");
         return "landmass";
     }
     let mode = Number(BigInt.asIntN(32, BigInt(rawMode)));
@@ -544,15 +545,23 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     
     console.log("recalculateAreas (1)");
     AreaBuilder.recalculateAreas();
-    console.log("addMountains...");
-    addMountains(iWidth, iHeight);
-    let numPlaced = placeVolcanoes(mapName);
-    console.log("Num Volcanoes = " + numPlaced);
-    if (numPlaced == 0) {
-        addVolcanoes(iWidth, iHeight);
+
+    // TODO : optional additional placement (menu check box)
+    //console.log("addMountains...");
+    //addMountains(iWidth, iHeight);
+    
+    if (mapType == 'CIV6') {
+        let numPlaced = placeVolcanoes(mapName);
+        console.log("Num Volcanoes = " + numPlaced);
+        if (numPlaced == 0) {
+            addVolcanoes(iWidth, iHeight);
+        }
     }
-    console.log("generateLakes...");
-    generateLakes(iWidth, iHeight, iTilesPerLake);
+    
+    // TODO : optional additional placement (menu check box)
+    //console.log("generateLakes...");
+    //generateLakes(iWidth, iHeight, iTilesPerLake);
+
     console.log("recalculateAreas (2)");
     AreaBuilder.recalculateAreas();
     console.log("buildElevation...");
@@ -658,9 +667,37 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     console.log("stampContinents...");
     TerrainBuilder.stampContinents();
     
-    addNaturalWonders(iWidth, iHeight, iNumNaturalWonders, naturalWonderEvent);
+    const nwMode = getNWPlacementMode();
+    console.log("NWPlacementMode: " + nwMode);
+    if (nwMode === "random") {
+        // Skip real-world positions entirely â€” place all wonders randomly.
+        addNaturalWonders(iWidth, iHeight, iNumNaturalWonders, naturalWonderEvent);
+    } else if (nwMode === "real-only") {
+        // Verify the constraint-removal SQL actually took effect.
+        const constraintTags = new Set(['ADJACENTMOUNTAIN','NOTADJACENTMOUNTAIN','NOTADJACENTTORIVER',
+            'ADJACENTTOSAMEBIOME','NOTNEARCOAST','NEARCOAST','ADJACENTTOLAND','ADJACENTTOCOAST',
+            'NOTADJACENTTOLAND','ADJACENTCLIFF','NOLANDOPPOSITECLIFF','ADJACENTTOSAMETERRAIN',
+            'NOTADJACENTTOICE','SHALLOWWATER','SIMALARELEVATION']);
+        const nwTypes = new Set([...GameInfo.Feature_NaturalWonders].map(nw => nw.FeatureType));
+        const remaining = [...GameInfo.TypeTags].filter(tt => nwTypes.has(tt.Type) && constraintTags.has(tt.Tag));
+        console.log("NW constraint TypeTags remaining after SQL: " + remaining.length
+            + (remaining.length > 0 ? " [" + remaining.map(tt => tt.Type + "." + tt.Tag).join(", ") + "]" : ""));
+        // Place XML real-world positions only; do not fill remaining slots randomly.
+        placeCustomNaturalWonders(mapName);
+    } else {
+        // "real-and-random" (default): place XML positions first, fill remainder randomly.
+        const { count: customWonderCount } = placeCustomNaturalWonders(mapName);
+        const remainingWonderSlots = Math.max(0, iNumNaturalWonders - customWonderCount);
+        if (remainingWonderSlots > 0) {
+            addNaturalWonders(iWidth, iHeight, remainingWonderSlots, naturalWonderEvent);
+        } else {
+            console.log("All natural wonder slots filled by custom placement, skipping random placement.");
+        }
+    }
     console.log("addFloodplains...");
     TerrainBuilder.addFloodplains(4, 10);
+    // TODO : optional for civ7 maps (menu check box)
+    // TODO : convert features for civ6 maps
     addFeatures(iWidth, iHeight);
     if (mapType == 'CIV6') {
         ynamp.extraJungle(iWidth, iHeight, importedMap);
@@ -691,6 +728,8 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     dumpPermanentSnow(iWidth, iHeight);
     console.log("generateResources...");
     // Use base game resource generator
+    // TODO : optional for civ7 maps (menu check box)
+    // TODO : convert resources for civ6 maps
     generateResources(iWidth, iHeight);
     
     if (mapType == 'CIV7') {
@@ -812,11 +851,13 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
         console.log("Using XML-based superregion classification (region mode)");
         ynamp.overrideHomelandsWithXMLRegions(iWidth, iHeight, mapName);
     } else if (regionMode == "landmass") {
-        // BFS connectivity from player starts — ocean-blocked, orientation-agnostic
+        // BFS connectivity from player starts - ocean-blocked, orientation-agnostic
         console.log("Using connectivity-based landmass classification (landmass mode)");
         ynamp.overrideHomelandsWithLandmass(iWidth, iHeight);
     } else {
         // east-west: column-based tagging already applied in tagHemispherePlots
+        // Follow up with a wrap-aware correction for seam-spanning island components.
+        ynamp.overrideEastWestSeamIslandStarts(iWidth, iHeight);
         let missingStartPlayerIds = getAlivePlayersWithoutStartPositions();
         if (missingStartPlayerIds.length == 0) {
             assignAdvancedStartRegions();
@@ -825,6 +866,7 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
         }
     }
 }
+
 
 function placeVolcanoes(mapName) {
     console.log("YNAMP - Place Volcanoes for map " + mapName);

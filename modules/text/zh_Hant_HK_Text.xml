@@ -8,19 +8,100 @@
       <Text>Massive (128x80)</Text>
     </Replace>
     <Replace Tag="LOC_MAPSIZE_GIANT_NAME" Language="zh_Hant_HK">
-      <Text>Giant (180x94)[n][icon:BUILDING_WARNING] no texture on tiles > 127</Text>
+      <Text>巨人 (180x94)[n][icon:BUILDING_WARNING] 127 > 的瓦片無紋理</Text>
     </Replace>
     <Replace Tag="LOC_MAPSIZE_LUDICROUS_NAME" Language="zh_Hant_HK">
-      <Text>Ludicrous (230x116)[n][icon:BUILDING_WARNING] no texture on tiles > 127</Text>
+      <Text>Ludicrous (230x116)[n][icon:BUILDING_WARNING] 127 > 的瓦片無紋理</Text>
     </Replace>
     <Replace Tag="LOC_MAP_CONTINENTS_YNAMP_NAME" Language="zh_Hant_HK">
       <Text>Continents++ (YnAMP)</Text>
     </Replace>
+    <Replace Tag="LOC_MAP_CONTINENTS_YNAMP_DESCRIPTION" Language="zh_Hant_HK">
+      <Text>適用於 YnAMP 地圖大小和設置的 continents 風格腳本。</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_TERRA_YNAMP_NAME" Language="zh_Hant_HK">
+      <Text>Terra (YnAMP)</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_TERRA_YNAMP_DESCRIPTION" Language="zh_Hant_HK">
+      <Text>採用 1/3 : 2/3 陸地比例的 Terra 風格 Voronoi 地圖，專為不均衡大陸生成優化。</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_FRACTAL_YNAMP_NAME" Language="zh_Hant_HK">
+      <Text>分形 (YnAMP)</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_FRACTAL_YNAMP_DESCRIPTION" Language="zh_Hant_HK">
+      <Text>適用於 YnAMP 地圖大小和設置的分形風格腳本。</Text>
+    </Replace>
     <Replace Tag="LOC_MAP_GIANT_EARTH_YNAMP_NAME" Language="zh_Hant_HK">
       <Text>Giant Earth Map (YnAMP)</Text>
     </Replace>
+    <Replace Tag="LOC_MAP_GIANT_EARTH_YNAMP_DESCRIPTION" Language="zh_Hant_HK">
+      <Text>具有固定現實世界地理和真實起始支持的巨型地球地圖。</Text>
+    </Replace>
     <Replace Tag="LOC_MAP_GREATEST_EARTH_YNAMP_NAME" Language="zh_Hant_HK">
       <Text>Greatest Earth Map (YnAMP)[n]Civ5 map by djvandyke</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_GREATEST_EARTH_YNAMP_DESCRIPTION" Language="zh_Hant_HK">
+      <Text>具有固定現實世界地理和真實起始支持的巨型地球地圖。</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_GREATEST_EARTH_SIZE_DESCRIPTION" Language="zh_Hant_HK">
+      <Text>Greatest Earth (104x64) 使用的自訂巨大地圖大小。</Text>
+    </Replace>
+    <Replace Tag="LOC_MAPSIZE_MASSIVE_DESCRIPTION" Language="zh_Hant_HK">
+      <Text>YnAMP 場景和腳本使用的 Massive 地圖大小。</Text>
+    </Replace>
+    <Replace Tag="LOC_MAPSIZE_GIANT_DESCRIPTION" Language="zh_Hant_HK">
+      <Text>YnAMP 場景和腳本使用的 Giant 地圖大小。</Text>
+    </Replace>
+    <Replace Tag="LOC_MAPSIZE_LUDICROUS_DESCRIPTION" Language="zh_Hant_HK">
+      <Text>YnAMP 場景和腳本使用的 Ludicrous 地圖大小。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGION_MODE_NAME" Language="zh_Hant_HK">
+      <Text>區域標籤模式（用於 YnAMP 地圖）</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGION_MODE_DESC" Language="zh_Hant_HK">
+      <Text>控制家鄉和遙遠地區區域如何分類。Landmass 使用玩家起始位置的海洋分離。East-West 使用簡單的列分割。Region 使用 XML 定義的超級區域（僅限地球地圖；若無 XML 數據則回退到 East-West）。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGION_MODE_LANDMASS_NAME" Language="zh_Hant_HK">
+      <Text>Landmass（預設）</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGION_MODE_LANDMASS_DESC" Language="zh_Hant_HK">
+      <Text>家鄉和遙遠地區由玩家起始位置被海洋阻斷的連接性決定。孤立的島嶼和海洋保持中立。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGION_MODE_EAST_WEST_NAME" Language="zh_Hant_HK">
+      <Text>東西分割</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGION_MODE_EAST_WEST_DESC" Language="zh_Hant_HK">
+      <Text>家鄉和遙遠地區由簡單的垂直列邊界分隔，符合原始 YnAMP 行為。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGION_MODE_REGION_NAME" Language="zh_Hant_HK">
+      <Text>區域（XML）</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGION_MODE_REGION_DESC" Language="zh_Hant_HK">
+      <Text>為地球地圖使用 XML 定義的超級區域數據（歐亞、非洲、美洲、大洋洲）。如果所選地圖沒有可用的 XML 數據，則回退到東西分割。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_START_POSITION_RELATIVE_DISTANCE_NAME" Language="zh_Hant_HK">
+      <Text>相對距離</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_START_POSITION_RELATIVE_DISTANCE_DESC" Language="zh_Hant_HK">
+      <Text>放置起始位置後，打亂文明，使那些在歷史上彼此接近（使用巨人地球地圖座標作為現實世界錨點）的文明在遊戲地圖上彼此靠近放置。對已使用真實起始位置的導入地球地圖沒有影響。這將忽略文明的起始偏見。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_START_POSITION_REGION_NAME" Language="zh_Hant_HK">
+      <Text>文化區域（Terra）</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_START_POSITION_REGION_DESC" Language="zh_Hant_HK">
+      <Text>放置起始位置後，按大陸區域對文明進行分組：舊世界文明在家鄉大陸開始，新世界文明在遙遠大陸開始。在每個大陸內，文化上相鄰的組彼此靠近放置。太平洋文明在任一區域的島嶼上生成。忽略文明的起始偏見。專為新世界大陸較小的 Terra 風格地圖設計；每個半球的文明數量將不平衡。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_START_POSITION_RELATIVE_DISTANCE_TERRA_NAME" Language="zh_Hant_HK">
+      <Text>相對距離（Terra）</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_START_POSITION_RELATIVE_DISTANCE_TERRA_DESC" Language="zh_Hant_HK">
+      <Text>首先使用大陸超級區域（舊世界/新世界）將文明分離到半球，然後在每個半球內打亂文明，使那些在歷史上彼此接近的文明在遊戲地圖上彼此靠近放置。專為新世界大陸較小的 Terra 風格地圖設計；每個半球的文明數量將不平衡。忽略文明的起始偏見。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_START_POSITION_REGION_BALANCED_NAME" Language="zh_Hant_HK">
+      <Text>文化區域（平衡）</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_START_POSITION_REGION_BALANCED_DESC" Language="zh_Hant_HK">
+      <Text>與文化區域（Terra）類似，但在半球之間重新分配文化組，使文明數量盡可能相等。同一文化組的所有文明始終留在同一半球。在每個半球內，文化上相鄰的組彼此靠近放置。忽略文明的起始偏見。</Text>
     </Replace>
   </LocalizedText>
 </Database>

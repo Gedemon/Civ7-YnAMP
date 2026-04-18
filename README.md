@@ -1,2 +1,81 @@
-# Civ7-YnAMP
-YnAMP for Civilization 7
+# YnAMP for Civilization VII
+
+Yet (not) Another Maps Pack for Civilization VII.
+
+Last reviewed: 2026-04-15  
+YnAMP version: 1.0.14  
+Verified against: Civ7 v1.3.2
+
+## What this mod adds
+
+YnAMP extends Civ7 with larger map sizes, Earth maps with fixed geography, and custom map scripts built around the current Civ7 MapScript API.
+
+Included content:
+
+- Larger playable map sizes for custom scripts and Earth maps.
+- Giant Earth and Greatest Earth maps with true-start support.
+- Continents++ and Terra variants adapted for YnAMP sizes and options.
+- Custom start-position shuffles for cultural and Terra-style distribution.
+- TSL natural wonder placement modes for Earth maps.
+
+## Included maps
+
+Active map scripts in the current build:
+
+| Map | Type | Main use |
+|---|---|---|
+| Continents++ (YnAMP) | Generated | Large random map with YnAMP sizes and settings |
+| Terra (YnAMP) | Generated | Two-landmass Terra-style Voronoi map |
+| Greatest Earth Map (YnAMP) | Fixed geography / TSL | Compact Earth map with true starts |
+| Giant Earth Map (YnAMP) | Fixed geography / TSL | Large Earth map with true starts |
+
+See [MAPS.md](MAPS.md) for dimensions, options, and map-specific notes.
+
+## Installation
+
+1. Place the mod in your Civ7 mods directory.
+2. Start Civilization VII 
+3. Check if YnAMP is enabled in the additional content / add-ons menu.
+4. Start a new game and select one of the YnAMP map scripts.
+
+Mod's folder path:
+
+- Windows : `%localappdata%\Firaxis Games\Sid Meier's Civilization VII\Mods`
+- Mac : `~/Library/Application Support/Civilization VII/Mods`
+- Linux : `Home\My Games\Sid Meier's Civilization VII\Mods`
+
+## How to use it
+
+For Earth maps:
+
+1. Select either Giant Earth Map or Greatest Earth Map.
+2. Optional: configure Natural Wonders Placement on TSL Maps.
+
+For generated maps:
+
+1. Select Continents++ or Terra.
+2. Choose one of the map sizes.
+3. Optional: configure Region Tagging Mode and custom start-position options.
+4. Terra also exposes landmass ratio and spawn distribution options.
+
+## Compatibility notes
+
+- Current documentation is aligned with Civ7 v1.3.2 behavior.
+- The mod version source of truth is `modules/version.sql`, which currently reports `1.0.14`.
+- Giant and Ludicrous sizes still carry the in-game warning about missing tile textures above width 127.
+- ScenarioScripts are registered in the mod metadata, but gameplay-event support is not treated as reliable yet.
+
+## Documentation
+
+- [MAPS.md](MAPS.md): active maps, sizes, and configuration notes.
+- [CHANGELOG.md](CHANGELOG.md): documented release history from the current refactor onward.
+- [MODDING NOTES.md](MODDING%20NOTES.md): Civ7 MapScript development notes and debugging guidance.
+- [PORTING_NOTES.md](PORTING_NOTES.md): API changes that mattered while aligning YnAMP to Civ7 v1.3.2.
+- [GEOGRAPHIC_UNLOCK.md](GEOGRAPHIC_UNLOCK.md): design notes for geography-driven civilization unlocks.
+- [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md): practical checks for map generation and setup issues.
+
+## Known limitations
+
+- Fractal and rotated Giant Earth entries exist in the repo but are not currently enabled in the map list.
+- Some natural wonder footprint notes are still empirical and need more validation across repeated runs.
+- Historical changelog entries before v1.0.14 are not fully reconstructed in the docs yet.

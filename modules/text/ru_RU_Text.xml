@@ -1,12 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Database>
   <LocalizedText>
-    <Replace Tag="LOC_MAPSIZE_HUGE_NAME" Language="ru_RU">
-      <Text>Огромная</Text>
-    </Replace>
-    <Replace Tag="LOC_MAPSIZE_LARGE_NAME" Language="ru_RU">
-      <Text>Большая</Text>
-    </Replace>
     <Replace Tag="LOC_MAP_GREATEST_EARTH_SIZE_NAME" Language="ru_RU">
       <Text>Огромная (Специально для Великой Земли) (104x64)</Text>
     </Replace>
@@ -22,11 +16,92 @@
     <Replace Tag="LOC_MAP_CONTINENTS_YNAMP_NAME" Language="ru_RU">
       <Text>Континенты++ (YnAMP)</Text>
     </Replace>
+    <Replace Tag="LOC_MAP_CONTINENTS_YNAMP_DESCRIPTION" Language="ru_RU">
+      <Text>Скрипт в стиле continents, адаптированный для размеров карт и настроек YnAMP.</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_TERRA_YNAMP_NAME" Language="ru_RU">
+      <Text>Terra (YnAMP)</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_TERRA_YNAMP_DESCRIPTION" Language="ru_RU">
+      <Text>Карта в стиле Terra с соотношением суши 1/3 : 2/3, оптимизирована для неравномерного генерирования континентов.</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_FRACTAL_YNAMP_NAME" Language="ru_RU">
+      <Text>Фрактал (YnAMP)</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_FRACTAL_YNAMP_DESCRIPTION" Language="ru_RU">
+      <Text>Скрипт в стиле фрактал, адаптированный для размеров карт и настроек YnAMP.</Text>
+    </Replace>
     <Replace Tag="LOC_MAP_GIANT_EARTH_YNAMP_NAME" Language="ru_RU">
       <Text>Гигантская Земля (YnAMP)</Text>
     </Replace>
+    <Replace Tag="LOC_MAP_GIANT_EARTH_YNAMP_DESCRIPTION" Language="ru_RU">
+      <Text>Гигантская карта Земли с фиксированной реальной географией и поддержкой истинного старта.</Text>
+    </Replace>
     <Replace Tag="LOC_MAP_GREATEST_EARTH_YNAMP_NAME" Language="ru_RU">
       <Text>Великая Земля (YnAMP)[n]Карта из civ5 от djvandyke</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_GREATEST_EARTH_YNAMP_DESCRIPTION" Language="ru_RU">
+      <Text>Гигантская карта Земли с фиксированной реальной географией и поддержкой истинного старта.</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_GREATEST_EARTH_SIZE_DESCRIPTION" Language="ru_RU">
+      <Text>Кастомный огромный размер карты, используемый Великой Землей (104x64).</Text>
+    </Replace>
+    <Replace Tag="LOC_MAPSIZE_MASSIVE_DESCRIPTION" Language="ru_RU">
+      <Text>Громадный размер карты для сценариев и скриптов YnAMP.</Text>
+    </Replace>
+    <Replace Tag="LOC_MAPSIZE_GIANT_DESCRIPTION" Language="ru_RU">
+      <Text>Гигантский размер карты для сценариев и скриптов YnAMP.</Text>
+    </Replace>
+    <Replace Tag="LOC_MAPSIZE_LUDICROUS_DESCRIPTION" Language="ru_RU">
+      <Text>Колоссальный размер карты для сценариев и скриптов YnAMP.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGION_MODE_NAME" Language="ru_RU">
+      <Text>Режим тегирования регионов (для карт YnAMP)</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGION_MODE_DESC" Language="ru_RU">
+      <Text>Управляет тем, как классифицируются регионы родины и отдаленных земель. Landmass использует океаническое разделение от позиций старта игрока. East-West использует простое разделение по колоннам. Region использует суперрегионы, определенные в XML (только для карт Земли; возвращается к East-West).</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGION_MODE_LANDMASS_NAME" Language="ru_RU">
+      <Text>Landmass (по умолчанию)</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGION_MODE_LANDMASS_DESC" Language="ru_RU">
+      <Text>Родина и отдаленные земли определяются по океанической связности, заблокированной океаном от позиций старта игрока. Изолированные острова и океан остаются нейтральными.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGION_MODE_EAST_WEST_NAME" Language="ru_RU">
+      <Text>Разделение Восток-Запад</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGION_MODE_EAST_WEST_DESC" Language="ru_RU">
+      <Text>Родина и отдаленные земли разделены простой вертикальной границей колонны, соответствующей оригинальному поведению YnAMP.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGION_MODE_REGION_NAME" Language="ru_RU">
+      <Text>Регион (XML)</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGION_MODE_REGION_DESC" Language="ru_RU">
+      <Text>Использует данные суперрегионов, определенные в XML (Евразия, Африка, Америка, Океания) для карт Земли. Возвращается к East-West, если нет данных XML для выбранной карты.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_START_POSITION_RELATIVE_DISTANCE_NAME" Language="ru_RU">
+      <Text>Относительное расстояние</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_START_POSITION_RELATIVE_DISTANCE_DESC" Language="ru_RU">
+      <Text>После размещения позиций старта перемешивает цивилизации так, чтобы те, которые исторически близки друг к другу (используя координаты карты Гигантской Земли как реальные якоря), размещались рядом друг с другом на игровой карте. Не влияет на импортированные карты Земли, которые уже используют истинные позиции старта. Это игнорирует предвзятость старта цивилизаций.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_START_POSITION_REGION_NAME" Language="ru_RU">
+      <Text>Культурный регион (Terra)</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_START_POSITION_REGION_DESC" Language="ru_RU">
+      <Text>После размещения позиций старта группирует цивилизации по континентальным регионам: цивилизации Старого Света начинают на континенте родины, цивилизации Нового Света — на континенте отдаленных земель. Внутри каждого континента культурно соседние группы размещаются рядом друг с другом. Цивилизации Тихого океана появляются на островах в любом регионе. Игнорирует предвзятость старта цивилизаций. Разработан для карт в стиле Terra, где континент Нового Света меньше; количество цивилизаций на полушарии будет неравномерным.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_START_POSITION_RELATIVE_DISTANCE_TERRA_NAME" Language="ru_RU">
+      <Text>Относительное расстояние (Terra)</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_START_POSITION_RELATIVE_DISTANCE_TERRA_DESC" Language="ru_RU">
+      <Text>Сначала разделяет цивилизации на полушария, используя континентальные суперрегионы (Старый Свет / Новый Свет), затем перемешивает цивилизации внутри каждого полушария так, чтобы те, которые исторически близки друг к другу, размещались рядом друг с другом на игровой карте. Разработан для карт в стиле Terra, где континент Нового Света меньше; количество цивилизаций на полушарии будет неравномерным. Игнорирует предвзятость старта цивилизаций.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_START_POSITION_REGION_BALANCED_NAME" Language="ru_RU">
+      <Text>Культурный регион (Сбалансированный)</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_START_POSITION_REGION_BALANCED_DESC" Language="ru_RU">
+      <Text>Как Культурный регион (Terra), но перераспределяет культурные группы между полушариями, чтобы поддерживать количество цивилизаций как можно более равным. Все цивилизации из одной и той же культурной группы всегда остаются на том же полушарии. Внутри каждого полушария культурно соседние группы размещаются рядом друг с другом. Игнорирует предвзятость старта цивилизаций.</Text>
     </Replace>
   </LocalizedText>
 </Database>

@@ -5,22 +5,106 @@
       <Text>Custom Huge for Greatest Earth (104x64)</Text>
     </Replace>
     <Replace Tag="LOC_MAPSIZE_MASSIVE_NAME" Language="de_DE">
-      <Text>Massive (128x80)</Text>
+      <Text>Massiv (128x80)</Text>
     </Replace>
     <Replace Tag="LOC_MAPSIZE_GIANT_NAME" Language="de_DE">
-      <Text>Giant (180x94)[n][icon:BUILDING_WARNING] no texture on tiles > 127]</Text>
+      <Text>Riese (180x94)[n][icon:BUILDING_WARNING] keine Texturen auf Feldern > 127</Text>
     </Replace>
     <Replace Tag="LOC_MAPSIZE_LUDICROUS_NAME" Language="de_DE">
-      <Text>Ludicrous (230x116)[n][icon:BUILDING_WARNING] no texture on tiles > 127</Text>
+      <Text>Verschwenderisch (230x116)[n][icon:BUILDING_WARNING] keine Texturen auf Feldern > 127</Text>
     </Replace>
     <Replace Tag="LOC_MAP_CONTINENTS_YNAMP_NAME" Language="de_DE">
       <Text>Continents++ (YnAMP)</Text>
     </Replace>
+    <Replace Tag="LOC_MAP_CONTINENTS_YNAMP_DESCRIPTION" Language="de_DE">
+      <Text>Eine continents-artige Skriptanpassung für YnAMP-KartenGrößen und Einstellungen.</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_TERRA_YNAMP_NAME" Language="de_DE">
+      <Text>Terra (YnAMP)</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_TERRA_YNAMP_DESCRIPTION" Language="de_DE">
+      <Text>Eine Terra-artige Voronoi-Karte mit 1/3 : 2/3 Landmassen-Verhältnis, optimiert für ungleiche Kontinentengenerierung.</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_FRACTAL_YNAMP_NAME" Language="de_DE">
+      <Text>Fraktal (YnAMP)</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_FRACTAL_YNAMP_DESCRIPTION" Language="de_DE">
+      <Text>Eine fraktal-artige Skriptanpassung für YnAMP-KartenGrößen und Einstellungen.</Text>
+    </Replace>
     <Replace Tag="LOC_MAP_GIANT_EARTH_YNAMP_NAME" Language="de_DE">
       <Text>Giant Earth Map (YnAMP)</Text>
     </Replace>
+    <Replace Tag="LOC_MAP_GIANT_EARTH_YNAMP_DESCRIPTION" Language="de_DE">
+      <Text>Eine riesige Erdkarte mit fester realer Geografie und True-Start-Unterstützung.</Text>
+    </Replace>
     <Replace Tag="LOC_MAP_GREATEST_EARTH_YNAMP_NAME" Language="de_DE">
       <Text>Greatest Earth Map (YnAMP)[n]Civ5 map by djvandyke</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_GREATEST_EARTH_YNAMP_DESCRIPTION" Language="de_DE">
+      <Text>Eine riesige Erdkarte mit fester realer Geografie und True-Start-Unterstützung.</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_GREATEST_EARTH_SIZE_DESCRIPTION" Language="de_DE">
+      <Text>Benutzerdefinierte riesige KartenGröße für Greatest Earth (104x64).</Text>
+    </Replace>
+    <Replace Tag="LOC_MAPSIZE_MASSIVE_DESCRIPTION" Language="de_DE">
+      <Text>Massive KartenGröße für YnAMP-Szenarien und Skripte.</Text>
+    </Replace>
+    <Replace Tag="LOC_MAPSIZE_GIANT_DESCRIPTION" Language="de_DE">
+      <Text>Riese KartenGröße für YnAMP-Szenarien und Skripte.</Text>
+    </Replace>
+    <Replace Tag="LOC_MAPSIZE_LUDICROUS_DESCRIPTION" Language="de_DE">
+      <Text>Verschwenderisch KartenGröße für YnAMP-Szenarien und Skripte.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGION_MODE_NAME" Language="de_DE">
+      <Text>Region-Tagging-Modus (für YnAMP-Karten)</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGION_MODE_DESC" Language="de_DE">
+      <Text>Steuert, wie Heimat- und ferne-Landschafts-Regionen klassifiziert werden. Landmass nutzt Ozeantrennung von Spieler-Startpositionen. East-West nutzt eine einfache Spaltenaufteilung. Region nutzt XML-definierte Superregionen (nur für Erdkarten; fällt zurück auf East-West).</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGION_MODE_LANDMASS_NAME" Language="de_DE">
+      <Text>Landmass (Standard)</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGION_MODE_LANDMASS_DESC" Language="de_DE">
+      <Text>Heimat und ferne Landschaften werden durch ozeanblockierte Verbindlichkeit von Spieler-Startpositionen bestimmt. Isolierte Inseln und Ozean bleiben neutral.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGION_MODE_EAST_WEST_NAME" Language="de_DE">
+      <Text>East-West-Aufteilung</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGION_MODE_EAST_WEST_DESC" Language="de_DE">
+      <Text>Heimat und ferne Landschaften werden durch eine einfache vertikale Spaltenbegrenzung getrennt, entsprechend dem ursprünglichen YnAMP-Verhalten.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGION_MODE_REGION_NAME" Language="de_DE">
+      <Text>Region (XML)</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGION_MODE_REGION_DESC" Language="de_DE">
+      <Text>Nutzt XML-definierte Superregionendaten (EurAsien, Afrika, Amerika, Ozeanien) für Erdkarten. Fällt zurück auf East-West, wenn keine XML-Daten für die ausgewählte Karte verfügbar sind.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_START_POSITION_RELATIVE_DISTANCE_NAME" Language="de_DE">
+      <Text>Relativer Abstand</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_START_POSITION_RELATIVE_DISTANCE_DESC" Language="de_DE">
+      <Text>Nach Platzierung der Startpositionen werden Zivilisationen so gemischt, dass diejenigen, die historisch nahe beieinander liegen (unter Verwendung von Giant Earth-Karten-Koordinaten als reale Anker), nahe beieinander auf der Spielkarte platziert werden. Hat keine Auswirkung auf importierte Erdkarten, die bereits wahre Startpositionen verwenden. Dies ignoriert Zivilisations-Startvoreinstellungen.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_START_POSITION_REGION_NAME" Language="de_DE">
+      <Text>Kulturelle Region (Terra)</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_START_POSITION_REGION_DESC" Language="de_DE">
+      <Text>Nach Platzierung der Startpositionen werden Zivilisationen nach Kontinentalregionen gruppiert: Alte-Welt-Zivilisationen starten auf dem Heimatkontinent, Neue-Welt-Zivilisationen auf dem ferne-Landschaften-Kontinent. Innerhalb jedes Kontinents werden kulturell benachbarte Gruppen nahe beieinander platziert. Pazifische Zivilisationen erscheinen auf Inseln in entweder Region. Ignoriert Zivilisations-Startvoreinstellungen. Entwickelt für Terra-artige Karten, bei denen der Neue-Welt-Kontinent kleiner ist; die Anzahl der Zivilisationen pro Halbkugel wird unbalanciert sein.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_START_POSITION_RELATIVE_DISTANCE_TERRA_NAME" Language="de_DE">
+      <Text>Relativer Abstand (Terra)</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_START_POSITION_RELATIVE_DISTANCE_TERRA_DESC" Language="de_DE">
+      <Text>Trennt zunächst Zivilisationen auf Halbkugeln unter Verwendung von kontinentalen Superregionen (Alte Welt / Neue Welt), mischt dann innerhalb jeder Halbkugel Zivilisationen so, dass diejenigen, die historisch nahe beieinander liegen, nahe beieinander auf der Spielkarte platziert werden. Entwickelt für Terra-artige Karten, bei denen der Neue-Welt-Kontinent kleiner ist; die Anzahl der Zivilisationen pro Halbkugel wird unbalanciert sein. Ignoriert Zivilisations-Startvoreinstellungen.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_START_POSITION_REGION_BALANCED_NAME" Language="de_DE">
+      <Text>Kulturelle Region (Ausgeglichen)</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_START_POSITION_REGION_BALANCED_DESC" Language="de_DE">
+      <Text>Wie Kulturelle Region (Terra), aber redistribuiert Kulturgruppen über Halbkugeln, um die Zivilisationsanzahl so gleich wie möglich zu halten. Alle Zivilisationen derselben Kulturgruppe bleiben immer auf derselben Halbkugel. Innerhalb jeder Halbkugel werden kulturell benachbarte Gruppen nahe beieinander platziert. Ignoriert Zivilisations-Startvoreinstellungen.</Text>
+    </Replace>
+    <Replace Tag="LOC_MAPSIZE_LARGE_NAME" Language="de_DE">
+      <Text>Groß</Text>
     </Replace>
   </LocalizedText>
 </Database>

@@ -8,19 +8,100 @@
       <Text>Massive (128x80)</Text>
     </Replace>
     <Replace Tag="LOC_MAPSIZE_GIANT_NAME" Language="it_IT">
-      <Text>Giant (180x94)[n][icon:BUILDING_WARNING] no texture on tiles > 127</Text>
+      <Text>Gigante (180x94)[n][icon:BUILDING_WARNING] nessuna texture sui tile > 127</Text>
     </Replace>
     <Replace Tag="LOC_MAPSIZE_LUDICROUS_NAME" Language="it_IT">
-      <Text>Ludicrous (230x116)[n][icon:BUILDING_WARNING] no texture on tiles > 127</Text>
+      <Text>Ludicrous (230x116)[n][icon:BUILDING_WARNING] nessuna texture sui tile > 127</Text>
     </Replace>
     <Replace Tag="LOC_MAP_CONTINENTS_YNAMP_NAME" Language="it_IT">
       <Text>Continents++ (YnAMP)</Text>
     </Replace>
+    <Replace Tag="LOC_MAP_CONTINENTS_YNAMP_DESCRIPTION" Language="it_IT">
+      <Text>Uno script stile continents adattato per le dimensioni mappa e impostazioni YnAMP.</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_TERRA_YNAMP_NAME" Language="it_IT">
+      <Text>Terra (YnAMP)</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_TERRA_YNAMP_DESCRIPTION" Language="it_IT">
+      <Text>Una mappa stile Terra con rapporto di massa terrestre 1/3 : 2/3, ottimizzata per la generazione disuguale dei continenti.</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_FRACTAL_YNAMP_NAME" Language="it_IT">
+      <Text>Frattale (YnAMP)</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_FRACTAL_YNAMP_DESCRIPTION" Language="it_IT">
+      <Text>Uno script stile frattale adattato per le dimensioni mappa e impostazioni YnAMP.</Text>
+    </Replace>
     <Replace Tag="LOC_MAP_GIANT_EARTH_YNAMP_NAME" Language="it_IT">
       <Text>Giant Earth Map (YnAMP)</Text>
     </Replace>
+    <Replace Tag="LOC_MAP_GIANT_EARTH_YNAMP_DESCRIPTION" Language="it_IT">
+      <Text>Una mappa Terra gigante con geografia reale fissa e supporto per vero inizio.</Text>
+    </Replace>
     <Replace Tag="LOC_MAP_GREATEST_EARTH_YNAMP_NAME" Language="it_IT">
       <Text>Greatest Earth Map (YnAMP)[n]Civ5 map by djvandyke</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_GREATEST_EARTH_YNAMP_DESCRIPTION" Language="it_IT">
+      <Text>Una mappa Terra enorme con geografia reale fissa e supporto per vero inizio.</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_GREATEST_EARTH_SIZE_DESCRIPTION" Language="it_IT">
+      <Text>Dimensione mappa custom enorme usata da Greatest Earth (104x64).</Text>
+    </Replace>
+    <Replace Tag="LOC_MAPSIZE_MASSIVE_DESCRIPTION" Language="it_IT">
+      <Text>Dimensione mappa massive per scenari e script YnAMP.</Text>
+    </Replace>
+    <Replace Tag="LOC_MAPSIZE_GIANT_DESCRIPTION" Language="it_IT">
+      <Text>Dimensione mappa gigante per scenari e script YnAMP.</Text>
+    </Replace>
+    <Replace Tag="LOC_MAPSIZE_LUDICROUS_DESCRIPTION" Language="it_IT">
+      <Text>Dimensione mappa ludicrous per scenari e script YnAMP.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGION_MODE_NAME" Language="it_IT">
+      <Text>Modalità di etichettatura delle regioni (per mappe YnAMP)</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGION_MODE_DESC" Language="it_IT">
+      <Text>Controlla come vengono classificate le regioni di terra natale e terre lontane. Landmass usa separazione oceanica dalle posizioni di inizio del giocatore. East-West usa una semplice divisione per colonna. Region usa superregioni definite in XML (mappe Terra solo; torna a East-West).</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGION_MODE_LANDMASS_NAME" Language="it_IT">
+      <Text>Landmass (predefinito)</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGION_MODE_LANDMASS_DESC" Language="it_IT">
+      <Text>Terra natale e terre lontane sono determinate dalla connettività bloccata dall'oceano dalle posizioni di inizio del giocatore. Le isole isolate e l'oceano rimangono neutre.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGION_MODE_EAST_WEST_NAME" Language="it_IT">
+      <Text>Divisione Est-Ovest</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGION_MODE_EAST_WEST_DESC" Language="it_IT">
+      <Text>Terra natale e terre lontane sono separate da un semplice confine verticale, corrispondente al comportamento originale YnAMP.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGION_MODE_REGION_NAME" Language="it_IT">
+      <Text>Regione (XML)</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGION_MODE_REGION_DESC" Language="it_IT">
+      <Text>Usa dati di superregione definiti in XML (EurAsia, Africa, Americhe, Oceania) per mappe Terra. Torna a East-West se non ci sono dati XML disponibili per la mappa selezionata.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_START_POSITION_RELATIVE_DISTANCE_NAME" Language="it_IT">
+      <Text>Distanza relativa</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_START_POSITION_RELATIVE_DISTANCE_DESC" Language="it_IT">
+      <Text>Dopo aver posizionato le posizioni di inizio, mescola le civiltà in modo che quelle storicamente vicine tra loro (usando le coordinate della mappa Terra gigante come ancoraggi del mondo reale) vengano posizionate vicine tra loro sulla mappa di gioco. Non ha effetto sulle mappe Terra importate, che già usano posizioni di inizio reali. Questo ignorerà i bias di inizio delle civiltà.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_START_POSITION_REGION_NAME" Language="it_IT">
+      <Text>Regione culturale (Terra)</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_START_POSITION_REGION_DESC" Language="it_IT">
+      <Text>Dopo aver posizionato le posizioni di inizio, raggruppa le civiltà per regione continentale: le civiltà del Vecchio Mondo iniziano sul continente della terra natale, le civiltà del Nuovo Mondo sul continente delle terre lontane. All'interno di ogni continente, i gruppi culturalmente adiacenti vengono posizionati vicini tra loro. Le civiltà del Pacifico appaiono su isole in una o entrambe le regioni. Ignora i bias di inizio delle civiltà. Progettato per mappe stile Terra dove il continente del Nuovo Mondo è più piccolo; il numero di civiltà per emisfero sarà sbilanciato.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_START_POSITION_RELATIVE_DISTANCE_TERRA_NAME" Language="it_IT">
+      <Text>Distanza relativa (Terra)</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_START_POSITION_RELATIVE_DISTANCE_TERRA_DESC" Language="it_IT">
+      <Text>Prima separa le civiltà su emisferi usando superregioni continentali (Vecchio Mondo / Nuovo Mondo), poi mescola le civiltà all'interno di ogni emisferio in modo che quelle storicamente vicine tra loro vengano posizionate vicine tra loro sulla mappa di gioco. Progettato per mappe stile Terra dove il continente del Nuovo Mondo è più piccolo; il numero di civiltà per emisfero sarà sbilanciato. Ignora i bias di inizio delle civiltà.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_START_POSITION_REGION_BALANCED_NAME" Language="it_IT">
+      <Text>Regione culturale (Equilibrato)</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_START_POSITION_REGION_BALANCED_DESC" Language="it_IT">
+      <Text>Come Regione culturale (Terra), ma ridistribuisce i gruppi culturali tra emisferi per mantenere il numero di civiltà il più uguale possibile. Tutte le civiltà dello stesso gruppo culturale rimangono sempre sullo stesso emisfero. All'interno di ogni emisfero, i gruppi culturalmente adiacenti vengono posizionati vicini tra loro. Ignora i bias di inizio delle civiltà.</Text>
     </Replace>
   </LocalizedText>
 </Database>

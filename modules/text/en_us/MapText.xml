@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Database>
 	<EnglishText>
-		<Replace Tag="LOC_MAPSIZE_LARGE_NAME">
-			<Text>Large</Text>
-		</Replace>
-		<Replace Tag="LOC_MAPSIZE_HUGE_NAME">
-			<Text>Huge</Text>
-		</Replace>
 		<Replace Tag="LOC_MAP_GREATEST_EARTH_SIZE_NAME">
 			<Text>Custom Huge for Greatest Earth (104x64)</Text>
 		</Replace>
@@ -24,6 +18,12 @@
 		</Replace>
 		<Replace Tag="LOC_MAP_CONTINENTS_YNAMP_DESCRIPTION">
 			<Text>A continents-style script adapted for YnAMP map sizes and settings.</Text>
+		</Replace>
+		<Replace Tag="LOC_MAP_TERRA_YNAMP_NAME">
+			<Text>Terra (YnAMP)</Text>
+		</Replace>
+		<Replace Tag="LOC_MAP_TERRA_YNAMP_DESCRIPTION">
+			<Text>A Terra-style Voronoi map with a larger landmass ("Old World") and a smaller one ("New World"). Suggested map script for "Terra" Start Position options.</Text>
 		</Replace>
 		<Replace Tag="LOC_MAP_FRACTAL_YNAMP_NAME">
 			<Text>Fractal (YnAMP)</Text>
@@ -56,7 +56,7 @@
 			<Text>Ludicrous map size for YnAMP scenarios and scripts.</Text>
 		</Replace>
 		<Replace Tag="LOC_YNAMP_REGION_MODE_NAME">
-			<Text>Region Tagging Mode (for YnAMP maps)</Text>
+			<Text>Region Tagging Mode (for YnAMP TSL maps)</Text>
 		</Replace>
 		<Replace Tag="LOC_YNAMP_REGION_MODE_DESC">
 			<Text>Controls how homeland and distant-lands regions are classified. Landmass uses ocean separation from player starts. East-West uses a simple column split. Region uses XML-defined superregions (Earth maps only; falls back to East-West).</Text>
@@ -87,10 +87,85 @@
 			<Text>After placing start positions, shuffles civilizations so that those historically close to each other (using Giant Earth map coordinates as real-world anchors) are placed near each other on the game map. Has no effect on imported Earth maps, which already use true start locations. This will ignore civilization starting biases.</Text>
 		</Replace>
 		<Replace Tag="LOC_YNAMP_START_POSITION_REGION_NAME">
-			<Text>Cultural Region</Text>
+			<Text>Cultural Region (Terra)</Text>
 		</Replace>
 		<Replace Tag="LOC_YNAMP_START_POSITION_REGION_DESC">
-			<Text>After placing start positions, groups civilizations by continental region: Old World civilizations start on the homeland continent, New World civilizations on the distant-lands continent. Within each continent, culturally adjacent groups are placed near one another. Pacific civilizations spawn on islands in either region. Ignores civilization starting biases.</Text>
+			<Text>After placing start positions, groups civilizations by continental region: Old World civilizations start on the homeland continent, New World civilizations on the distant-lands continent. Within each continent, culturally adjacent groups are placed near one another. Pacific civilizations spawn on islands in either region. Ignores civilization starting biases. Designed for Terra-style maps where the New World continent is smaller; the number of civilizations per hemisphere will be unbalanced.</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_START_POSITION_RELATIVE_DISTANCE_TERRA_NAME">
+			<Text>Relative Distance (Terra)</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_START_POSITION_RELATIVE_DISTANCE_TERRA_DESC">
+			<Text>First separates civilizations onto hemispheres using continental superregions (Old World / New World), then within each hemisphere shuffles civilizations so that those historically close to each other are placed near each other on the game map. Designed for Terra-style maps where the New World continent is smaller; the number of civilizations per hemisphere will be unbalanced. Ignores civilization starting biases.</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_START_POSITION_REGION_BALANCED_NAME">
+			<Text>Cultural Region (Balanced)</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_START_POSITION_REGION_BALANCED_DESC">
+			<Text>Like Cultural Region (Terra), but redistributes culture groups across hemispheres to keep civ counts as equal as possible. All civilizations from the same cultural group always stay on the same hemisphere. Within each hemisphere, culturally adjacent groups are placed near one another. Ignores civilization starting biases.</Text>
+		</Replace>
+
+		<Replace Tag="LOC_TERRA_YNAMP_RATIO_NAME">
+			<Text>Landmass Ratio for Terra YnAMP</Text>
+		</Replace>
+		<Replace Tag="LOC_TERRA_YNAMP_RATIO_DESC">
+			<Text>Percentage of total land area allocated to the smaller landmass ("New World"). The larger landmass (Old World) receives the remainder. Smaller values produce a more extreme size difference.</Text>
+		</Replace>
+		<Replace Tag="LOC_TERRA_YNAMP_RATIO_40_NAME">
+			<Text>40% New World</Text>
+		</Replace>
+		<Replace Tag="LOC_TERRA_YNAMP_RATIO_33_NAME">
+			<Text>33% New World</Text>
+		</Replace>
+		<Replace Tag="LOC_TERRA_YNAMP_RATIO_25_NAME">
+			<Text>25% New World</Text>
+		</Replace>
+		<Replace Tag="LOC_TERRA_YNAMP_RATIO_20_NAME">
+			<Text>20% New World</Text>
+		</Replace>
+		<Replace Tag="LOC_TERRA_YNAMP_RATIO_15_NAME">
+			<Text>15% New World</Text>
+		</Replace>
+		<Replace Tag="LOC_TERRA_YNAMP_RATIO_10_NAME">
+			<Text>10% New World</Text>
+		</Replace>
+
+		<Replace Tag="LOC_TERRA_YNAMP_SPAWN_MODE_NAME">
+			<Text>Spawn Distribution for Terra YnAMP</Text>
+		</Replace>
+		<Replace Tag="LOC_TERRA_YNAMP_SPAWN_MODE_DESC">
+			<Text>Controls how civilizations are distributed between the two landmasses. Split places civs on both landmasses proportional to their size. Same Landmass places all civs on the larger landmass.</Text>
+		</Replace>
+		<Replace Tag="LOC_TERRA_YNAMP_SPAWN_SPLIT_NAME">
+			<Text>Split civs on landmasses</Text>
+		</Replace>
+		<Replace Tag="LOC_TERRA_YNAMP_SPAWN_SAME_NAME">
+			<Text>All civs on larger landmass</Text>
+		</Replace>
+
+		<Replace Tag="LOC_YNAMP_NW_PLACEMENT_MODE_NAME">
+			<Text>Natural Wonders Placement on TSL Maps</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_NW_PLACEMENT_MODE_DESC">
+			<Text>Controls how Natural Wonders are placed on True Start Location Earth maps. "Real World + Random" uses XML real-world positions first, then fills remaining slots randomly. "Real World Only" uses only XML positions (adjacency and elevation requirements are relaxed to improve placement). "Random" ignores all real-world positions and places all wonders randomly.</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_NW_PLACEMENT_RANDOM_NAME">
+			<Text>Random</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_NW_PLACEMENT_RANDOM_DESC">
+			<Text>Natural Wonders are placed entirely randomly, ignoring real-world positions.</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_NW_PLACEMENT_REAL_AND_RANDOM_NAME">
+			<Text>Real World + Random (default)</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_NW_PLACEMENT_REAL_AND_RANDOM_DESC">
+			<Text>Uses XML real-world positions first, then fills any remaining Natural Wonder slots with random placement.</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_NW_PLACEMENT_REAL_ONLY_NAME">
+			<Text>Real World Only</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_NW_PLACEMENT_REAL_ONLY_DESC">
+			<Text>Only XML real-world positions are used. No random fill. Adjacency and elevation placement requirements are removed from the game database to improve placement success.</Text>
 		</Replace>
 	</EnglishText>
 </Database>

@@ -62,7 +62,10 @@ CREATE TABLE IF NOT EXISTS NaturalWonderPosition
 		FeatureType TEXT NOT NULL,
 		TerrainType TEXT,
 		X INT default 0,
-		Y INT default 0);
+		Y INT default 0,
+		Direction INT default -1,
+		SearchRadius INT default 0,
+		PreservePlacementRule INT default 0);
 		
 -- Start Positions
 CREATE TABLE IF NOT EXISTS StartPosition

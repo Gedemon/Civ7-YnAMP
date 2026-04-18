@@ -13,6 +13,13 @@
 		<Criteria id="always">
 			<AlwaysMet></AlwaysMet>
 		</Criteria>
+		<Criteria id="nw-real-world-only">
+			<ConfigurationValueMatches>
+				<Group>Map</Group>
+				<ConfigurationId>NWPlacementMode</ConfigurationId>
+				<Value>YNAMP_NW_PLACEMENT_REAL_ONLY</Value>
+			</ConfigurationValueMatches>
+		</Criteria>
 	</ActionCriteria>
 	<ActionGroups>
 		<ActionGroup id="base-game-init-ynamp" scope="game" criteria="always">
@@ -25,10 +32,21 @@
 				</UpdateDatabase>
 			</Actions>
 		</ActionGroup>
+		<ActionGroup id="base-game-nw-real-only" scope="game" criteria="nw-real-world-only">
+			<Properties>
+				<LoadOrder>500</LoadOrder>
+			</Properties>
+			<Actions>
+				<UpdateDatabase>
+					<Item>data/nw-remove-constraints.sql</Item>
+				</UpdateDatabase>
+			</Actions>
+		</ActionGroup>
 		<ActionGroup id="base-game-main-ynamp" scope="game" criteria="always">
 			<Actions>
 				<UpdateDatabase>
 					<Item>version.sql</Item>
+					<Item>data/data.sql</Item>
 					<Item>data/maps.xml</Item>
 					<Item>maps/giant-earth-map/giant-earth.xml</Item>
 					<Item>maps/giant-earth-map/giant-earth-city.xml</Item>
@@ -72,6 +90,7 @@
 			<Actions>
 				<UpdateDatabase>
 					<Item>config/config.xml</Item>
+					<Item>config/config.sql</Item>
 				</UpdateDatabase>
 				<UpdateText>
 					<Item>text/en_us/MapText.xml</Item>
