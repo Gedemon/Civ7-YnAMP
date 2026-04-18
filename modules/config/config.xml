@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Database>
 	<Maps>
-		<!-- <Row File="{ged-ynamp}maps/fractal-ynamp.js" Name="LOC_MAP_FRACTAL_YNAMP_NAME" Description="LOC_MAP_CONTINENTS_YNAMP_DESCRIPTION" SortIndex="210"/> -->
-
 		<Row File="{ged-ynamp}maps/continents-ynamp.js" Name="LOC_MAP_CONTINENTS_YNAMP_NAME" Description="LOC_MAP_CONTINENTS_YNAMP_DESCRIPTION" SortIndex="900"/>
 		<Row File="{ged-ynamp}maps/terra-ynamp.js" Name="LOC_MAP_TERRA_YNAMP_NAME" Description="LOC_MAP_TERRA_YNAMP_DESCRIPTION" SortIndex="905"/>
 		<Row File="{ged-ynamp}maps/greatest-earth-map/greatest-earth-map.js" Name="LOC_MAP_GREATEST_EARTH_YNAMP_NAME" Description="LOC_MAP_GREATEST_EARTH_YNAMP_DESCRIPTION" SortIndex="910"/>
 		<Row File="{ged-ynamp}maps/giant-earth-map/giant-earth-map.js" Name="LOC_MAP_GIANT_EARTH_YNAMP_NAME" Description="LOC_MAP_GIANT_EARTH_YNAMP_DESCRIPTION" SortIndex="920"/>
-		<!-- <Row File="{ged-ynamp}maps/giant-earth-map/giant-earth-map-rotated.js" Name="LOC_MAP_GIANT_EARTH_ROTATED_YNAMP_NAME" Description="LOC_MAP_GIANT_EARTH_YNAMP_DESCRIPTION" SortIndex="930"/> -->
 	</Maps>
 	<MapSizes>
 		<!-- Standard MapSize Domain - For ages where civs on both landmasses can win victories. -->
@@ -16,17 +13,15 @@
 		<Row Domain="StandardMapSizes" MapSizeType="MAPSIZE_GREATEST_EARTH" Name="LOC_MAP_GREATEST_EARTH_SIZE_NAME" Description="LOC_MAP_GREATEST_EARTH_SIZE_DESCRIPTION" MinPlayers="2" MaxPlayers="40" MaxHumans="10" DefaultPlayers="8" SortIndex="65"/>
 		<Row Domain="StandardMapSizes" MapSizeType="MAPSIZE_MASSIVE" Name="LOC_MAPSIZE_MASSIVE_NAME" Description="LOC_MAPSIZE_MASSIVE_DESCRIPTION" MinPlayers="2" MaxPlayers="40" MaxHumans="10" DefaultPlayers="12" SortIndex="70"/>
 		<Row Domain="StandardMapSizes" MapSizeType="MAPSIZE_GIANT" Name="LOC_MAPSIZE_GIANT_NAME" Description="LOC_MAPSIZE_GIANT_DESCRIPTION" MinPlayers="2" MaxPlayers="40" MaxHumans="10" DefaultPlayers="12" SortIndex="80"/>
-		<!-- <Row Domain="StandardMapSizes" MapSizeType="MAPSIZE_GIANT_ROTATED" Name="LOC_MAPSIZE_GIANT_ROTATED_NAME" Description="LOC_MAPSIZE_GIANT_DESCRIPTION" MinPlayers="2" MaxPlayers="10" MaxHumans="10" DefaultPlayers="8" SortIndex="85"/> -->
 		<Row Domain="StandardMapSizes" MapSizeType="MAPSIZE_LUDICROUS" Name="LOC_MAPSIZE_LUDICROUS_NAME" Description="LOC_MAPSIZE_LUDICROUS_DESCRIPTION" MinPlayers="2" MaxPlayers="40" MaxHumans="10" DefaultPlayers="12" SortIndex="90"/>
-		
-		<!-- Distant Lands MapSize Domain - For ages where only civs on landmass1 can win victories. 
+        
+		<!-- Distant Lands MapSize Domain - For ages where only civs on landmasses1 can win victories. 
 			This domain has lower MaxHumans so human players will only spawn on landmass1.  -->
 		<!-- <Replace Domain="DistantLandsMapSizes" MapSizeType="MAPSIZE_LARGE" Name="LOC_MAPSIZE_LARGE_NAME" Description="LOC_MAPSIZE_LARGE_DESCRIPTION" MinPlayers="2" MaxPlayers="10" MaxHumans="5" DefaultPlayers="8" SortIndex="50"/> -->
 		<!-- <Replace Domain="DistantLandsMapSizes" MapSizeType="MAPSIZE_HUGE" Name="LOC_MAPSIZE_HUGE_NAME" Description="LOC_MAPSIZE_HUGE_DESCRIPTION" MinPlayers="2" MaxPlayers="10" MaxHumans="5" DefaultPlayers="8" SortIndex="60"/> -->
 		<Row Domain="DistantLandsMapSizes" MapSizeType="MAPSIZE_GREATEST_EARTH" Name="LOC_MAP_GREATEST_EARTH_SIZE_NAME" Description="LOC_MAP_GREATEST_EARTH_SIZE_DESCRIPTION" MinPlayers="2" MaxPlayers="40" MaxHumans="5" DefaultPlayers="8" SortIndex="65"/>
 		<Row Domain="DistantLandsMapSizes" MapSizeType="MAPSIZE_MASSIVE" Name="LOC_MAPSIZE_MASSIVE_NAME" Description="LOC_MAPSIZE_MASSIVE_DESCRIPTION" MinPlayers="2" MaxPlayers="40" MaxHumans="5" DefaultPlayers="12" SortIndex="70"/>
 		<Row Domain="DistantLandsMapSizes" MapSizeType="MAPSIZE_GIANT" Name="LOC_MAPSIZE_GIANT_NAME" Description="LOC_MAPSIZE_GIANT_DESCRIPTION" MinPlayers="2" MaxPlayers="40" MaxHumans="5" DefaultPlayers="12" SortIndex="80"/>
-		<!-- <Row Domain="DistantLandsMapSizes" MapSizeType="MAPSIZE_GIANT_ROTATED" Name="LOC_MAPSIZE_GIANT_ROTATED_NAME" Description="LOC_MAPSIZE_GIANT_DESCRIPTION" MinPlayers="2" MaxPlayers="10" MaxHumans="5" DefaultPlayers="8" SortIndex="85"/> -->
 		<Row Domain="DistantLandsMapSizes" MapSizeType="MAPSIZE_LUDICROUS" Name="LOC_MAPSIZE_LUDICROUS_NAME" Description="LOC_MAPSIZE_LUDICROUS_DESCRIPTION" MinPlayers="2" MaxPlayers="40" MaxHumans="5" DefaultPlayers="12" SortIndex="90"/>
 	</MapSizes>
 	<Parameters>
@@ -85,10 +80,7 @@
 		<Row Map="{ged-ynamp}maps/greatest-earth-map/greatest-earth-map.js" Domain="StandardMapSizes"		Value="MAPSIZE_GREATEST_EARTH" 		/>
 		<Row Map="{ged-ynamp}maps/greatest-earth-map/greatest-earth-map.js" Domain="DistantLandsMapSizes"	Value="MAPSIZE_GREATEST_EARTH" 		/>
 		
-		<Row Map="{ged-ynamp}maps/giant-earth-map/giant-earth-map.js" Domain="StandardMapSizes"		Value="MAPSIZE_GIANT" 		/>
-		<Row Map="{ged-ynamp}maps/giant-earth-map/giant-earth-map.js" Domain="DistantLandsMapSizes"	Value="MAPSIZE_GIANT" 		/>
-        
-		<!-- <Row Map="{ged-ynamp}maps/giant-earth-map/giant-earth-map-rotated.js" Domain="StandardMapSizes"		Value="MAPSIZE_GIANT_ROTATED" 		/> -->
-		<!-- <Row Map="{ged-ynamp}maps/giant-earth-map/giant-earth-map-rotated.js" Domain="DistantLandsMapSizes"	Value="MAPSIZE_GIANT_ROTATED" 		/> -->
+		<Row Map="{ged-ynamp}maps/giant-earth-map/giant-earth-map.js" Domain="StandardMapSizes" 		Value="MAPSIZE_GIANT" 		/>
+		<Row Map="{ged-ynamp}maps/giant-earth-map/giant-earth-map.js" Domain="DistantLandsMapSizes" 	Value="MAPSIZE_GIANT" 		/>
 	</SupportedValuesByMap>
 </Database>

@@ -44,7 +44,12 @@
 // Note: generateDiscoveries() is called by base-game maps before FertilityBuilder.recalculate,
 //   so discoveries will reflect pre-shuffle start positions. This is a known limitation.
 
-import { isValidPlot, findFallbackStartPlot } from '/ged-ynamp/maps/ynamp-utilities.js';
+import {
+    isValidPlot,
+    findFallbackStartPlot,
+    buildIslandStartMetadata,
+    findFallbackIslandStartPlot,
+} from '/ged-ynamp/maps/ynamp-utilities.js';
 
 console.log("Loading ynamp-cultural-start.js");
 
@@ -546,8 +551,84 @@ function calculateRegionScore(playerIds, civProfiles, iWidth) {
     return score;
 }
 
+function canSwapWithIslandConstraint(playerId, currentPlot, destinationPlot, swapConstraint) {
+    if (!swapConstraint || !swapConstraint.islandLockedPlayers.has(playerId)) {
+        return true;
+    }
+    return swapConstraint.islandPlots.has(currentPlot) && swapConstraint.islandPlots.has(destinationPlot);
+}
+
+function prepareOceaniaIslandStarts(playerIds, civProfiles, iWidth, iHeight) {
+    const oceaniaPlayers = [];
+    for (let i = 0; i < playerIds.length; i++) {
+        const pid = playerIds[i];
+        if ((civProfiles.get(pid) || {}).superRegion === "OCEANIA") {
+            oceaniaPlayers.push(pid);
+        }
+    }
+    if (oceaniaPlayers.length === 0) return null;
+
+    console.log("[YnAMP Region] ─── Oceania island placement ───");
+    const usedPlots = new Set();
+    for (let i = 0; i < playerIds.length; i++) {
+        const plot = StartPositioner.getStartPosition(playerIds[i]);
+        if (isValidPlot(plot)) usedPlots.add(plot);
+    }
+
+    const islandMetadata = buildIslandStartMetadata(iWidth, iHeight);
+    const islandLockedPlayers = new Set(oceaniaPlayers);
+
+    for (let i = 0; i < oceaniaPlayers.length; i++) {
+        const pid = oceaniaPlayers[i];
+        const civ = getCivTypeName(pid) || ("player" + pid);
+        const currentPlot = StartPositioner.getStartPosition(pid);
+        let preferredRegionId = -1;
+        if (isValidPlot(currentPlot)) {
+            const currentX = currentPlot % iWidth;
+            const currentY = Math.floor(currentPlot / iWidth);
+            preferredRegionId = GameplayMap.getLandmassRegionId(currentX, currentY);
+            usedPlots.delete(currentPlot);
+        }
+
+        const islandStart = findFallbackIslandStartPlot(
+            currentPlot,
+            usedPlots,
+            iWidth,
+            iHeight,
+            REGION_MIN_DISTANCE,
+            preferredRegionId,
+            islandMetadata
+        );
+
+        if (!isValidPlot(islandStart.plot)) {
+            if (isValidPlot(currentPlot)) usedPlots.add(currentPlot);
+            console.log("[YnAMP Region]  WARNING: no island start found for " + civ +
+                " (preferred regionId=" + preferredRegionId + ")");
+            continue;
+        }
+
+        if (islandStart.plot !== currentPlot) {
+            StartPositioner.setStartPosition(islandStart.plot, pid);
+        }
+        usedPlots.add(islandStart.plot);
+
+        const finalX = islandStart.plot % iWidth;
+        const finalY = Math.floor(islandStart.plot / iWidth);
+        const finalRegionId = islandStart.regionId >= 0 ? islandStart.regionId : GameplayMap.getLandmassRegionId(finalX, finalY);
+        console.log("[YnAMP Region]  Oceania island start " + civ +
+            " preferredRegionId=" + preferredRegionId +
+            " → (" + finalX + "," + finalY + ")" +
+            " regionId=" + finalRegionId +
+            " source=" + islandStart.source +
+            " componentId=" + islandStart.componentId);
+    }
+
+    console.log("[YnAMP Region] Oceania island placement complete.");
+    return { islandLockedPlayers, islandPlots: islandMetadata.islandPlots };
+}
+
 // Run brute-force swap passes for a given set of players (optionally restricted to one regionId).
-function runCultureGroupSwaps(playerIds, civProfiles, iWidth, label) {
+function runCultureGroupSwaps(playerIds, civProfiles, iWidth, label, swapConstraint = null) {
     if (playerIds.length < 2) return;
     const initialScore = calculateRegionScore(playerIds, civProfiles, iWidth);
     let currentScore   = initialScore;
@@ -562,6 +643,10 @@ function runCultureGroupSwaps(playerIds, civProfiles, iWidth, label) {
                 const p2    = playerIds[j];
                 const plot2 = StartPositioner.getStartPosition(p2);
                 if (!isValidPlot(plot2)) continue;
+                if (!canSwapWithIslandConstraint(p1, plot1, plot2, swapConstraint) ||
+                        !canSwapWithIslandConstraint(p2, plot2, plot1, swapConstraint)) {
+                    continue;
+                }
 
                 StartPositioner.setStartPosition(plot2, p1);
                 StartPositioner.setStartPosition(plot1, p2);
@@ -624,12 +709,14 @@ function runRegionShuffle() {
 
     if (detectSingleContinent(iWidth, iHeight)) {
         // Single continent (e.g. Pangaea): skip hemisphere assignment, score everyone together.
+        const swapConstraint = prepareOceaniaIslandStarts(aliveMajorIds, civProfiles, iWidth, iHeight);
         console.log("[YnAMP Region] Single-continent map — running global culture-group swaps.");
-        runCultureGroupSwaps(aliveMajorIds, civProfiles, iWidth, "global");
+        runCultureGroupSwaps(aliveMajorIds, civProfiles, iWidth, "global", swapConstraint);
         logFinalRegionPlacements(aliveMajorIds, civProfiles, iWidth);
     } else {
         // Phase 1: force civs to their correct hemisphere regionId.
         assignCivsBySuperRegion(aliveMajorIds, civProfiles, iWidth, iHeight);
+        const swapConstraint = prepareOceaniaIslandStarts(aliveMajorIds, civProfiles, iWidth, iHeight);
 
         // Phase 2: fine-tune within each regionId independently.
         console.log("[YnAMP Region] ─── Phase 2: intra-region culture-group swaps ───");
@@ -645,7 +732,7 @@ function runRegionShuffle() {
             regionGroups.get(rid).push(pid);
         }
         for (const [rid, players] of regionGroups) {
-            runCultureGroupSwaps(players, civProfiles, iWidth, "regionId=" + rid);
+            runCultureGroupSwaps(players, civProfiles, iWidth, "regionId=" + rid, swapConstraint);
         }
         logFinalRegionPlacements(aliveMajorIds, civProfiles, iWidth);
     }

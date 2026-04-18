@@ -90,7 +90,7 @@
 			<Text>Cultural Region (Terra)</Text>
 		</Replace>
 		<Replace Tag="LOC_YNAMP_START_POSITION_REGION_DESC">
-			<Text>After placing start positions, groups civilizations by continental region: Old World civilizations start on the homeland continent, New World civilizations on the distant-lands continent. Within each continent, culturally adjacent groups are placed near one another. Pacific civilizations spawn on islands in either region. Ignores civilization starting biases. Designed for Terra-style maps where the New World continent is smaller; the number of civilizations per hemisphere will be unbalanced.</Text>
+			<Text>After placing start positions, groups civilizations by continental region: Old World civilizations start on one continent, New World civilizations on the other. Within each continent, culturally adjacent groups are placed near one another. Oceania civilizations spawn on islands in either region. Ignores civilization starting biases. Designed for Terra-style maps where the New World continent is smaller; the number of civilizations per hemisphere will be unbalanced.</Text>
 		</Replace>
 		<Replace Tag="LOC_YNAMP_START_POSITION_RELATIVE_DISTANCE_TERRA_NAME">
 			<Text>Relative Distance (Terra)</Text>

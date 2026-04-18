@@ -1640,6 +1640,133 @@ console.log("Loaded YnAMP Utilities");
 
 // ── Plot helpers (shared between ynamp-map-loading.js and ynamp-cultural-start.js) ──
 
+function getComponentRegionIds(componentLandTiles) {
+    let regionIds = new Set();
+    for (let tile of componentLandTiles) {
+        let regionId = GameplayMap.getLandmassRegionId(tile.x, tile.y);
+        if (regionId == LandmassRegion.LANDMASS_REGION_DEFAULT ||
+                regionId == LandmassRegion.LANDMASS_REGION_NONE ||
+                regionId == LandmassRegion.LANDMASS_REGION_ANY) {
+            continue;
+        }
+        regionIds.add(regionId);
+    }
+    return Array.from(regionIds).sort((a, b) => a - b);
+}
+
+function retagIslandComponentRegion(component, targetRegionId) {
+    if (!component || targetRegionId == undefined || targetRegionId == null || targetRegionId < 0) {
+        return;
+    }
+
+    for (let tile of component.tiles) {
+        TerrainBuilder.setLandmassRegionId(tile.x, tile.y, targetRegionId);
+    }
+    for (let coastTile of component.coastRing) {
+        TerrainBuilder.setLandmassRegionId(coastTile.x, coastTile.y, targetRegionId);
+    }
+
+    component.regionIds = [targetRegionId];
+    component.primaryRegionId = targetRegionId;
+    component.closestMainlandRegionId = targetRegionId;
+}
+
+function resolveClosestMainlandRegionId(component, islandMetadata) {
+    if (!component) {
+        return -1;
+    }
+    if (component.closestMainlandRegionId != undefined) {
+        return component.closestMainlandRegionId;
+    }
+
+    let bestRegionId = -1;
+    let bestDistance = Number.MAX_SAFE_INTEGER;
+    let sourcePlots = component.attachmentPlots;
+    for (let mainlandComponent of islandMetadata.mainlandComponents) {
+        if (mainlandComponent.primaryRegionId < 0) {
+            continue;
+        }
+
+        let distance = getMinimumPlotDistanceBetweenSets(sourcePlots, mainlandComponent.attachmentPlots);
+        if (distance < bestDistance ||
+                (distance == bestDistance && (bestRegionId < 0 || mainlandComponent.primaryRegionId < bestRegionId))) {
+            bestDistance = distance;
+            bestRegionId = mainlandComponent.primaryRegionId;
+        }
+    }
+
+    component.closestMainlandRegionId = bestRegionId;
+    component.closestMainlandDistance = bestDistance;
+    return bestRegionId;
+}
+
+export function buildIslandStartMetadata(iWidth, iHeight) {
+    let processedKeys = new Set();
+    let components = [];
+    let componentsById = new Map();
+    let plotToComponentId = new Map();
+    let islandPlots = new Set();
+    let mainlandComponents = [];
+
+    for (let y = 0; y < iHeight; y++) {
+        for (let x = 0; x < iWidth; x++) {
+            if (GameplayMap.getTerrainType(x, y) == globals.g_OceanTerrain) {
+                continue;
+            }
+
+            let key = x + y * iWidth;
+            if (processedKeys.has(key)) {
+                continue;
+            }
+
+            let connectedComponent = collectConnectedNonOceanComponent(x, y, iWidth, iHeight);
+            if (connectedComponent.tiles.length === 0) {
+                continue;
+            }
+
+            connectedComponent.keys.forEach((componentKey) => processedKeys.add(componentKey));
+            let landStats = getLandOnlyStatsForComponent(connectedComponent, iWidth, iHeight);
+            let component = {
+                id: components.length + 1,
+                tiles: connectedComponent.tiles,
+                keys: connectedComponent.keys,
+                spansWrap: connectedComponent.spansWrap,
+                coastRing: collectAdjacentCoastRing(connectedComponent.tiles, connectedComponent.keys, iWidth, iHeight),
+                landTiles: landStats.landTiles,
+                landTileCount: landStats.landTileCount,
+                largestLandCoreSize: landStats.largestLandCoreSize,
+                largestLandCoreDepth: landStats.largestLandCoreDepth,
+            };
+            component.isIsland = !isMainlandStartComponent(component, iWidth, iHeight);
+            component.regionIds = getComponentRegionIds(component.landTiles);
+            component.primaryRegionId = component.regionIds.length > 0 ? component.regionIds[0] : -1;
+            component.attachmentPlots = getComponentAttachmentPlots(component);
+            components.push(component);
+            componentsById.set(component.id, component);
+
+            for (let landTile of component.landTiles) {
+                let plot = landTile.y * iWidth + landTile.x;
+                plotToComponentId.set(plot, component.id);
+                if (component.isIsland) {
+                    islandPlots.add(plot);
+                }
+            }
+
+            if (!component.isIsland && component.primaryRegionId >= 0) {
+                mainlandComponents.push(component);
+            }
+        }
+    }
+
+    return {
+        components,
+        componentsById,
+        plotToComponentId,
+        islandPlots,
+        mainlandComponents,
+    };
+}
+
 export function isValidPlot(plotIndex) {
     return plotIndex !== undefined && plotIndex !== null && !isNaN(plotIndex) && plotIndex >= 0;
 }
@@ -1669,6 +1796,46 @@ export function isPlotTooCloseToUsed(plotIndex, usedPlots, iWidth, minDistance) 
     return false;
 }
 
+function chooseFallbackStartPlot(defaultPlot, usedPlots, iWidth, iHeight, minDistance, requiredRegionId = -1, candidateFilter = null) {
+    const regionFilter = requiredRegionId >= 0;
+
+    if (isValidPlot(defaultPlot)) {
+        const x = defaultPlot % iWidth;
+        const y = Math.floor(defaultPlot / iWidth);
+        const regionOk = !regionFilter || GameplayMap.getLandmassRegionId(x, y) === requiredRegionId;
+        const filterOk = !candidateFilter || candidateFilter(x, y, defaultPlot);
+        if (regionOk && filterOk && isSettlablePlot(x, y) && !usedPlots.has(defaultPlot) &&
+                !isPlotTooCloseToUsed(defaultPlot, usedPlots, iWidth, minDistance)) {
+            return defaultPlot;
+        }
+    }
+
+    const candidates = [];
+    for (let y = 0; y < iHeight; y++) {
+        for (let x = 0; x < iWidth; x++) {
+            if (!isSettlablePlot(x, y)) continue;
+            if (regionFilter && GameplayMap.getLandmassRegionId(x, y) !== requiredRegionId) continue;
+            const plot = y * iWidth + x;
+            if (usedPlots.has(plot)) continue;
+            if (candidateFilter && !candidateFilter(x, y, plot)) continue;
+            const score = StartPositioner.getStartPositionScore(x, y);
+            if (score > 0) {
+                candidates.push({ plot, score });
+            }
+        }
+    }
+    candidates.sort((a, b) => b.score - a.score);
+
+    for (let i = 0; i < candidates.length; i++) {
+        if (!isPlotTooCloseToUsed(candidates[i].plot, usedPlots, iWidth, minDistance)) {
+            return candidates[i].plot;
+        }
+    }
+
+    if (candidates.length > 0) return candidates[0].plot;
+    return -1;
+}
+
 /**
  * Finds the best available start plot, optionally restricted to a specific landmass regionID.
  *
@@ -1683,45 +1850,77 @@ export function isPlotTooCloseToUsed(plotIndex, usedPlots, iWidth, minDistance) 
  * @returns {number} Plot index, or -1 if none found.
  */
 export function findFallbackStartPlot(defaultPlot, usedPlots, iWidth, iHeight, minDistance, requiredRegionId = -1) {
-    const regionFilter = requiredRegionId >= 0;
+    return chooseFallbackStartPlot(defaultPlot, usedPlots, iWidth, iHeight, minDistance, requiredRegionId);
+}
 
-    if (isValidPlot(defaultPlot)) {
-        const x = defaultPlot % iWidth;
-        const y = Math.floor(defaultPlot / iWidth);
-        const regionOk = !regionFilter || GameplayMap.getLandmassRegionId(x, y) === requiredRegionId;
-        if (regionOk && isSettlablePlot(x, y) && !usedPlots.has(defaultPlot) &&
-                !isPlotTooCloseToUsed(defaultPlot, usedPlots, iWidth, minDistance)) {
-            return defaultPlot;
+export function findFallbackIslandStartPlot(defaultPlot, usedPlots, iWidth, iHeight, minDistance, preferredRegionId = -1, islandMetadata = null) {
+    let metadata = islandMetadata || buildIslandStartMetadata(iWidth, iHeight);
+
+    function getComponentForPlot(plot) {
+        let componentId = metadata.plotToComponentId.get(plot);
+        return componentId ? metadata.componentsById.get(componentId) : null;
+    }
+
+    function isRegionIslandCandidate(x, y, plot) {
+        let component = getComponentForPlot(plot);
+        return !!component && component.isIsland && component.regionIds.indexOf(preferredRegionId) >= 0;
+    }
+
+    if (preferredRegionId >= 0) {
+        let preferredIslandPlot = chooseFallbackStartPlot(
+            defaultPlot,
+            usedPlots,
+            iWidth,
+            iHeight,
+            minDistance,
+            preferredRegionId,
+            isRegionIslandCandidate
+        );
+        if (isValidPlot(preferredIslandPlot)) {
+            let component = getComponentForPlot(preferredIslandPlot);
+            return {
+                plot: preferredIslandPlot,
+                componentId: component ? component.id : -1,
+                regionId: preferredRegionId,
+                source: "region-island",
+            };
         }
     }
 
-    // Build a scored list of all candidate plots, sorted by fertility (best first).
-    // FertilityBuilder.recalculate() must have been called before this function.
-    const candidates = [];
-    for (let y = 0; y < iHeight; y++) {
-        for (let x = 0; x < iWidth; x++) {
-            if (!isSettlablePlot(x, y)) continue;
-            if (regionFilter && GameplayMap.getLandmassRegionId(x, y) !== requiredRegionId) continue;
-            const plot = y * iWidth + x;
-            if (usedPlots.has(plot)) continue;
-            const score = StartPositioner.getStartPositionScore(x, y);
-            if (score > 0) {
-                candidates.push({ plot, x, y, score });
-            }
-        }
-    }
-    candidates.sort((a, b) => b.score - a.score);
-
-    // First pass: respect minimum distance
-    for (let i = 0; i < candidates.length; i++) {
-        if (!isPlotTooCloseToUsed(candidates[i].plot, usedPlots, iWidth, minDistance)) {
-            return candidates[i].plot;
-        }
+    function isNeutralIslandCandidate(x, y, plot) {
+        let component = getComponentForPlot(plot);
+        return !!component && component.isIsland && component.regionIds.length === 0;
     }
 
-    // Last resort: best-scored plot regardless of distance
-    if (candidates.length > 0) return candidates[0].plot;
+    let neutralIslandPlot = chooseFallbackStartPlot(
+        defaultPlot,
+        usedPlots,
+        iWidth,
+        iHeight,
+        minDistance,
+        -1,
+        isNeutralIslandCandidate
+    );
+    if (!isValidPlot(neutralIslandPlot)) {
+        return {
+            plot: -1,
+            componentId: -1,
+            regionId: -1,
+            source: "none",
+        };
+    }
 
-    return -1;
+    let component = getComponentForPlot(neutralIslandPlot);
+    let targetRegionId = resolveClosestMainlandRegionId(component, metadata);
+    if (targetRegionId >= 0) {
+        retagIslandComponentRegion(component, targetRegionId);
+    }
+
+    return {
+        plot: neutralIslandPlot,
+        componentId: component ? component.id : -1,
+        regionId: targetRegionId,
+        source: "retagged-island",
+    };
 }
 
