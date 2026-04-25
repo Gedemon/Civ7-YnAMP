@@ -2,34 +2,22 @@
 <Database>
 	<EnglishText>
 		<Replace Tag="LOC_MAP_GREATEST_EARTH_SIZE_NAME">
-			<Text>Custom Huge for Greatest Earth (104x64)</Text>
+			<Text>Custom Huge (YnAMP 104x64)</Text>
 		</Replace>
 		<Replace Tag="LOC_MAPSIZE_MASSIVE_NAME">
-			<Text>Massive (128x80)</Text>
+			<Text>Massive (YnAMP 128x80)</Text>
 		</Replace>
 		<Replace Tag="LOC_MAPSIZE_GIANT_NAME">
-			<Text>Giant (180x94)[n][icon:BUILDING_WARNING] no texture on tiles > 127</Text>
+			<Text>Giant (YnAMP 180x94)[n][icon:BUILDING_WARNING] no texture on tiles > 127</Text>
 		</Replace>
 		<Replace Tag="LOC_MAPSIZE_LUDICROUS_NAME">
-			<Text>Ludicrous (230x116)[n][icon:BUILDING_WARNING] no texture on tiles > 127</Text>
-		</Replace>
-		<Replace Tag="LOC_MAP_CONTINENTS_YNAMP_NAME">
-			<Text>Continents++ (YnAMP)</Text>
-		</Replace>
-		<Replace Tag="LOC_MAP_CONTINENTS_YNAMP_DESCRIPTION">
-			<Text>A continents-style script adapted for YnAMP map sizes and settings.</Text>
+			<Text>Ludicrous (YnAMP 230x116)[n][icon:BUILDING_WARNING] no texture on tiles > 127</Text>
 		</Replace>
 		<Replace Tag="LOC_MAP_TERRA_YNAMP_NAME">
 			<Text>Terra (YnAMP)</Text>
 		</Replace>
 		<Replace Tag="LOC_MAP_TERRA_YNAMP_DESCRIPTION">
 			<Text>A Terra-style Voronoi map with a larger landmass ("Old World") and a smaller one ("New World"). Suggested map script for "Terra" Start Position options.</Text>
-		</Replace>
-		<Replace Tag="LOC_MAP_FRACTAL_YNAMP_NAME">
-			<Text>Fractal (YnAMP)</Text>
-		</Replace>
-		<Replace Tag="LOC_MAP_FRACTAL_YNAMP_DESCRIPTION">
-			<Text>A fractal-style script adapted for YnAMP map sizes and settings.</Text>
 		</Replace>
 		<Replace Tag="LOC_MAP_GIANT_EARTH_YNAMP_NAME">
 			<Text>Giant Earth Map (YnAMP)</Text>
@@ -43,6 +31,12 @@
 		<Replace Tag="LOC_MAP_GREATEST_EARTH_YNAMP_DESCRIPTION">
 			<Text>A huge Earth map with fixed real-world geography and true-start support.</Text>
 		</Replace>
+		<Replace Tag="LOC_MAP_REGIONAL_EARTH_MASSIVE_YNAMP_NAME">
+			<Text>Massive Regional Earth (YnAMP)</Text>
+		</Replace>
+		<Replace Tag="LOC_MAP_REGIONAL_EARTH_MASSIVE_YNAMP_DESCRIPTION">
+			<Text>A 128x80 Regional Earth map that imports a 1:1 Giant Earth crop, then replaces edge seam columns to preserve no-wrap behavior. Start with the classic Colonization section.</Text>
+		</Replace>
 		<Replace Tag="LOC_MAP_GREATEST_EARTH_SIZE_DESCRIPTION">
 			<Text>Custom huge map size used by Greatest Earth (104x64).</Text>
 		</Replace>
@@ -55,31 +49,54 @@
 		<Replace Tag="LOC_MAPSIZE_LUDICROUS_DESCRIPTION">
 			<Text>Ludicrous map size for YnAMP scenarios and scripts.</Text>
 		</Replace>
-		<Replace Tag="LOC_YNAMP_REGION_MODE_NAME">
+		<Replace Tag="LOC_YNAMP_HOMELAND_MODE_NAME">
 			<Text>Region Tagging Mode (for YnAMP TSL maps)</Text>
 		</Replace>
-		<Replace Tag="LOC_YNAMP_REGION_MODE_DESC">
-			<Text>Controls how homeland and distant-lands regions are classified. Landmass uses ocean separation from player starts. East-West uses a simple column split. Region uses XML-defined superregions (Earth maps only; falls back to East-West).</Text>
+		<Replace Tag="LOC_YNAMP_HOMELAND_MODE_DESC">
+			<Text>Controls how homeland and distant-lands regions are classified. Landmass uses ocean separation from player starts. Region uses XML-defined superregions on supported Earth maps and falls back to Landmass when XML region data is unavailable.</Text>
 		</Replace>
-		<Replace Tag="LOC_YNAMP_REGION_MODE_LANDMASS_NAME">
+		<Replace Tag="LOC_YNAMP_HOMELAND_MODE_LANDMASS_NAME">
 			<Text>Landmass (default)</Text>
 		</Replace>
-		<Replace Tag="LOC_YNAMP_REGION_MODE_LANDMASS_DESC">
+		<Replace Tag="LOC_YNAMP_HOMELAND_MODE_LANDMASS_DESC">
 			<Text>Homeland and distant lands are determined by ocean-blocked connectivity from player start positions. Isolated islands and ocean remain neutral.</Text>
 		</Replace>
-		<Replace Tag="LOC_YNAMP_REGION_MODE_EAST_WEST_NAME">
-			<Text>East-West Split</Text>
-		</Replace>
-		<Replace Tag="LOC_YNAMP_REGION_MODE_EAST_WEST_DESC">
-			<Text>Homeland and distant lands are separated by a simple vertical column boundary, matching the original YnAMP behavior.</Text>
-		</Replace>
-		<Replace Tag="LOC_YNAMP_REGION_MODE_REGION_NAME">
+		<Replace Tag="LOC_YNAMP_HOMELAND_MODE_REGION_NAME">
 			<Text>Region (XML)</Text>
 		</Replace>
-		<Replace Tag="LOC_YNAMP_REGION_MODE_REGION_DESC">
-			<Text>Uses XML-defined superregion data (EurAsia, Africa, Americas, Oceania) for Earth maps. Falls back to East-West if no XML data is available for the selected map.</Text>
+		<Replace Tag="LOC_YNAMP_HOMELAND_MODE_REGION_DESC">
+			<Text>Uses XML-defined superregion data (EurAsia, Africa, Americas, Oceania) for supported Earth maps. Falls back to Landmass if no XML data is available for the selected map.</Text>
 		</Replace>
-
+		<Replace Tag="LOC_YNAMP_REGIONAL_EARTH_SECTION_NAME">
+			<Text>Regional Earth Section</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_REGIONAL_EARTH_SECTION_DESC">
+			<Text>Selects a Giant Earth subsection.</Text>
+		</Replace>
+		<Replace Tag="LOC_MASSIVE_COLONIZATION_NAME">
+			<Text>Colonization</Text>
+		</Replace>
+		<Replace Tag="LOC_MASSIVE_COLONIZATION_DESC">
+			<Text>Europe, the North Atlantic, and the Americas.</Text>
+		</Replace>
+		<Replace Tag="LOC_MASSIVE_OLD_WORLD_NAME">
+			<Text>Old World</Text>
+		</Replace>
+		<Replace Tag="LOC_MASSIVE_OLD_WORLD_DESC">
+			<Text>Europe, Africa, and Asia on a 128x80 canvas, using a no-wrap Giant Earth crop.</Text>
+		</Replace>
+		<Replace Tag="LOC_MASSIVE_INDO_PACIFIC_NAME">
+			<Text>Indo-Pacific</Text>
+		</Replace>
+		<Replace Tag="LOC_MASSIVE_INDO_PACIFIC_DESC">
+			<Text>South Asia, Southeast Asia, Oceania, and the Pacific basin on a 128x80 canvas, using a no-wrap Giant Earth crop.</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_REGIONAL_WRAPX_OLD_WORLD_NAME">
+			<Text>No Wrapping</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_REGIONAL_WRAPX_OLD_WORLD_DESC">
+			<Text>Disable this to remove the impassable terrain on the edges, if you want to be able to circumnavigate the Old World, and reach the East Indies by sailing west.</Text>
+		</Replace>
 		<Replace Tag="LOC_YNAMP_START_POSITION_RELATIVE_DISTANCE_NAME">
 			<Text>Relative Distance</Text>
 		</Replace>
@@ -148,6 +165,48 @@
 		</Replace>
 		<Replace Tag="LOC_YNAMP_NW_PLACEMENT_MODE_DESC">
 			<Text>Controls how Natural Wonders are placed on True Start Location Earth maps. "Real World + Random" uses XML real-world positions first, then fills remaining slots randomly. "Real World Only" uses only XML positions (adjacency and elevation requirements are relaxed to improve placement). "Random" ignores all real-world positions and places all wonders randomly.</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_REGIONAL_RESOURCE_MODE_NAME">
+			<Text>Regional Resource Placement on TSL Maps</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_REGIONAL_RESOURCE_MODE_DESC">
+			<Text>Controls Earth-region resource realism. Curated enforces a curated ruleset for a small set of geographically distinctive resources after normal generation or imported map placement..</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_REGIONAL_RESOURCE_OFF_NAME">
+			<Text>Off</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_REGIONAL_RESOURCE_OFF_DESC">
+			<Text>No regional cleanup or backfilling is applied. Resources keep the current YnAMP behavior.</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_REGIONAL_RESOURCE_CURATED_NAME">
+			<Text>Curated Regional Rules (default)</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_REGIONAL_RESOURCE_CURATED_DESC">
+			<Text>Applies a narrow first-pass Earth ruleset for distinctive resources, removing obvious out-of-region placements and guaranteeing a few regional deposits where they are expected.</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_MODE_NAME">
+			<Text>Geographic Civilization Unlocks</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_MODE_DESC">
+			<Text>Controls how geography affects civilization availability on Earth TSL maps. No Unlock keeps placement realism only. Add Unlock keeps the game's normal unlock paths and adds geographic ones. Strict Unlock keeps only geographic unlocks plus explicitly preserved local or adjacent original unlocks.</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_NONE_NAME">
+			<Text>No Unlock (default)</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_NONE_DESC">
+			<Text>No geography-based unlock changes are applied. Realistic resource placement can still run independently.</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_ADD_NAME">
+			<Text>Add Unlock</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_ADD_DESC">
+			<Text>Keeps the game's existing unlock paths and adds geography-based unlocks when the player controls qualifying regional resources.</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_STRICT_NAME">
+			<Text>Strict Unlock</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_STRICT_DESC">
+			<Text>Limits civilization availability to geography-based unlocks and explicitly preserved nearby original unlocks, removing other non-geographic unlock paths such as leader or reward-driven availability.</Text>
 		</Replace>
 		<Replace Tag="LOC_YNAMP_NW_PLACEMENT_RANDOM_NAME">
 			<Text>Random</Text>

@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<PanelData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>YnAMP</Name>
+  <App>Civ7</App>
+  <EnterAction>if (typeof g_TunerState == 'undefined') {
+	g_TunerState = {};
+}
+if (g_TunerState.YnAMPPanel == null) {
+	g_TunerState.YnAMPPanel = {};
+}
+if (g_TunerState.YnAMPPanel.placementMode == null) {
+	g_TunerState.YnAMPPanel.placementMode = '';
+}
+if (g_TunerState.YnAMPPanel.lastClickText == null) {
+	g_TunerState.YnAMPPanel.lastClickText = 'none';
+}
+if (g_TunerState.YnAMPPanel.lastDumpStatus == null) {
+  g_TunerState.YnAMPPanel.lastDumpStatus = 'idle';
+}
+g_TunerState.YnAMPPanel.isOpen = true;
+g_TunerState.openPanel = 'YnAMPPanel';</EnterAction>
+  <ExitAction>if (typeof g_TunerState == 'undefined') {
+	g_TunerState = {};
+}
+if (g_TunerState.YnAMPPanel == null) {
+	g_TunerState.YnAMPPanel = {};
+}
+g_TunerState.YnAMPPanel.isOpen = false;
+if (g_TunerState.openPanel == 'YnAMPPanel') {
+	g_TunerState.openPanel = '';
+}</ExitAction>
+  <CompatibleStates>
+    <string>App UI</string>
+  </CompatibleStates>
+  <LoadStates />
+  <Actions>
+    <ActionData>
+      <Name>Explore All</Name>
+      <Action>if (typeof g_TunerInput != 'undefined' &amp;&amp; g_TunerInput.panels &amp;&amp; g_TunerInput.panels['YnAMPPanel']) {
+	g_TunerInput.panels['YnAMPPanel'].exploreAll();
+} else {
+	console.warn('[YnAMP FireTuner] Panel bridge missing for Explore All.');
+}</Action>
+      <Location>
+        <X>20</X>
+        <Y>40</Y>
+      </Location>
+    </ActionData>
+    <ActionData>
+      <Name>Dump WorldBuilder</Name>
+      <Action>if (typeof g_TunerInput != 'undefined' &amp;&amp; g_TunerInput.panels &amp;&amp; g_TunerInput.panels['YnAMPPanel']) {
+	g_TunerInput.panels['YnAMPPanel'].dumpWorldBuilder();
+} else {
+	console.warn('[YnAMP FireTuner] Panel bridge missing for Dump WorldBuilder.');
+}</Action>
+      <Location>
+        <X>110</X>
+        <Y>40</Y>
+      </Location>
+    </ActionData>
+    <ActionData>
+      <Name>Dump MapPlots</Name>
+      <Action>if (typeof g_TunerInput != 'undefined' &amp;&amp; g_TunerInput.panels &amp;&amp; g_TunerInput.panels['YnAMPPanel']) {
+	g_TunerInput.panels['YnAMPPanel'].dumpWorldBuilderMapPlotsRoot();
+} else {
+	console.warn('[YnAMP FireTuner] Panel bridge missing for Dump MapPlots.');
+}</Action>
+      <Location>
+        <X>240</X>
+        <Y>40</Y>
+      </Location>
+    </ActionData>
+    <ActionData>
+      <Name>Dump Full</Name>
+      <Action>if (typeof g_TunerInput != 'undefined' &amp;&amp; g_TunerInput.panels &amp;&amp; g_TunerInput.panels['YnAMPPanel']) {
+	g_TunerInput.panels['YnAMPPanel'].dumpWorldBuilderFull();
+} else {
+	console.warn('[YnAMP FireTuner] Panel bridge missing for Dump Full.');
+}</Action>
+      <Location>
+        <X>350</X>
+        <Y>40</Y>
+      </Location>
+    </ActionData>
+  </Actions>
+  <StringControls>
+    <StringControlData>
+      <Name>Bridge</Name>
+      <GetFunction>if (typeof g_TunerInput != 'undefined' &amp;&amp; g_TunerInput.panels &amp;&amp; g_TunerInput.panels['YnAMPPanel']) {
+	return 'READY';
+}
+return 'MISSING';</GetFunction>
+      <SetFunction />
+      <Location>
+        <X>20</X>
+        <Y>130</Y>
+      </Location>
+    </StringControlData>
+    <StringControlData>
+      <Name>Last Click</Name>
+      <GetFunction>if (typeof g_TunerState != 'undefined' &amp;&amp; g_TunerState.YnAMPPanel) {
+	return g_TunerState.YnAMPPanel.lastClickText || 'none';
+}
+return 'none';</GetFunction>
+      <SetFunction />
+      <Location>
+        <X>20</X>
+        <Y>170</Y>
+      </Location>
+    </StringControlData>
+    <StringControlData>
+      <Name>Last Dump</Name>
+      <GetFunction>if (typeof g_TunerState != 'undefined' &amp;&amp; g_TunerState.YnAMPPanel) {
+	return g_TunerState.YnAMPPanel.lastDumpStatus || 'idle';
+}
+return 'idle';</GetFunction>
+      <SetFunction />
+      <Location>
+        <X>20</X>
+        <Y>210</Y>
+      </Location>
+    </StringControlData>
+  </StringControls>
+  <IntegerControls />
+  <FloatControls />
+  <BooleanControls>
+    <BooleanControlData>
+      <Name>Capture Plot Clicks</Name>
+      <GetFunction>if (typeof g_TunerState != 'undefined' &amp;&amp; g_TunerState.YnAMPPanel) {
+	return g_TunerState.YnAMPPanel.placementMode == 'LogPlot';
+}
+return false;</GetFunction>
+      <SetFunction>if (typeof g_TunerState != 'undefined' &amp;&amp; g_TunerState.YnAMPPanel) {
+	if (value) {
+		g_TunerState.YnAMPPanel.placementMode = 'LogPlot';
+	} else if (g_TunerState.YnAMPPanel.placementMode == 'LogPlot') {
+		g_TunerState.YnAMPPanel.placementMode = '';
+	}
+}</SetFunction>
+      <Location>
+        <X>20</X>
+        <Y>92</Y>
+      </Location>
+    </BooleanControlData>
+  </BooleanControls>
+  <TableViews />
+  <TreeViews />
+  <DataViews />
+  <StatTrackers />
+  <SelectionLists />
+  <MultiselectLists />
+  <XRInputPanels />
+</PanelData>

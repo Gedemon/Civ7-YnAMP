@@ -20,6 +20,13 @@
 				<Value>YNAMP_NW_PLACEMENT_REAL_ONLY</Value>
 			</ConfigurationValueMatches>
 		</Criteria>
+		<Criteria id="region-no-ice">
+			<ConfigurationValueMatches>
+				<Group>Map</Group>
+				<ConfigurationId>DisableIceOnRegion</ConfigurationId>
+				<Value>DISABLE_ICE</Value>
+			</ConfigurationValueMatches>
+		</Criteria>
 	</ActionCriteria>
 	<ActionGroups>
 		<ActionGroup id="base-game-init-ynamp" scope="game" criteria="always">
@@ -38,7 +45,17 @@
 			</Properties>
 			<Actions>
 				<UpdateDatabase>
-					<Item>data/nw-remove-constraints.sql</Item>
+					<Item>data/options/nw-remove-constraints.sql</Item>
+				</UpdateDatabase>
+			</Actions>
+		</ActionGroup>
+		<ActionGroup id="base-game-region-no-ice" scope="game" criteria="region-no-ice">
+			<Properties>
+				<LoadOrder>500</LoadOrder>
+			</Properties>
+			<Actions>
+				<UpdateDatabase>
+					<Item>data/options/region-no-ice.sql</Item>
 				</UpdateDatabase>
 			</Actions>
 		</ActionGroup>
@@ -48,6 +65,7 @@
 					<Item>version.sql</Item>
 					<Item>data.sql</Item>
 					<Item>data/maps.xml</Item>
+					<Item>data/resource-regions.xml</Item>
 					<Item>maps/giant-earth-map/giant-earth.xml</Item>
 					<Item>maps/giant-earth-map/giant-earth-city.xml</Item>
 					<Item>maps/greatest-earth-map/greatest-earth.xml</Item>
@@ -76,9 +94,15 @@
 				<UpdateIcons>
 					<Item>icons/ynamp-icons.xml</Item>
 				</UpdateIcons>
+				<UIScripts>
+					<Item module="false">ui/tuner/ynamp-firetuner.js</Item>
+				</UIScripts>
 				<ScenarioScripts>
 					<Item>scenario/test.js</Item>
 				</ScenarioScripts>
+				<AgeTransitionScripts>
+					<Item>scenario/test.js</Item>
+				</AgeTransitionScripts>
 				<MapGenScripts>
 					<Item>scenario/test.js</Item>
 					<Item>maps/ynamp-mapsize-patch.js</Item>

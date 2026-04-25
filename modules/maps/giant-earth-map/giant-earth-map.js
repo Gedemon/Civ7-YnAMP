@@ -19,14 +19,7 @@ function requestMapData(initParams) {
 }
 function generateMap() {
     const mapName = 'GiantEarth';
-	let genParameters = {
-        westStart: 1,
-        westEnd: 110,
-        eastStart: 113,
-        eastEnd: 171
-    };
-    let importedMap = GetMap();
-    generateYnAMP(mapName, importedMap, genParameters);
+    generateYnAMP(mapName, GetMap());
 }
 
 // Register listeners.

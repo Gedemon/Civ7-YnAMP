@@ -13,23 +13,11 @@
     <Replace Tag="LOC_MAPSIZE_LUDICROUS_NAME" Language="ko_KR">
       <Text>Ludicrous (230x116)[n][icon:BUILDING_WARNING] 127 > 타일에는 텍스처 없음</Text>
     </Replace>
-    <Replace Tag="LOC_MAP_CONTINENTS_YNAMP_NAME" Language="ko_KR">
-      <Text>Continents++ (YnAMP)</Text>
-    </Replace>
-    <Replace Tag="LOC_MAP_CONTINENTS_YNAMP_DESCRIPTION" Language="ko_KR">
-      <Text>YnAMP 맵 크기와 설정에 적응된 continents 스타일 스크립트.</Text>
-    </Replace>
     <Replace Tag="LOC_MAP_TERRA_YNAMP_NAME" Language="ko_KR">
       <Text>Terra (YnAMP)</Text>
     </Replace>
     <Replace Tag="LOC_MAP_TERRA_YNAMP_DESCRIPTION" Language="ko_KR">
       <Text>1/3 : 2/3 대지 비율을 가진 Terra 스타일 Voronoi 맵, 불균형 대륙 생성에 최적화됨.</Text>
-    </Replace>
-    <Replace Tag="LOC_MAP_FRACTAL_YNAMP_NAME" Language="ko_KR">
-      <Text>프랙탈 (YnAMP)</Text>
-    </Replace>
-    <Replace Tag="LOC_MAP_FRACTAL_YNAMP_DESCRIPTION" Language="ko_KR">
-      <Text>YnAMP 맵 크기와 설정에 적응된 프랙탈 스타일 스크립트.</Text>
     </Replace>
     <Replace Tag="LOC_MAP_GIANT_EARTH_YNAMP_NAME" Language="ko_KR">
       <Text>Giant Earth Map (YnAMP)</Text>
@@ -55,29 +43,23 @@
     <Replace Tag="LOC_MAPSIZE_LUDICROUS_DESCRIPTION" Language="ko_KR">
       <Text>YnAMP 시나리오와 스크립트를 위한 Ludicrous 맵 크기.</Text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_REGION_MODE_NAME" Language="ko_KR">
+    <Replace Tag="LOC_YNAMP_HOMELAND_MODE_NAME" Language="ko_KR">
       <Text>지역 태그 모드 (YnAMP 맵용)</Text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_REGION_MODE_DESC" Language="ko_KR">
-      <Text>고향 지역과 먼 지역이 어떻게 분류되는지 제어합니다. Landmass 는 플레이어 시작 위치에서의 해양 분리를 사용합니다. East-West 는 간단한 열 분할을 사용합니다. Region 은 XML 로 정의된 슈퍼 지역 (지구 맵 전용; XML 데이터가 없는 경우 East-West 로 복귀) 을 사용합니다.</Text>
+    <Replace Tag="LOC_YNAMP_HOMELAND_MODE_DESC" Language="ko_KR">
+      <Text>고향과 먼 지역 분류 방법을 제어합니다. Landmass 는 플레이어 시작 위치에서의 해양 분리를 사용합니다. Region 은 지원되는 지구 맵에서 XML 로 정의된 슈퍼 지역을 사용하며, XML 지역 데이터가 사용 불가능한 경우 Landmass 로 폴백합니다.</Text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_REGION_MODE_LANDMASS_NAME" Language="ko_KR">
+    <Replace Tag="LOC_YNAMP_HOMELAND_MODE_LANDMASS_NAME" Language="ko_KR">
       <Text>Landmass (기본)</Text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_REGION_MODE_LANDMASS_DESC" Language="ko_KR">
+    <Replace Tag="LOC_YNAMP_HOMELAND_MODE_LANDMASS_DESC" Language="ko_KR">
       <Text>고향과 먼 지역은 플레이어 시작 위치에서의 해양 차단 연결성으로 결정됩니다. 고립된 섬과 해양은 중립으로 남습니다.</Text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_REGION_MODE_EAST_WEST_NAME" Language="ko_KR">
-      <Text>동서 분할</Text>
-    </Replace>
-    <Replace Tag="LOC_YNAMP_REGION_MODE_EAST_WEST_DESC" Language="ko_KR">
-      <Text>고향과 먼 지역은 간단한 수직 열 경계로 분리되며, 원래 YnAMP 동작과 일치합니다.</Text>
-    </Replace>
-    <Replace Tag="LOC_YNAMP_REGION_MODE_REGION_NAME" Language="ko_KR">
+    <Replace Tag="LOC_YNAMP_HOMELAND_MODE_REGION_NAME" Language="ko_KR">
       <Text>지역 (XML)</Text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_REGION_MODE_REGION_DESC" Language="ko_KR">
-      <Text>지구 맵을 위해 XML 로 정의된 슈퍼 지역 데이터 (유라시아, 아프리카, 아메리카, 오세아니아) 를 사용합니다. 선택된 맵에 XML 데이터가 없는 경우 East-West 로 복귀합니다.</Text>
+    <Replace Tag="LOC_YNAMP_HOMELAND_MODE_REGION_DESC" Language="ko_KR">
+      <Text>지원되는 지구 맵에 대해 XML 로 정의된 슈퍼 지역 데이터 (유라시아, 아프리카, 아메리카, 오세아니아) 를 사용합니다. 선택된 맵에 XML 데이터가 없는 경우 Landmass 로 폴백합니다.</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_START_POSITION_RELATIVE_DISTANCE_NAME" Language="ko_KR">
       <Text>상대 거리</Text>
@@ -102,6 +84,144 @@
     </Replace>
     <Replace Tag="LOC_YNAMP_START_POSITION_REGION_BALANCED_DESC" Language="ko_KR">
       <Text>Cultural Region (Terra) 과 유사하지만, 문화 그룹을 반구 간에 재분배하여 문명 수를 가능한 한 균등하게 유지합니다. 같은 문화 그룹의 모든 문명은 항상 같은 반구에 머무릅니다. 각 반구 내에서 문화적으로 인접한 그룹은 서로 가까이 배치됩니다. 문명의 시작 편향을 무시합니다.</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_REGIONAL_EARTH_MASSIVE_YNAMP_NAME" Language="ko_KR">
+      <Text>Regional Earth Map (Massive) (YnAMP)</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_REGIONAL_EARTH_MASSIVE_YNAMP_DESCRIPTION" Language="ko_KR">
+      <Text>Giant Earth 의 지리, 실제 시작 위치 및 XML 지역을 섹션 오프셋으로 재사용하는 128x80 Regional Earth 맵. 클래식 Colonization 크롭으로 시작합니다.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGIONAL_EARTH_SECTION_NAME" Language="ko_KR">
+      <Text>Regional Earth 섹션</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGIONAL_EARTH_SECTION_DESC" Language="ko_KR">
+      <Text>이 고정된 128x80 Regional Earth 캔버스에 투영될 Giant Earth 의 하위 섹션을 선택합니다.</Text>
+    </Replace>
+    <Replace Tag="LOC_MASSIVE_COLONIZATION_NAME" Language="ko_KR">
+      <Text>식민지화</Text>
+    </Replace>
+    <Replace Tag="LOC_MASSIVE_COLONIZATION_DESC" Language="ko_KR">
+      <Text>유럽, 북대서양 및 아메리카를 128x80 캔버스에, YnAMP 의 클래식 Colonization 오프셋 사용.</Text>
+    </Replace>
+    <Replace Tag="LOC_MASSIVE_OLD_WORLD_NAME" Language="ko_KR">
+      <Text>구세계</Text>
+    </Replace>
+    <Replace Tag="LOC_MASSIVE_OLD_WORLD_DESC" Language="ko_KR">
+      <Text>유럽, 아프리카 및 아시아를 128x80 캔버스에, 랩 없는 Giant Earth 크롭 사용.</Text>
+    </Replace>
+    <Replace Tag="LOC_MASSIVE_INDO_PACIFIC_NAME" Language="ko_KR">
+      <Text>인도-태평양</Text>
+    </Replace>
+    <Replace Tag="LOC_MASSIVE_INDO_PACIFIC_DESC" Language="ko_KR">
+      <Text>남아시아, 동남아시아, 오세아니아 및 태평양 분지를 128x80 캔버스에, 랩 없는 Giant Earth 크롭 사용.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_WRAPX_OLD_WORLD_NAME" Language="ko_KR">
+      <Text>랩 없음</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_WRAPX_OLD_WORLD_DESC" Language="ko_KR">
+      <Text>서쪽으로 항해하여 구세계를 일주하고 동인도에 도달할 수 있도록 가장자리의 통과 불가능한 지형을 제거하려면 이 옵션을 비활성화하세요.</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_RATIO_NAME" Language="ko_KR">
+      <Text>Terra YnAMP 의 육지 비율</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_RATIO_DESC" Language="ko_KR">
+      <Text>작은 육지대("신세계")에 할당되는 총 육지 면적의 비율. 큰 육지대(구세계)는 나머지를 받습니다. 작은 값은 더 극단적인 크기 차이를 만듭니다.</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_RATIO_40_NAME" Language="ko_KR">
+      <Text>신세계 40%</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_RATIO_33_NAME" Language="ko_KR">
+      <Text>신세계 33%</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_RATIO_25_NAME" Language="ko_KR">
+      <Text>신세계 25%</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_RATIO_20_NAME" Language="ko_KR">
+      <Text>신세계 20%</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_RATIO_15_NAME" Language="ko_KR">
+      <Text>신세계 15%</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_RATIO_10_NAME" Language="ko_KR">
+      <Text>신세계 10%</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_SPAWN_MODE_NAME" Language="ko_KR">
+      <Text>Terra YnAMP 시작 배치 분포</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_SPAWN_MODE_DESC" Language="ko_KR">
+      <Text>두 육지대 사이에서 문명이 어떻게 분포되는지 제어합니다. Split 은 크기에 비례하여 두 육지대에 문명을 배치합니다. Same landmass 는 모든 문명을 큰 육지대에 배치합니다.</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_SPAWN_SPLIT_NAME" Language="ko_KR">
+      <Text>육지대에서 문명 분할</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_SPAWN_SAME_NAME" Language="ko_KR">
+      <Text>모든 문명을 큰 육지대에 배치</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_NW_PLACEMENT_MODE_NAME" Language="ko_KR">
+      <Text>TSL 맵에서 자연 기적 배치</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_NW_PLACEMENT_MODE_DESC" Language="ko_KR">
+      <Text>지구 실제 위치 맵에서 자연 기적의 배치 방법을 제어합니다. "실제 세계 + 랜덤"은 먼저 XML 의 실제 세계 위치를 사용하고, 나머지 슬롯을 랜덤으로 채웁니다. "실제 세계만"은 XML 위치만 사용합니다(인접 및 고도 요구 사항은 완화됨). "랜덤"은 모든 실제 세계 위치를 무시합니다.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_NW_PLACEMENT_RANDOM_NAME" Language="ko_KR">
+      <Text>랜덤</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_NW_PLACEMENT_RANDOM_DESC" Language="ko_KR">
+      <Text>자연 기적은 완전히 랜덤으로 배치되며, 실제 세계 위치는 무시됩니다.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_NW_PLACEMENT_REAL_AND_RANDOM_NAME" Language="ko_KR">
+      <Text>실제 세계 + 랜덤 (기본)</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_NW_PLACEMENT_REAL_AND_RANDOM_DESC" Language="ko_KR">
+      <Text>먼저 XML 의 실제 세계 위치를 사용하고, 나머지 자연 기적 슬롯을 랜덤 배치로 채웁니다.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_NW_PLACEMENT_REAL_ONLY_NAME" Language="ko_KR">
+      <Text>실제 세계만</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_NW_PLACEMENT_REAL_ONLY_DESC" Language="ko_KR">
+      <Text>XML 의 실제 세계 위치만 사용됩니다. 랜덤 채우기 없음. 배치를 개선하기 위해 게임 데이터베이스에서 인접 및 고도 요구 사항이 제거됩니다.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGIONAL_RESOURCE_MODE_NAME" Language="ko_KR">
+      <Text>TSL 맵에서 지역 자원 배치</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGIONAL_RESOURCE_MODE_DESC" Language="ko_KR">
+      <Text>지구 지역별 자원의 리얼리즘을 제어합니다. Curated 는 일반 생성 또는 가져온 맵 배치 후 지리적으로 특징적인 소수의 자원에 큐레이션된 규칙 세트를 적용합니다.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGIONAL_RESOURCE_OFF_NAME" Language="ko_KR">
+      <Text>끔</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGIONAL_RESOURCE_OFF_DESC" Language="ko_KR">
+      <Text>지역 정리 또는 백필이 적용되지 않습니다. 자원은 현재 YnAMP 동작을 유지합니다.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGIONAL_RESOURCE_CURATED_NAME" Language="ko_KR">
+      <Text>큐레이션된 지역 규칙 (기본)</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGIONAL_RESOURCE_CURATED_DESC" Language="ko_KR">
+      <Text>특징적인 자원에 대해 좁은 첫 번째 지구 규칙 세트를 적용하고, 지역外の 명백한 배치를 제거하며, 예상되는 위치에 몇 가지 지역 광맥을 보장합니다.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_MODE_NAME" Language="ko_KR">
+      <Text>지리적 문명 잠금 해제</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_MODE_DESC" Language="ko_KR">
+      <Text>지리가 지구 TSL 맵에서 문명의 사용 가능성에 어떻게 영향을 미치는지 제어합니다. No Unlock 은 배치 리얼리즘만 유지합니다. Add Unlock 은 게임의 일반 잠금 해제 경로를 유지하고 지리적 경로를 추가합니다. Strict Unlock 은 지리적 잠금 해제와 명시적으로 보존된 인접한 원래 잠금 해제만 유지합니다.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_NONE_NAME" Language="ko_KR">
+      <Text>잠금 해제 없음 (기본)</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_NONE_DESC" Language="ko_KR">
+      <Text>지리 기반 잠금 해제 변경 사항이 적용되지 않습니다. 리얼리스틱한 자원 배치는 독립적으로 실행할 수 있습니다.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_ADD_NAME" Language="ko_KR">
+      <Text>잠금 해제 추가</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_ADD_DESC" Language="ko_KR">
+      <Text>게임의 기존 잠금 해제 경로를 유지하고, 플레이어가 자격 있는 지역 자원을 제어할 때 지리적 잠금 해제를 추가합니다.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_STRICT_NAME" Language="ko_KR">
+      <Text>엄격한 잠금 해제</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_STRICT_DESC" Language="ko_KR">
+      <Text>문명의 사용 가능성을 지리적 잠금 해제와 명시적으로 보존된 인접한 원래 잠금 해제로 제한하고, 리더 또는 보상 기반 사용 가능성과 같은 다른 비지리적 잠금 해제 경로를 제거합니다.</Text>
     </Replace>
   </LocalizedText>
 </Database>

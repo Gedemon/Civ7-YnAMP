@@ -1,5 +1,14 @@
 import * as globals from '/base-standard/maps/map-globals.js';
 import * as utilities from '/base-standard/maps/map-utilities.js';
+import {
+    getActiveEarthMapContext,
+    getEarthMapLabel,
+    getEarthMapSourceMapName,
+    isEarthMapNoWrapX,
+    isEarthMapPlayableLocalCoordinate,
+    isEarthMapSyntheticWorldEndColumn,
+    mapLocalToSourceCoordinate,
+} from '/ged-ynamp/maps/earth-map-context.js';
 
 export function getVersion() {
     // Modding is not defined in MapGeneration context... (13-Mar-25)
@@ -15,6 +24,18 @@ export function getVersion() {
     });
     //*/
     return GlobalParameters.YNAMP_VERSION;
+}
+
+let g_missingImportedMapRowWarnings = new Set();
+
+function clearFeatureAt(iX, iY) {
+    const featureParameters = {
+        Feature: FeatureTypes.NO_FEATURE,
+        Direction: -1,
+        Elevation: 0
+    };
+
+    TerrainBuilder.setFeatureType(iX, iY, featureParameters);
 }
 
 /*
@@ -369,7 +390,81 @@ function getResourceFromCiv7Row(row) {
 
 // Map creation
 
-export function createMapTerrains(iWidth, iHeight, continent1, continent2, importedMap, mapType) {
+function tryGetImportedMapRow(importedMap, iX, iY) {
+    if (!importedMap || iX < 0 || iY < 0) {
+        return null;
+    }
+
+    let importedColumn = importedMap[iX];
+    if (!importedColumn || iY >= importedColumn.length) {
+        return null;
+    }
+
+    return importedColumn[iY];
+}
+
+function getImportedMapRow(importedMap, iX, iY, mapContext) {
+    if (!mapContext) {
+        return tryGetImportedMapRow(importedMap, iX, iY);
+    }
+
+    if (!isEarthMapPlayableLocalCoordinate(iX, iY, mapContext)) {
+        return null;
+    }
+
+    let sourceCoord = mapLocalToSourceCoordinate(iX, iY, mapContext);
+    if (!sourceCoord) {
+        return null;
+    }
+
+    let importedRow = tryGetImportedMapRow(importedMap, sourceCoord.X, sourceCoord.Y);
+    if (importedRow) {
+        return importedRow;
+    }
+
+    let warningKey = getEarthMapLabel(mapContext) + ":" + iX + "," + iY + ":" + sourceCoord.X + "," + sourceCoord.Y;
+    if (!g_missingImportedMapRowWarnings.has(warningKey)) {
+        g_missingImportedMapRowWarnings.add(warningKey);
+        let importedWidth = importedMap?.length ?? 0;
+        let importedHeight = importedWidth > 0 && importedMap[0] ? importedMap[0].length : 0;
+        console.log(
+            "YnAMP imported map lookup miss: map=" + getEarthMapLabel(mapContext) +
+            " local=" + iX + "," + iY +
+            " source=" + sourceCoord.X + "," + sourceCoord.Y +
+            " importedSize=" + importedWidth + "x" + importedHeight +
+            " ctx.sourceStartX=" + (mapContext.sourceStartX ?? "?") +
+            " ctx.sourceEndX=" + (mapContext.sourceEndX ?? "?") +
+            " ctx.sourceWidth=" + (mapContext.sourceWidth ?? "?") +
+            " ctx.cropWidth=" + (mapContext.cropWidth ?? "?") +
+            " ctx.livePlayableStartX=" + (mapContext.livePlayableStartX ?? "?")
+        );
+    }
+
+    return null;
+}
+
+export function enforceSyntheticWorldEndColumns(iWidth, iHeight, mapContext = getActiveEarthMapContext()) {
+    if (!isEarthMapNoWrapX(mapContext)) {
+        return;
+    }
+
+    for (let iY = 0; iY < iHeight; iY++) {
+        for (let iX = 0; iX < iWidth; iX++) {
+            if (!isEarthMapSyntheticWorldEndColumn(iX, mapContext)) {
+                continue;
+            }
+
+            TerrainBuilder.setTerrainType(iX, iY, globals.g_MountainTerrain);
+            TerrainBuilder.setBiomeType(iX, iY, globals.g_MarineBiome);
+            clearFeatureAt(iX, iY);
+            ResourceBuilder.setResourceType(iX, iY, ResourceTypes.NO_RESOURCE);
+            TerrainBuilder.setPlotTag(iX, iY, PlotTags.PLOT_TAG_NONE);
+            TerrainBuilder.setLandmassRegionId(iX, iY, LandmassRegion.LANDMASS_REGION_DEFAULT);
+        }
+    }
+}
+
+export function createMapTerrains(iWidth, iHeight, importedMap, mapType, mapContext = null) {
     
     console.log("YnAMP : Set Land and Water...");
     let getTerrainFromRow;
@@ -394,21 +489,27 @@ export function createMapTerrains(iWidth, iHeight, continent1, continent2, impor
             let terrain = globals.g_FlatTerrain;
             // Initialize plot tag
             TerrainBuilder.setPlotTag(iX, iY, PlotTags.PLOT_TAG_NONE);
-            //console.log("createLandmasses (" + iX + "," + iY +")");
-            terrain = getTerrainFromRow(importedMap[iX][iY]);
-
-            // Add plot tag if applicable
-            if (terrain != globals.g_OceanTerrain && terrain != globals.g_CoastTerrain) {
-                //utilities.addLandmassPlotTags(iX, iY, continent2.west);
+            if (isEarthMapSyntheticWorldEndColumn(iX, mapContext)) {
+                // Temporary workaround until WrapX can be disabled on regional Earth maps.
+                TerrainBuilder.setTerrainType(iX, iY, globals.g_MountainTerrain);
+                continue;
             }
+
+            let importedRow = getImportedMapRow(importedMap, iX, iY, mapContext);
+            if (!importedRow) {
+                TerrainBuilder.setTerrainType(iX, iY, terrain);
+                continue;
+            }
+            //console.log("createLandmasses (" + iX + "," + iY +")");
+            terrain = getTerrainFromRow(importedRow);
             TerrainBuilder.setTerrainType(iX, iY, terrain);
 
-            //console.log("createLandmasses (" + iX + "," + iY +") = " + importedMap[iX][iY][0] + " = " + terrain + " / " + GameplayMap.getTerrainType(iX, iY));
+            //console.log("createLandmasses (" + iX + "," + iY +") = " + importedRow[0] + " = " + terrain + " / " + GameplayMap.getTerrainType(iX, iY));
         }
     }
 }
 
-export function createBiomes(iWidth, iHeight, importedMap, mapType) {
+export function createBiomes(iWidth, iHeight, importedMap, mapType, mapContext = null) {
     
     console.log("YnAMP : Create Biomes...");
     
@@ -431,7 +532,16 @@ export function createBiomes(iWidth, iHeight, importedMap, mapType) {
 
     for (let iY = 0; iY < iHeight; iY++) {
         for (let iX = 0; iX < iWidth; iX++) {
-            let biome = getBiomeFromRow(importedMap[iX][iY]);
+            if (isEarthMapSyntheticWorldEndColumn(iX, mapContext)) {
+                TerrainBuilder.setBiomeType(iX, iY, globals.g_MarineBiome);
+                continue;
+            }
+
+            let importedRow = getImportedMapRow(importedMap, iX, iY, mapContext);
+            if (!importedRow) {
+                continue;
+            }
+            let biome = getBiomeFromRow(importedRow);
 //            TerrainBuilder.setBiomeType(iX, iY, globals.g_MarineBiome);
             TerrainBuilder.setBiomeType(iX, iY, biome);
             //console.log("SetBiome (" + iX + "," + iY +") = " + importedMap[iX][iY][0] + " = " + biome);
@@ -439,7 +549,7 @@ export function createBiomes(iWidth, iHeight, importedMap, mapType) {
     }
 }
 
-export function placeFeatures(iWidth, iHeight, importedMap, mapType) {
+export function placeFeatures(iWidth, iHeight, importedMap, mapType, mapContext = null) {
     
     console.log("YnAMP : Add Features...");
     
@@ -459,7 +569,12 @@ export function placeFeatures(iWidth, iHeight, importedMap, mapType) {
 
     for (let iY = 0; iY < iHeight; iY++) {
         for (let iX = 0; iX < iWidth; iX++) {
-            let featureIndex = getFeatureFromRow(importedMap[iX][iY]);
+            let importedRow = getImportedMapRow(importedMap, iX, iY, mapContext);
+            if (!importedRow) {
+                clearFeatureAt(iX, iY);
+                continue;
+            }
+            let featureIndex = getFeatureFromRow(importedRow);
 
             const featureParam = {
                 Feature: featureIndex,
@@ -467,18 +582,16 @@ export function placeFeatures(iWidth, iHeight, importedMap, mapType) {
                 Elevation: 0
             };
 
-            if (featureIndex == 0) {
+            if (featureIndex === FeatureTypes.NO_FEATURE) {
                 console.log("Feature[" + iX + "][" + iY + "]) = " + featureIndex + " (None)");
-                TerrainBuilder.setFeatureType(iX, iY, 0);
-            } else if (featureIndex == -1) {
-                //console.log("Feature[" + iX + "][" + iY + "]) = " + featureIndex + " (Random)");
+                clearFeatureAt(iX, iY);
             } else { 
-                TerrainBuilder.setFeatureType(iX, iY, 0); // Remove existing feature if any
-                if (TerrainBuilder.canHaveFeature(iX, iY, featureParam)) {
+                clearFeatureAt(iX, iY); // Remove existing feature if any
+                if (TerrainBuilder.canHaveFeatureParam(iX, iY, featureParam)) {
                     console.log("Feature[" + iX + "][" + iY + "]) = " + featureIndex + " (" + GameInfo.Features[featureIndex].Name + ") ... OK");
                     TerrainBuilder.setFeatureType(iX, iY, featureParam);
                 } else {
-                    console.log("Feature[" + iX + "][" + iY + "]) = " + featureIndex + " (" + GameInfo.Resources[featureIndex].Name + ") - WARNING: ResourceBuilder check failed, incompatible position !");
+                    console.log("Feature[" + iX + "][" + iY + "]) = " + featureIndex + " (" + GameInfo.Features[featureIndex].Name + ") - WARNING: TerrainBuilder check failed, incompatible position !");
                     TerrainBuilder.setFeatureType(iX, iY, featureParam);
                 }
             }
@@ -486,7 +599,7 @@ export function placeFeatures(iWidth, iHeight, importedMap, mapType) {
     }
 }
 
-export function placeResources(iWidth, iHeight, importedMap, mapType) {
+export function placeResources(iWidth, iHeight, importedMap, mapType, mapContext = null) {
     console.log("YnAMP : Add Resources...");
 
     let getResourceFromRow;
@@ -505,13 +618,16 @@ export function placeResources(iWidth, iHeight, importedMap, mapType) {
 
     for (let iY = 0; iY < iHeight; iY++) {
         for (let iX = 0; iX < iWidth; iX++) {
-            let resourceIndex = getResourceFromRow(importedMap[iX][iY]);
+            let importedRow = getImportedMapRow(importedMap, iX, iY, mapContext);
+            if (!importedRow) {
+                ResourceBuilder.setResourceType(iX, iY, ResourceTypes.NO_RESOURCE);
+                continue;
+            }
+            let resourceIndex = getResourceFromRow(importedRow);
             
-            if (resourceIndex == 0) {
+            if (resourceIndex === ResourceTypes.NO_RESOURCE) {
                 console.log("Resource[" + iX + "][" + iY + "]) = " + resourceIndex + " (None)");
                 ResourceBuilder.setResourceType(iX, iY, ResourceTypes.NO_RESOURCE);
-            } else if (resourceIndex == -1) {
-                //console.log("Resource[" + iX + "][" + iY + "]) = " + resourceIndex + "(Random)");
             } else { 
                 ResourceBuilder.setResourceType(iX, iY, ResourceTypes.NO_RESOURCE); // Remove existing resource if any
                 if (ResourceBuilder.canHaveResource(iX, iY, resourceIndex)) {
@@ -526,7 +642,7 @@ export function placeResources(iWidth, iHeight, importedMap, mapType) {
     }
 }
 
-export function importSnow(iWidth, iHeight, importedMap) {
+export function importSnow(iWidth, iHeight, importedMap, mapContext = null) {
     
     console.log("YnAMP : Add snow...");
     const aLightSnowEffects = MapPlotEffects.getPlotEffectTypesContainingTags(["SNOW", "LIGHT", "PERMANENT"]);
@@ -536,8 +652,9 @@ export function importSnow(iWidth, iHeight, importedMap) {
     let aWeightEffect = (aHeavySnowEffects ? aHeavySnowEffects[0] : -1);
     
     for (let iY = 0; iY < iHeight; iY++) {
-        for (let iX = 0; iX < iWidth; iX++) {   
-            if (isCiv6RowSnow(importedMap[iX][iY])) {
+        for (let iX = 0; iX < iWidth; iX++) {
+            let importedRow = getImportedMapRow(importedMap, iX, iY, mapContext);
+            if (importedRow && isCiv6RowSnow(importedRow)) {
                 //console.log("Snow (" + iX + "," + iY +") = " + importedMap[iX][iY][0]);
                 MapPlotEffects.addPlotEffect(GameplayMap.getIndexFromXY(iX, iY), aWeightEffect);
             }
@@ -545,7 +662,7 @@ export function importSnow(iWidth, iHeight, importedMap) {
     }
 }
 
-export function extraJungle(iWidth, iHeight, importedMap) {
+export function extraJungle(iWidth, iHeight, importedMap, mapContext = null) {
     let featIdx = GameInfo.Features.find(t => t.FeatureType == 'FEATURE_RAINFOREST').$index;
     console.log("YnAMP : Extra Jungle...");
 
@@ -553,7 +670,8 @@ export function extraJungle(iWidth, iHeight, importedMap) {
         for (let iX = 0; iX < iWidth; iX++) {           
             let feature = GameplayMap.getFeatureType(iX, iY);
             if (GameplayMap.isWater(iX, iY) == false && feature == FeatureTypes.NO_FEATURE && GameplayMap.isNavigableRiver(iX, iY) == false) {
-                if (isCiv6RowJungle(importedMap[iX][iY]) ) {//&& canAddFeature(iX, iY, featIdx, true /*bScatterable*/, false /*bRiverMouth*/, false /*bCoastal*/, false /*bNearRiver*/, false /*bIsolated*/, false /*bReef*/, false /*bIce*/)) {
+                let importedRow = getImportedMapRow(importedMap, iX, iY, mapContext);
+                if (importedRow && isCiv6RowJungle(importedRow) ) {//&& canAddFeature(iX, iY, featIdx, true /*bScatterable*/, false /*bRiverMouth*/, false /*bCoastal*/, false /*bNearRiver*/, false /*bIsolated*/, false /*bReef*/, false /*bIce*/)) {
                     //console.log("Extra Jungle (" + iX + "," + iY +") = " + importedMap[iX][iY][0]);
                      const featureParam = {
                         Feature: featIdx,
@@ -589,6 +707,7 @@ function getNeighbors(x, y, mapWidth, mapHeight) {
     let seen = new Set();
     let iIndex = GameplayMap.getIndexFromXY(x, y);
     let iLocation = GameplayMap.getLocationFromIndex(iIndex);
+    let mapContext = getActiveEarthMapContext();
 
     for (let iDirection = 0; iDirection < DirectionTypes.NUM_DIRECTION_TYPES; iDirection++) {
         let adjacent = GameplayMap.getAdjacentPlotLocation(iLocation, iDirection);
@@ -601,7 +720,22 @@ function getNeighbors(x, y, mapWidth, mapHeight) {
             continue;
         }
 
-        let newX = (adjacent.x + mapWidth) % mapWidth;
+        let newX = adjacent.x;
+        if (isEarthMapNoWrapX(mapContext)) {
+            if (newX < 0 || newX >= mapWidth) {
+                continue;
+            }
+            if (Math.abs(newX - x) > 1) {
+                continue;
+            }
+        } else {
+            newX = (newX + mapWidth) % mapWidth;
+        }
+
+        if (isEarthMapSyntheticWorldEndColumn(newX, mapContext)) {
+            continue;
+        }
+
         let key = newX + newY * mapWidth;
         if (!seen.has(key)) {
             seen.add(key);
@@ -645,7 +779,7 @@ function collectConnectedNonOceanComponent(startX, startY, mapWidth, mapHeight) 
         }
     }
 
-    return { tiles, keys, spansWrap: touchesWestEdge && touchesEastEdge };
+    return { tiles, keys, spansWrap: !isEarthMapNoWrapX(getActiveEarthMapContext()) && touchesWestEdge && touchesEastEdge };
 }
 
 function collectAdjacentCoastRing(componentTiles, componentKeys, mapWidth, mapHeight) {
@@ -671,48 +805,6 @@ function collectAdjacentCoastRing(componentTiles, componentKeys, mapWidth, mapHe
     return coastTiles;
 }
 
-function hasMixedEastWestRegionIds(componentTiles) {
-    let hasWest = false;
-    let hasEast = false;
-
-    for (let tile of componentTiles) {
-        let regionId = GameplayMap.getLandmassRegionId(tile.x, tile.y);
-        hasWest = hasWest || regionId == LandmassRegion.LANDMASS_REGION_WEST;
-        hasEast = hasEast || regionId == LandmassRegion.LANDMASS_REGION_EAST;
-        if (hasWest && hasEast) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-function applyEastWestRegionTag(iX, iY, targetRegionId, useEastTags) {
-    let terrainType = GameplayMap.getTerrainType(iX, iY);
-    if (terrainType == globals.g_CoastTerrain) {
-        TerrainBuilder.setPlotTag(iX, iY, PlotTags.PLOT_TAG_WATER);
-        if (useEastTags) {
-            TerrainBuilder.addPlotTag(iX, iY, PlotTags.PLOT_TAG_EAST_WATER);
-        } else {
-            TerrainBuilder.addPlotTag(iX, iY, PlotTags.PLOT_TAG_WEST_WATER);
-        }
-        TerrainBuilder.setLandmassRegionId(iX, iY, targetRegionId);
-        return "coast";
-    }
-
-    if (!GameplayMap.isWater(iX, iY)) {
-        if (useEastTags) {
-            TerrainBuilder.setPlotTag(iX, iY, PlotTags.PLOT_TAG_EAST_LANDMASS);
-        } else {
-            TerrainBuilder.setPlotTag(iX, iY, PlotTags.PLOT_TAG_WEST_LANDMASS);
-        }
-        TerrainBuilder.setLandmassRegionId(iX, iY, targetRegionId);
-        return "land";
-    }
-
-    return "ignored";
-}
-
 // Superregion groupings - maps individual XML regions to continental superregions.
 // Data is loaded from the ContinentsRegion table (populated in maps.xml).
 // Fallback: if the table is empty (e.g. data not loaded yet), returns an empty map.
@@ -732,14 +824,17 @@ function getSuperregionMapping() {
 /**
  * @param {number} iWidth
  * @param {number} iHeight
- * @param {string} mapName
+ * @param {string|*} mapContextOrName
  * @returns {(string|null)[][] | null}
  */
-function buildRegionGrid(iWidth, iHeight, mapName) {
+function buildRegionGrid(iWidth, iHeight, mapContextOrName) {
     let regionRows = GameInfo.RegionPosition;
     if (!regionRows) {
         return null;
     }
+
+    let sourceMapName = getEarthMapSourceMapName(mapContextOrName);
+    let sourceWidth = typeof mapContextOrName === 'object' && mapContextOrName ? mapContextOrName.sourceWidth : iWidth;
 
     let regionByTile = [];
     for (let iX = 0; iX < iWidth; iX++) {
@@ -749,34 +844,48 @@ function buildRegionGrid(iWidth, iHeight, mapName) {
         }
     }
 
-    regionRows.forEach((row) => {
-        if (row.MapName != mapName) {
-            return;
-        }
-        let startX = row.X;
-        let startY = row.Y;
-        let endY = row.Y + row.Height - 1;
-        for (let xOffset = 0; xOffset < row.Width; xOffset++) {
-            let x = (startX + xOffset + iWidth) % iWidth;
-            for (let y = startY; y <= endY; y++) {
-                if (x >= 0 && x < iWidth && y >= 0 && y < iHeight) {
-                    regionByTile[x][y] = row.Region;
+    for (let iX = 0; iX < iWidth; iX++) {
+        for (let iY = 0; iY < iHeight; iY++) {
+            let sourceCoord = typeof mapContextOrName === 'object' && mapContextOrName
+                ? mapLocalToSourceCoordinate(iX, iY, mapContextOrName)
+                : { X: iX, Y: iY };
+            if (!sourceCoord) {
+                continue;
+            }
+            for (let i = 0; i < regionRows.length; i++) {
+                let row = regionRows[i];
+                if (row.MapName != sourceMapName) {
+                    continue;
+                }
+                let yInRange = sourceCoord.Y >= row.Y && sourceCoord.Y < row.Y + row.Height;
+                if (!yInRange) {
+                    continue;
+                }
+                let xOffset = sourceCoord.X - row.X;
+                if (xOffset < 0) {
+                    xOffset += sourceWidth;
+                }
+                if (xOffset >= 0 && xOffset < row.Width) {
+                    regionByTile[iX][iY] = row.Region;
+                    break;
                 }
             }
         }
-    });
+    }
 
     return regionByTile;
 }
 
-export function hasRegionPositionData(mapName) {
+export function hasRegionPositionData(mapContextOrName) {
     let regionRows = GameInfo.RegionPosition;
     if (!regionRows) {
         return false;
     }
 
+    let sourceMapName = getEarthMapSourceMapName(mapContextOrName);
+
     for (let i = 0; i < regionRows.length; i++) {
-        if (regionRows[i].MapName == mapName) {
+        if (regionRows[i].MapName == sourceMapName) {
             return true;
         }
     }
@@ -787,13 +896,13 @@ export function hasRegionPositionData(mapName) {
 /**
  * @param {number} iWidth
  * @param {number} iHeight
- * @param {string} mapName
+ * @param {string|*} mapContextOrName
  */
-export function overrideHomelandsWithXMLRegions(iWidth, iHeight, mapName) {
-    console.log("overrideHomelandsWithXMLRegions: Starting for mapName=" + mapName);
+export function overrideHomelandsWithXMLRegions(iWidth, iHeight, mapContextOrName) {
+    console.log("overrideHomelandsWithXMLRegions: Starting for mapName=" + getEarthMapLabel(mapContextOrName));
     
     // Build region grid from XML
-    let regionByTile = buildRegionGrid(iWidth, iHeight, mapName);
+    let regionByTile = buildRegionGrid(iWidth, iHeight, mapContextOrName);
     if (!regionByTile) {
         console.log("overrideHomelandsWithXMLRegions: No RegionPosition data found, falling back to landmass mode");
         overrideHomelandsWithLandmass(iWidth, iHeight);
@@ -903,8 +1012,12 @@ export function overrideHomelandsWithXMLRegions(iWidth, iHeight, mapName) {
     let tagCounts = { homeland: 0, distant: 0 };
     let homelandLandPlots = [];
     let distantLandPlots = [];
+    let activeMapContext = getActiveEarthMapContext();
     for (let iY = 0; iY < iHeight; iY++) {
         for (let iX = 0; iX < iWidth; iX++) {
+            if (isEarthMapSyntheticWorldEndColumn(iX, activeMapContext)) {
+                continue;
+            }
             if (!GameplayMap.isWater(iX, iY)) {
                 if (isHomeland[iY][iX]) {
                     TerrainBuilder.setLandmassRegionId(iX, iY, LandmassRegion.LANDMASS_REGION_WEST);
@@ -943,6 +1056,9 @@ export function overrideHomelandsWithXMLRegions(iWidth, iHeight, mapName) {
     let waterTagCounts = { homeland: 0, distant: 0 };
     for (let iY = 0; iY < iHeight; iY++) {
         for (let iX = 0; iX < iWidth; iX++) {
+            if (isEarthMapSyntheticWorldEndColumn(iX, activeMapContext)) {
+                continue;
+            }
             if (!GameplayMap.isWater(iX, iY)) {
                 continue;
             }
@@ -974,68 +1090,6 @@ export function overrideHomelandsWithXMLRegions(iWidth, iHeight, mapName) {
     
     console.log("overrideHomelandsWithXMLRegions: Applied landmass region IDs - homeland=" + tagCounts.homeland + " distant=" + tagCounts.distant);
     console.log("overrideHomelandsWithXMLRegions: Retagged coastal water - homeland=" + waterTagCounts.homeland + " distant=" + waterTagCounts.distant);
-}
-
-export function overrideEastWestSeamIslandStarts(iWidth, iHeight) {
-    console.log("overrideEastWestSeamIslandStarts: Starting");
-
-    let aliveMajorIds = Players.getAliveMajorIds();
-    let processedKeys = new Set();
-    let retaggedComponents = 0;
-    let retaggedLandPlots = 0;
-    let retaggedCoastPlots = 0;
-
-    for (let i = 0; i < aliveMajorIds.length; i++) {
-        let playerId = aliveMajorIds[i];
-        let startPlot = StartPositioner.getStartPosition(playerId);
-        if (startPlot === undefined || startPlot === null || startPlot < 0) {
-            continue;
-        }
-
-        let startX = startPlot % iWidth;
-        let startY = Math.floor(startPlot / iWidth);
-        let startKey = startX + startY * iWidth;
-        if (processedKeys.has(startKey)) {
-            continue;
-        }
-
-        let component = collectConnectedNonOceanComponent(startX, startY, iWidth, iHeight);
-        component.keys.forEach((key) => processedKeys.add(key));
-
-        if (component.tiles.length === 0 || !component.spansWrap || !hasMixedEastWestRegionIds(component.tiles)) {
-            continue;
-        }
-
-        let targetRegionId = GameplayMap.getLandmassRegionId(startX, startY);
-        if (targetRegionId != LandmassRegion.LANDMASS_REGION_WEST && targetRegionId != LandmassRegion.LANDMASS_REGION_EAST) {
-            console.log("overrideEastWestSeamIslandStarts: Skipping player " + playerId + " at (" + startX + "," + startY + ") because start tile has non-east-west regionId=" + targetRegionId);
-            continue;
-        }
-        let useEastTags = GameplayMap.hasPlotTag(startX, startY, PlotTags.PLOT_TAG_EAST_LANDMASS);
-
-        let coastRing = collectAdjacentCoastRing(component.tiles, component.keys, iWidth, iHeight);
-        retaggedComponents++;
-
-        for (let tile of component.tiles) {
-            let result = applyEastWestRegionTag(tile.x, tile.y, targetRegionId, useEastTags);
-            if (result == "land") {
-                retaggedLandPlots++;
-            } else if (result == "coast") {
-                retaggedCoastPlots++;
-            }
-        }
-
-        for (let coastTile of coastRing) {
-            let result = applyEastWestRegionTag(coastTile.x, coastTile.y, targetRegionId, useEastTags);
-            if (result == "coast") {
-                retaggedCoastPlots++;
-            }
-        }
-
-        console.log("overrideEastWestSeamIslandStarts: Retagged seam-spanning component for player " + playerId + " at (" + startX + "," + startY + ") with " + component.tiles.length + " non-ocean tiles and " + coastRing.length + " adjacent coast tiles");
-    }
-
-    console.log("overrideEastWestSeamIslandStarts: Retagged components=" + retaggedComponents + " land=" + retaggedLandPlots + " coast=" + retaggedCoastPlots);
 }
 
 function collectConnectedLandSubcomponent(startX, startY, mapWidth, mapHeight, allowedKeys, visitedLandKeys) {
@@ -1394,6 +1448,9 @@ export function overrideHomelandsWithLandmass(iWidth, iHeight) {
 
     for (let iY = 0; iY < iHeight; iY++) {
         for (let iX = 0; iX < iWidth; iX++) {
+            if (isEarthMapSyntheticWorldEndColumn(iX, getActiveEarthMapContext())) {
+                continue;
+            }
             if (GameplayMap.isWater(iX, iY)) continue; // land tiles only
             let key = iX + iY * iWidth;
             if (homelandReachable.has(key)) {
@@ -1436,6 +1493,9 @@ export function overrideHomelandsWithLandmass(iWidth, iHeight) {
     let waterTagCounts = { homeland: 0, distant: 0, island: 0, ocean: 0 };
     for (let iY = 0; iY < iHeight; iY++) {
         for (let iX = 0; iX < iWidth; iX++) {
+            if (isEarthMapSyntheticWorldEndColumn(iX, getActiveEarthMapContext())) {
+                continue;
+            }
             let terrainType = GameplayMap.getTerrainType(iX, iY);
             if (terrainType == globals.g_CoastTerrain) {
                 let nearestHomeland  = getNearestDistanceToPlots(iX, iY, homelandLandPlots);
@@ -1481,17 +1541,17 @@ export function overrideHomelandsWithLandmass(iWidth, iHeight) {
  * @param {number} iWidth
  * @param {number} iHeight
  * @param {number[]} startPositions
- * @param {string} mapName
+ * @param {string|*} mapContextOrName
  */
-export function applyRegionBasedLandmassTags(iWidth, iHeight, startPositions, mapName) {
-    console.log("applyRegionBasedLandmassTags: Starting with mapName=" + mapName);
+export function applyRegionBasedLandmassTags(iWidth, iHeight, startPositions, mapContextOrName) {
+    console.log("applyRegionBasedLandmassTags: Starting with mapName=" + getEarthMapLabel(mapContextOrName));
     console.log("applyRegionBasedLandmassTags: startPositions type=" + typeof startPositions + " length=" + (Array.isArray(startPositions) ? startPositions.length : "not array"));
     if (Array.isArray(startPositions) && startPositions.length > 0) {
         console.log("applyRegionBasedLandmassTags: startPositions[0]=" + startPositions[0]);
     }
     
     // Build region grid from XML
-    let regionByTile = buildRegionGrid(iWidth, iHeight, mapName);
+    let regionByTile = buildRegionGrid(iWidth, iHeight, mapContextOrName);
     if (!regionByTile) {
         console.log("applyRegionBasedLandmassTags: No RegionPosition data found");
         return;
@@ -1526,6 +1586,9 @@ export function applyRegionBasedLandmassTags(iWidth, iHeight, startPositions, ma
     let tagCounts = { homeland: 0, distant: 0 };
     for (let iY = 0; iY < iHeight; iY++) {
         for (let iX = 0; iX < iWidth; iX++) {
+            if (isEarthMapSyntheticWorldEndColumn(iX, getActiveEarthMapContext())) {
+                continue;
+            }
             if (!GameplayMap.isWater(iX, iY)) {
                 let regionName = regionByTile[iX][iY];
                 let isHomeland = regionName ? homelandRegions[regionName] : false;
@@ -1599,30 +1662,6 @@ export function dumpRivers(iWidth, iHeight) {
     }
 }
 
-export function dumpciv6ImportedRivers(iWidth, iHeight, map) {
-    // Dump it out as an ASCII map to "Scripting.log"
-    for (let iY = iHeight - 1; iY >= 0; iY--) {
-        let str = '';
-        if (iY % 2 == 1) {
-            str += ' ';
-        }
-        for (let iX = 0; iX < iWidth; iX++) {
-            const row = map[iX][iY];
-            if (getTerrainFromCiv6Row(row) != globals.g_OceanTerrain && getTerrainFromCiv6Row(row) != globals.g_CoastTerrain) {
-                let riverToDisplay = '.';
-                if (isCiv6RowRiver(row)) {
-                    riverToDisplay = 'r';
-                }
-                str += riverToDisplay + ' ';
-            }
-            else {
-                str += '  ';
-            }
-        }
-        console.log(str);
-    }
-}
-
 export function isAdjacentToTerrain(iX, iY, terrain) {
     for (let iDirection = 0; iDirection < DirectionTypes.NUM_DIRECTION_TYPES; iDirection++) {
         let iIndex = GameplayMap.getIndexFromXY(iX, iY);
@@ -1640,6 +1679,9 @@ console.log("Loaded YnAMP Utilities");
 
 // ── Plot helpers (shared between ynamp-map-loading.js and ynamp-cultural-start.js) ──
 
+const NO_REGION_ID = -1;
+const NO_REGION_FILTER = NO_REGION_ID;
+
 function getComponentRegionIds(componentLandTiles) {
     let regionIds = new Set();
     for (let tile of componentLandTiles) {
@@ -1655,7 +1697,7 @@ function getComponentRegionIds(componentLandTiles) {
 }
 
 function retagIslandComponentRegion(component, targetRegionId) {
-    if (!component || targetRegionId == undefined || targetRegionId == null || targetRegionId < 0) {
+    if (!component || targetRegionId == undefined || targetRegionId == null || targetRegionId === NO_REGION_ID) {
         return;
     }
 
@@ -1673,23 +1715,23 @@ function retagIslandComponentRegion(component, targetRegionId) {
 
 function resolveClosestMainlandRegionId(component, islandMetadata) {
     if (!component) {
-        return -1;
+        return NO_REGION_ID;
     }
     if (component.closestMainlandRegionId != undefined) {
         return component.closestMainlandRegionId;
     }
 
-    let bestRegionId = -1;
+    let bestRegionId = NO_REGION_ID;
     let bestDistance = Number.MAX_SAFE_INTEGER;
     let sourcePlots = component.attachmentPlots;
     for (let mainlandComponent of islandMetadata.mainlandComponents) {
-        if (mainlandComponent.primaryRegionId < 0) {
+        if (mainlandComponent.primaryRegionId === NO_REGION_ID) {
             continue;
         }
 
         let distance = getMinimumPlotDistanceBetweenSets(sourcePlots, mainlandComponent.attachmentPlots);
         if (distance < bestDistance ||
-                (distance == bestDistance && (bestRegionId < 0 || mainlandComponent.primaryRegionId < bestRegionId))) {
+                (distance == bestDistance && (bestRegionId === NO_REGION_ID || mainlandComponent.primaryRegionId < bestRegionId))) {
             bestDistance = distance;
             bestRegionId = mainlandComponent.primaryRegionId;
         }
@@ -1739,7 +1781,7 @@ export function buildIslandStartMetadata(iWidth, iHeight) {
             };
             component.isIsland = !isMainlandStartComponent(component, iWidth, iHeight);
             component.regionIds = getComponentRegionIds(component.landTiles);
-            component.primaryRegionId = component.regionIds.length > 0 ? component.regionIds[0] : -1;
+            component.primaryRegionId = component.regionIds.length > 0 ? component.regionIds[0] : NO_REGION_ID;
             component.attachmentPlots = getComponentAttachmentPlots(component);
             components.push(component);
             componentsById.set(component.id, component);
@@ -1752,7 +1794,7 @@ export function buildIslandStartMetadata(iWidth, iHeight) {
                 }
             }
 
-            if (!component.isIsland && component.primaryRegionId >= 0) {
+            if (!component.isIsland && component.primaryRegionId !== NO_REGION_ID) {
                 mainlandComponents.push(component);
             }
         }
@@ -1796,8 +1838,8 @@ export function isPlotTooCloseToUsed(plotIndex, usedPlots, iWidth, minDistance) 
     return false;
 }
 
-function chooseFallbackStartPlot(defaultPlot, usedPlots, iWidth, iHeight, minDistance, requiredRegionId = -1, candidateFilter = null) {
-    const regionFilter = requiredRegionId >= 0;
+function chooseFallbackStartPlot(defaultPlot, usedPlots, iWidth, iHeight, minDistance, requiredRegionId = NO_REGION_FILTER, candidateFilter = null) {
+    const regionFilter = requiredRegionId !== NO_REGION_FILTER;
 
     if (isValidPlot(defaultPlot)) {
         const x = defaultPlot % iWidth;
@@ -1844,16 +1886,16 @@ function chooseFallbackStartPlot(defaultPlot, usedPlots, iWidth, iHeight, minDis
  * @param {number}  iWidth
  * @param {number}  iHeight
  * @param {number}  minDistance      Minimum hex distance from any used plot.
- * @param {number}  [requiredRegionId=-1]
- *   When >= 0, only candidates whose GameplayMap.getLandmassRegionId() matches this value
- *   are considered. Pass -1 (default) to accept candidates from any region.
+ * @param {number}  [requiredRegionId=NO_REGION_FILTER]
+ *   When not NO_REGION_FILTER, only candidates whose GameplayMap.getLandmassRegionId() matches this value
+ *   are considered. Pass NO_REGION_FILTER (default) to accept candidates from any region.
  * @returns {number} Plot index, or -1 if none found.
  */
-export function findFallbackStartPlot(defaultPlot, usedPlots, iWidth, iHeight, minDistance, requiredRegionId = -1) {
+export function findFallbackStartPlot(defaultPlot, usedPlots, iWidth, iHeight, minDistance, requiredRegionId = NO_REGION_FILTER) {
     return chooseFallbackStartPlot(defaultPlot, usedPlots, iWidth, iHeight, minDistance, requiredRegionId);
 }
 
-export function findFallbackIslandStartPlot(defaultPlot, usedPlots, iWidth, iHeight, minDistance, preferredRegionId = -1, islandMetadata = null) {
+export function findFallbackIslandStartPlot(defaultPlot, usedPlots, iWidth, iHeight, minDistance, preferredRegionId = NO_REGION_FILTER, islandMetadata = null) {
     let metadata = islandMetadata || buildIslandStartMetadata(iWidth, iHeight);
 
     function getComponentForPlot(plot) {
@@ -1866,7 +1908,7 @@ export function findFallbackIslandStartPlot(defaultPlot, usedPlots, iWidth, iHei
         return !!component && component.isIsland && component.regionIds.indexOf(preferredRegionId) >= 0;
     }
 
-    if (preferredRegionId >= 0) {
+    if (preferredRegionId !== NO_REGION_FILTER) {
         let preferredIslandPlot = chooseFallbackStartPlot(
             defaultPlot,
             usedPlots,
@@ -1898,21 +1940,21 @@ export function findFallbackIslandStartPlot(defaultPlot, usedPlots, iWidth, iHei
         iWidth,
         iHeight,
         minDistance,
-        -1,
+        NO_REGION_FILTER,
         isNeutralIslandCandidate
     );
     if (!isValidPlot(neutralIslandPlot)) {
         return {
             plot: -1,
             componentId: -1,
-            regionId: -1,
+            regionId: NO_REGION_ID,
             source: "none",
         };
     }
 
     let component = getComponentForPlot(neutralIslandPlot);
     let targetRegionId = resolveClosestMainlandRegionId(component, metadata);
-    if (targetRegionId >= 0) {
+    if (targetRegionId !== NO_REGION_ID) {
         retagIslandComponentRegion(component, targetRegionId);
     }
 

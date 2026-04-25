@@ -19,14 +19,7 @@ function requestMapData(initParams) {
 }
 function generateMap() {
     const mapName = 'GreatestEarthMap';
-	let genParameters = {
-        westStart: 1,
-        westEnd: 31,
-        eastStart: 32,
-        eastEnd: 102
-    };
-    let importedMap = GetMap();
-    generateYnAMP(mapName, importedMap, genParameters);
+    generateYnAMP(mapName, GetMap());
 }
 
 // Register listeners.

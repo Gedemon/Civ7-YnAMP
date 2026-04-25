@@ -13,23 +13,11 @@
     <Replace Tag="LOC_MAPSIZE_LUDICROUS_NAME" Language="fr_FR">
       <Text>Démesurée (230x116)[n][icon:BUILDING_WARNING] pas de texture pour les tuiles > 127</Text>
     </Replace>
-    <Replace Tag="LOC_MAP_CONTINENTS_YNAMP_NAME" Language="fr_FR">
-      <Text>Continents++ (YnAMP)</Text>
-    </Replace>
-    <Replace Tag="LOC_MAP_CONTINENTS_YNAMP_DESCRIPTION" Language="fr_FR">
-      <Text>Un script style continents adapté aux tailles de carte et paramètres YnAMP.</Text>
-    </Replace>
     <Replace Tag="LOC_MAP_TERRA_YNAMP_NAME" Language="fr_FR">
       <Text>Terra (YnAMP)</Text>
     </Replace>
     <Replace Tag="LOC_MAP_TERRA_YNAMP_DESCRIPTION" Language="fr_FR">
       <Text>Une carte style Terra avec un rapport de masse terrestre 1/3 : 2/3, optimisée pour la génération inégale de continents.</Text>
-    </Replace>
-    <Replace Tag="LOC_MAP_FRACTAL_YNAMP_NAME" Language="fr_FR">
-      <Text>Fractal (YnAMP)</Text>
-    </Replace>
-    <Replace Tag="LOC_MAP_FRACTAL_YNAMP_DESCRIPTION" Language="fr_FR">
-      <Text>Un script style fractal adapté aux tailles de carte et paramètres YnAMP.</Text>
     </Replace>
     <Replace Tag="LOC_MAP_GIANT_EARTH_YNAMP_NAME" Language="fr_FR">
       <Text>Giant Earth Map (YnAMP)</Text>
@@ -55,29 +43,23 @@
     <Replace Tag="LOC_MAPSIZE_LUDICROUS_DESCRIPTION" Language="fr_FR">
       <Text>Taille de carte démesurée pour les scénarios et scripts YnAMP.</Text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_REGION_MODE_NAME" Language="fr_FR">
+    <Replace Tag="LOC_YNAMP_HOMELAND_MODE_NAME" Language="fr_FR">
       <Text>Mode d'étiquetage des régions (pour les cartes YnAMP)</Text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_REGION_MODE_DESC" Language="fr_FR">
-      <Text>Contrôle la classification des régions de terre natale et de terres lointaines. Landmass utilise la séparation océanique depuis les positions de départ du joueur. East-West utilise une simple division par colonne. Region utilise des superrégions définies par XML (cartes Terre uniquement; retourne à East-West).</Text>
+    <Replace Tag="LOC_YNAMP_HOMELAND_MODE_DESC" Language="fr_FR">
+      <Text>Contrôle la classification des régions de terre natale et de terres lointaines. Landmass utilise la séparation par l'océan depuis les positions de départ du joueur. Region utilise les super-régions définies dans le XML pour les cartes Terre prises en charge et revient à Landmass si les données XML ne sont pas disponibles.</Text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_REGION_MODE_LANDMASS_NAME" Language="fr_FR">
+    <Replace Tag="LOC_YNAMP_HOMELAND_MODE_LANDMASS_NAME" Language="fr_FR">
       <Text>Landmass (par défaut)</Text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_REGION_MODE_LANDMASS_DESC" Language="fr_FR">
+    <Replace Tag="LOC_YNAMP_HOMELAND_MODE_LANDMASS_DESC" Language="fr_FR">
       <Text>La terre natale et les terres lointaines sont déterminées par la connectivité bloquée par l'océan depuis les positions de départ du joueur. Les îles isolées et l'océan restent neutres.</Text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_REGION_MODE_EAST_WEST_NAME" Language="fr_FR">
-      <Text>Division Est-Ouest</Text>
-    </Replace>
-    <Replace Tag="LOC_YNAMP_REGION_MODE_EAST_WEST_DESC" Language="fr_FR">
-      <Text>La terre natale et les terres lointaines sont séparées par une frontière de colonne verticale simple, correspondant au comportement original YnAMP.</Text>
-    </Replace>
-    <Replace Tag="LOC_YNAMP_REGION_MODE_REGION_NAME" Language="fr_FR">
+    <Replace Tag="LOC_YNAMP_HOMELAND_MODE_REGION_NAME" Language="fr_FR">
       <Text>Région (XML)</Text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_REGION_MODE_REGION_DESC" Language="fr_FR">
-      <Text>Utilise les données de superrégion définies par XML (EurAsie, Afrique, Amériques, Océanie) pour les cartes Terre. Retourne à East-West si aucune donnée XML n'est disponible pour la carte sélectionnée.</Text>
+    <Replace Tag="LOC_YNAMP_HOMELAND_MODE_REGION_DESC" Language="fr_FR">
+      <Text>Utilise les données de super-région définies dans le XML (EurAsie, Afrique, Amériques, Océanie) pour les cartes Terre prises en charge. Reviend à Landmass si aucune donnée XML n'est disponible pour la carte sélectionnée.</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_START_POSITION_RELATIVE_DISTANCE_NAME" Language="fr_FR">
       <Text>Distance relative</Text>
@@ -102,6 +84,144 @@
     </Replace>
     <Replace Tag="LOC_YNAMP_START_POSITION_REGION_BALANCED_DESC" Language="fr_FR">
       <Text>Comme Région culturelle (Terra), mais redistribue les groupes culturels entre les hémisphères pour garder le nombre de civilisations aussi égal que possible. Toutes les civilisations du même groupe culturel restent toujours sur le même hémisphère. Dans chaque hémisphère, les groupes culturellement adjacents sont placés les uns près des autres. Ignore les biais de départ des civilisations.</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_REGIONAL_EARTH_MASSIVE_YNAMP_NAME" Language="fr_FR">
+      <Text>Regional Earth Map (Massive) (YnAMP)</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_REGIONAL_EARTH_MASSIVE_YNAMP_DESCRIPTION" Language="fr_FR">
+      <Text>Une carte Regional Earth de 128x80 qui réutilise la géographie de Giant Earth, les vrais départs et les régions XML via des décalages de section. Commencez avec le recadrage Colonization classique.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGIONAL_EARTH_SECTION_NAME" Language="fr_FR">
+      <Text>Section de la Regional Earth</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGIONAL_EARTH_SECTION_DESC" Language="fr_FR">
+      <Text>Sélectionne quelle sous-section de Giant Earth est projetée sur ce canevas Regional Earth fixe de 128x80.</Text>
+    </Replace>
+    <Replace Tag="LOC_MASSIVE_COLONIZATION_NAME" Language="fr_FR">
+      <Text>Colonisation</Text>
+    </Replace>
+    <Replace Tag="LOC_MASSIVE_COLONIZATION_DESC" Language="fr_FR">
+      <Text>L'Europe, l'Atlantique Nord et les Amériques sur un canevas de 128x80, utilisant les décalages Colonization classiques de YnAMP.</Text>
+    </Replace>
+    <Replace Tag="LOC_MASSIVE_OLD_WORLD_NAME" Language="fr_FR">
+      <Text>Vieux Monde</Text>
+    </Replace>
+    <Replace Tag="LOC_MASSIVE_OLD_WORLD_DESC" Language="fr_FR">
+      <Text>L'Europe, l'Afrique et l'Asie sur un canevas de 128x80, utilisant un recadrage Giant Earth sans enroulement.</Text>
+    </Replace>
+    <Replace Tag="LOC_MASSIVE_INDO_PACIFIC_NAME" Language="fr_FR">
+      <Text>Indo-Pacifique</Text>
+    </Replace>
+    <Replace Tag="LOC_MASSIVE_INDO_PACIFIC_DESC" Language="fr_FR">
+      <Text>L'Asie du Sud, l'Asie du Sud-Est, l'Océanie et le bassin du Pacifique sur un canevas de 128x80, utilisant un recadrage Giant Earth sans enroulement.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_WRAPX_OLD_WORLD_NAME" Language="fr_FR">
+      <Text>Sans enroulement</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_WRAPX_OLD_WORLD_DESC" Language="fr_FR">
+      <Text>Désactivez cette option pour supprimer le terrain infranchissable sur les bords, si vous souhaitez pouvoir circumnaviguer le Vieux Monde et atteindre les Indes orientales en naviguant vers l'ouest.</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_RATIO_NAME" Language="fr_FR">
+      <Text>Rapport de masse terrestre pour Terra YnAMP</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_RATIO_DESC" Language="fr_FR">
+      <Text>Pourcentage de la superficie totale terrestre attribuée à la plus petite masse terrestre (« Nouveau Monde »). La plus grande masse terrestre (Vieux Monde) reçoit le reste. Des valeurs plus petites produisent une différence de taille plus extrême.</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_RATIO_40_NAME" Language="fr_FR">
+      <Text>40 % Nouveau Monde</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_RATIO_33_NAME" Language="fr_FR">
+      <Text>33 % Nouveau Monde</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_RATIO_25_NAME" Language="fr_FR">
+      <Text>25 % Nouveau Monde</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_RATIO_20_NAME" Language="fr_FR">
+      <Text>20 % Nouveau Monde</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_RATIO_15_NAME" Language="fr_FR">
+      <Text>15 % Nouveau Monde</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_RATIO_10_NAME" Language="fr_FR">
+      <Text>10 % Nouveau Monde</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_SPAWN_MODE_NAME" Language="fr_FR">
+      <Text>Distribution de départ pour Terra YnAMP</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_SPAWN_MODE_DESC" Language="fr_FR">
+      <Text>Contrôle la répartition des civilisations entre les deux masses terrestres. Split place les civilisations sur les deux masses terrestres proportionnellement à leur taille. Same landmass place toutes les civilisations sur la plus grande masse terrestre.</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_SPAWN_SPLIT_NAME" Language="fr_FR">
+      <Text>Diviser les civilisations sur les masses terrestres</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_SPAWN_SAME_NAME" Language="fr_FR">
+      <Text>Toutes les civilisations sur la plus grande masse terrestre</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_NW_PLACEMENT_MODE_NAME" Language="fr_FR">
+      <Text>Placement des merveilles naturelles sur les cartes TSL</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_NW_PLACEMENT_MODE_DESC" Language="fr_FR">
+      <Text>Contrôle le placement des Merveilles Naturelles sur les cartes Terre à position réelle. « Monde Réel + Aléatoire » utilise d'abord les positions réelles du XML, puis remplit les emplacements restants aléatoirement. « Monde Réel Uniquement » n'utilise que les positions XML (les exigences d'adjacence et d'élévation sont relâchées). « Aléatoire » ignore toutes les positions réelles.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_NW_PLACEMENT_RANDOM_NAME" Language="fr_FR">
+      <Text>Aléatoire</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_NW_PLACEMENT_RANDOM_DESC" Language="fr_FR">
+      <Text>Les Merveilles Naturelles sont placées entièrement au hasard, ignorant les positions du monde réel.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_NW_PLACEMENT_REAL_AND_RANDOM_NAME" Language="fr_FR">
+      <Text>Monde Réel + Aléatoire (par défaut)</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_NW_PLACEMENT_REAL_AND_RANDOM_DESC" Language="fr_FR">
+      <Text>Utilise d'abord les positions réelles du XML, puis remplit les emplacements restants de Merveilles Naturelles par placement aléatoire.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_NW_PLACEMENT_REAL_ONLY_NAME" Language="fr_FR">
+      <Text>Monde Réel Uniquement</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_NW_PLACEMENT_REAL_ONLY_DESC" Language="fr_FR">
+      <Text>Seules les positions réelles du XML sont utilisées. Pas de remplissage aléatoire. Les exigences d'adjacence et d'élévation sont supprimées de la base de données du jeu pour améliorer le placement.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGIONAL_RESOURCE_MODE_NAME" Language="fr_FR">
+      <Text>Placement des ressources régionales sur les cartes TSL</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGIONAL_RESOURCE_MODE_DESC" Language="fr_FR">
+      <Text>Contrôle le réalisme des ressources par région terrestre. Curated applique un ensemble de règles soigné pour un petit nombre de ressources géographiquement distinctives après la génération normale ou le placement de carte importée.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGIONAL_RESOURCE_OFF_NAME" Language="fr_FR">
+      <Text>Désactivé</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGIONAL_RESOURCE_OFF_DESC" Language="fr_FR">
+      <Text>Aucun nettoyage régional ni remplissage n'est appliqué. Les ressources conservent le comportement actuel de YnAMP.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGIONAL_RESOURCE_CURATED_NAME" Language="fr_FR">
+      <Text>Règles régionales soignées (par défaut)</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGIONAL_RESOURCE_CURATED_DESC" Language="fr_FR">
+      <Text>Applique un ensemble de règles terrestre étroit en premier passage pour les ressources distinctives, supprime les placements manifestement hors région, et garantit quelques dépôts régionaux aux endroits attendus.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_MODE_NAME" Language="fr_FR">
+      <Text>Débloquage géographique des civilisations</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_MODE_DESC" Language="fr_FR">
+      <Text>Contrôle comment la géographie affecte la disponibilité des civilisations sur les cartes Terre TSL. No Unlock conserve uniquement le réalisme de placement. Add Unlock conserve les chemins de débloquage normaux du jeu et ajoute les chemins géographiques. Strict Unlock ne conserve que les débloquages géographiques et les débloquages originaux locaux ou adjacents explicitement préservés.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_NONE_NAME" Language="fr_FR">
+      <Text>Pas de débloquage (par défaut)</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_NONE_DESC" Language="fr_FR">
+      <Text>Aucun changement de débloquage basé sur la géographie n'est appliqué. Le placement réaliste des ressources peut fonctionner indépendamment.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_ADD_NAME" Language="fr_FR">
+      <Text>Ajouter le débloquage</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_ADD_DESC" Language="fr_FR">
+      <Text>Conserve les chemins de débloquage existants du jeu et ajoute les débloquages géographiques lorsque le joueur contrôle des ressources régionales qualifiantes.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_STRICT_NAME" Language="fr_FR">
+      <Text>Débloquage strict</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_STRICT_DESC" Language="fr_FR">
+      <Text>Limite la disponibilité des civilisations aux débloquages géographiques et aux débloquages originaux voisins explicitement préservés, en supprimant les autres chemins de débloquage non géographiques comme la disponibilité par leader ou par récompense.</Text>
     </Replace>
   </LocalizedText>
 </Database>

@@ -3,6 +3,13 @@
  * Natural wonder placement logic for YnAMP maps.
  */
 import * as globals from '/base-standard/maps/map-globals.js';
+import {
+    getActiveEarthMapContext,
+    getEarthMapSourceMapName,
+    isEarthMapNoWrapX,
+    isEarthMapPlayableLocalCoordinate,
+    mapSourceToLocalCoordinate,
+} from '/ged-ynamp/maps/earth-map-context.js';
 
 /**
  * Reads the NWPlacementMode map option and returns the effective mode string.
@@ -24,6 +31,69 @@ export function getNWPlacementMode() {
         return "real-only";
     }
     return "real-and-random";
+}
+
+function buildNaturalWonderGroups(mapName, mapContext) {
+    const sourceMapName = getEarthMapSourceMapName(mapContext) ?? mapName;
+    const sourceOrder = [];
+    const sourceGroups = {};
+
+    for (let i = 0; i < GameInfo.NaturalWonderPosition.length; ++i) {
+        const sourceRow = GameInfo.NaturalWonderPosition[i];
+        if (sourceRow.MapName != sourceMapName) continue;
+        if (!sourceGroups[sourceRow.FeatureType]) {
+            sourceGroups[sourceRow.FeatureType] = { anchor: sourceRow, secondary: [] };
+            sourceOrder.push(sourceRow.FeatureType);
+        } else {
+            sourceGroups[sourceRow.FeatureType].secondary.push(sourceRow);
+        }
+    }
+
+    const nwOrder = [];
+    const nwGroups = {};
+    for (let i = 0; i < sourceOrder.length; i++) {
+        const featureType = sourceOrder[i];
+        const sourceGroup = sourceGroups[featureType];
+        const anchorCoord = mapSourceToLocalCoordinate(sourceGroup.anchor.X, sourceGroup.anchor.Y, mapContext);
+        if (!anchorCoord) {
+            continue;
+        }
+
+        const secondary = [];
+        let skipGroup = false;
+        for (let si = 0; si < sourceGroup.secondary.length; si++) {
+            const sourceSecondary = sourceGroup.secondary[si];
+            const secondaryCoord = mapSourceToLocalCoordinate(sourceSecondary.X, sourceSecondary.Y, mapContext);
+            if (!secondaryCoord) {
+                skipGroup = true;
+                break;
+            }
+            secondary.push({
+                ...sourceSecondary,
+                X: secondaryCoord.X,
+                Y: secondaryCoord.Y,
+                SourceX: sourceSecondary.X,
+                SourceY: sourceSecondary.Y,
+            });
+        }
+        if (skipGroup) {
+            continue;
+        }
+
+        nwGroups[featureType] = {
+            anchor: {
+                ...sourceGroup.anchor,
+                X: anchorCoord.X,
+                Y: anchorCoord.Y,
+                SourceX: sourceGroup.anchor.X,
+                SourceY: sourceGroup.anchor.Y,
+            },
+            secondary,
+        };
+        nwOrder.push(featureType);
+    }
+
+    return { nwOrder, nwGroups };
 }
 
 const TERRAIN_NAMES_SHORT = ["MTN", "HILL", "FLAT", "COAST", "OCEAN", "NAVR"];
@@ -525,7 +595,7 @@ function logNWPlacedFootprint(anchorX, anchorY, featureType, tiles, expectedFoot
     return { tiles: placedFootprint.tiles, incomplete: placedFootprint.incomplete, signature };
 }
 
-export function placeCustomNaturalWonders(mapName) {
+export function placeCustomNaturalWonders(mapName, mapContext = getActiveEarthMapContext()) {
     console.log("YNAMP - Place Custom Natural Wonders for map " + mapName);
     let numPlaced = 0;
     const placedFeatureHashes = new Set();
@@ -576,20 +646,8 @@ export function placeCustomNaturalWonders(mapName) {
         nwTypeTagsMap[tt.Type].add(tt.Tag);
     }
 
-    // Group NaturalWonderPosition rows by FeatureType preserving order of first appearance.
-    // First row per FeatureType = anchor tile; subsequent rows = secondary pre-condition tiles.
-    const nwOrder  = [];  // ordered list of featureType strings
-    const nwGroups = {};  // featureType -> { anchor: row, secondary: [row, ...] }
-    for (let i = 0; i < GameInfo.NaturalWonderPosition.length; ++i) {
-        const r = GameInfo.NaturalWonderPosition[i];
-        if (r.MapName != mapName) continue;
-        if (!nwGroups[r.FeatureType]) {
-            nwGroups[r.FeatureType] = { anchor: r, secondary: [] };
-            nwOrder.push(r.FeatureType);
-        } else {
-            nwGroups[r.FeatureType].secondary.push(r);
-        }
-    }
+    // Group source-map rows first, then transform them into local coordinates.
+    const { nwOrder, nwGroups } = buildNaturalWonderGroups(mapName, mapContext);
 
     for (let gi = 0; gi < nwOrder.length; gi++) {
         const featureType = nwOrder[gi];
@@ -937,14 +995,17 @@ export function placeCustomNaturalWonders(mapName) {
             if (searchRadius > 0) {
                 const iWidth  = GameplayMap.getGridWidth();
                 const iHeight = GameplayMap.getGridHeight();
+                const noWrapX = isEarthMapNoWrapX(mapContext);
                 // Collect candidates sorted by hex distance
                 const candidates = [];
                 for (let dy = -searchRadius; dy <= searchRadius; dy++) {
                     for (let dx = -searchRadius; dx <= searchRadius; dx++) {
                         if (dx === 0 && dy === 0) continue;
-                        const cx = ((row.X + dx) % iWidth + iWidth) % iWidth;
+                        const rawX = row.X + dx;
                         const cy = row.Y + dy;
                         if (cy < 0 || cy >= iHeight) continue;
+                        const cx = noWrapX ? rawX : ((rawX % iWidth) + iWidth) % iWidth;
+                        if (noWrapX && !isEarthMapPlayableLocalCoordinate(cx, cy, mapContext)) continue;
                         const dist = GameplayMap.getPlotDistance(row.X, row.Y, cx, cy);
                         if (dist > 0 && dist <= searchRadius) candidates.push({ x: cx, y: cy, dist });
                     }

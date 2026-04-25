@@ -369,7 +369,7 @@
 		<Replace MapName="GiantEarth" X="88" Y="48" FeatureType="FEATURE_ZHANGJIAJIE" />
 
 		<!-- FEATURE_THERA : shape=FOURPARALLELAGRM | terrain=COAST | biome=MARINE | tags: ADJACENTTOLAND, VOLCANO, SHALLOWWATER, NOTADJACENTTOICE — Santorini/Thera, Aegean Sea (coast confirmed) -->
-		<Replace MapName="GiantEarth" X="28" Y="53" FeatureType="FEATURE_THERA" />
+		<Replace MapName="GiantEarth" X="32" Y="52" FeatureType="FEATURE_THERA"   Direction="4"/>
 
 		<!-- FEATURE_TORRES_DEL_PAINE : shape=THREETRIANGLE | terrain=MOUNTAIN | biome=TUNDRA | tags: (none) — Patagonia, Chile (tundra_mountain confirmed) -->
 		<Replace MapName="GiantEarth" X="155" Y="6" FeatureType="FEATURE_TORRES_DEL_PAINE" />
@@ -382,7 +382,7 @@
 		<!-- =================================== -->
 
 		<!-- FEATURE_MOUNT_FUJI : shape=THREETRIANGLE | terrain=MOUNTAIN | biome=GRASSLAND | tags: VOLCANO — Honshu, Japan (near MEIJI TSL 96,58) -->
-		<Replace MapName="GiantEarth" X="97" Y="57" FeatureType="FEATURE_MOUNT_FUJI" />
+		<Replace MapName="GiantEarth" X="97" Y="61" FeatureType="FEATURE_MOUNT_FUJI" />
 
 		<!-- FEATURE_MACHAPUCHARE : shape=THREETRIANGLE | terrain=MOUNTAIN | biome=TROPICAL | tags: (none) — Annapurna, Nepal (snow_mountain at 67,53-54, near NEPAL TSL 68,52) -->
 		<Replace MapName="GiantEarth" X="67" Y="53" FeatureType="FEATURE_MACHAPUCHARE" />
@@ -391,17 +391,20 @@
 		<Replace MapName="GiantEarth" X="28" Y="62" FeatureType="FEATURE_VIHREN" />
 
 		<!-- FEATURE_VINICUNCA : shape=FOURPARALLELAGRM | terrain=MOUNTAIN | biome=DESERT | tags: (none) — Rainbow Mountain, Peru (plains_mountain confirmed at 154,23-24) -->
-		<Replace MapName="GiantEarth" X="154" Y="23" FeatureType="FEATURE_VINICUNCA" />
+		<Replace MapName="GiantEarth" X="156" Y="26" FeatureType="FEATURE_VINICUNCA" />
 
 		<!-- =================================== -->
 		<!-- WATER WONDERS DLC NATURAL WONDERS   -->
 		<!-- =================================== -->
 
 		<!-- FEATURE_GREAT_BLUE_HOLE : shape=ONE | terrain=COAST | biome=MARINE | tags: SHALLOWWATER, NOTADJACENTTOICE, ADJACENTTOSAMETERRAIN — Belize, Caribbean (near MAYA TSL 145,47) -->
-		<Replace MapName="GiantEarth" X="148" Y="45" FeatureType="FEATURE_GREAT_BLUE_HOLE" />
+		<Replace MapName="GiantEarth" X="148" Y="47" FeatureType="FEATURE_GREAT_BLUE_HOLE" />
 
 		<!-- FEATURE_MAPU_A_VAEA_BLOWHOLES : shape=TWO | terrain=COAST | biome=MARINE | tags: ADJACENTCLIFF, ADJACENTTOLAND, SHALLOWWATER, NOTADJACENTTOICE, NOLANDOPPOSITECLIFF — Tonga (near TONGA TSL 116,27) -->
-		<Replace MapName="GiantEarth" X="115" Y="25" FeatureType="FEATURE_MAPU_A_VAEA_BLOWHOLES" PreservePlacementRule="1" />
+		<Replace MapName="GiantEarth" X="108" Y="24" FeatureType="FEATURE_MAPU_A_VAEA_BLOWHOLES" PreservePlacementRule="1" />
+
+		<!-- FEATURE_BERMUDA_TRIANGLE : shape=THREETRIANGLEDEEPOCEAN | terrain=OCEAN | biome=MARINE | tags: NOTADJACENTTOLAND, ADJACENTTOCOAST — Bermuda Triangle, North Atlantic (open ocean east of the Bahamas) -->
+		<Replace MapName="GiantEarth" X="159" Y="50" FeatureType="FEATURE_BERMUDA_TRIANGLE" />
 
 	</NaturalWonderPosition>
 

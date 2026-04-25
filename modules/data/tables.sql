@@ -21,16 +21,22 @@ CREATE TABLE IF NOT EXISTS ResourceRegionExclude
 		
 -- Resources : Exclusive zones for resources
 CREATE TABLE IF NOT EXISTS ResourceRegionExclusive
-	(	Region TEXT,
-		Resource TEXT);	
+	(	Resource TEXT,
+		Region TEXT);	
 		
 -- Resources : Regions of Major Deposits
 CREATE TABLE IF NOT EXISTS ResourceRegionDeposit
-	(	Region TEXT,
-		Resource TEXT,
+	(	Resource TEXT,
+		Region TEXT,
 		Deposit TEXT,
 		MinYield INT default 1,
 		MaxYield INT default 1);
+
+-- Resources : Replacement priority metadata for removed-plot restoration
+CREATE TABLE IF NOT EXISTS ResourcePlacementPriority
+	(	Resource TEXT,
+		Tier TEXT,
+		Priority INT default 0);
 		
 -- Resources : Requested for each Civilization
 CREATE TABLE IF NOT EXISTS CivilizationRequestedResource

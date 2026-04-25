@@ -131,7 +131,6 @@
 		<Replace MapName="GreatestEarthMap" X="21" Y="20"	TerrainType="TERRAIN_MOUNTAIN" FeatureType="FEATURE_VOLCANO" />
 		<Replace MapName="GreatestEarthMap" X="84" Y="26"	TerrainType="TERRAIN_MOUNTAIN" FeatureType="FEATURE_VOLCANO" />
 		<Replace MapName="GreatestEarthMap" X="65" Y="44"	TerrainType="TERRAIN_MOUNTAIN" FeatureType="FEATURE_VOLCANO" />
-		<Replace MapName="GreatestEarthMap" X="100" Y="50"	TerrainType="TERRAIN_MOUNTAIN" FeatureType="FEATURE_VOLCANO" />
 		<Replace MapName="GreatestEarthMap" X="16" Y="30"	TerrainType="TERRAIN_MOUNTAIN" FeatureType="FEATURE_VOLCANO" />
 		<Replace MapName="GreatestEarthMap" X="30" Y="30"	TerrainType="TERRAIN_MOUNTAIN" FeatureType="FEATURE_VOLCANO" />
 		<Replace MapName="GreatestEarthMap" X="22" Y="23"	TerrainType="TERRAIN_MOUNTAIN" FeatureType="FEATURE_VOLCANO" />
@@ -292,7 +291,7 @@
 		<!-- =================================== -->
 
 		<!-- FEATURE_MOUNT_FUJI : shape=THREETRIANGLE | terrain=MOUNTAIN | biome=GRASSLAND | tags: VOLCANO — Honshu, Japan (near MEIJI TSL 98,48) -->
-		<Replace MapName="GreatestEarthMap" X="98" Y="49" FeatureType="FEATURE_MOUNT_FUJI" Direction="2" SearchRadius="1" />
+		<Replace MapName="GreatestEarthMap" X="99" Y="50" FeatureType="FEATURE_MOUNT_FUJI" Direction="1" SearchRadius="1" />
 
 		<!-- FEATURE_MACHAPUCHARE : shape=THREETRIANGLE | terrain=MOUNTAIN | biome=TROPICAL | tags: (none) — Annapurna, Nepal (near NEPAL TSL 76,41) -->
 		<Replace MapName="GreatestEarthMap" X="76" Y="41" FeatureType="FEATURE_MACHAPUCHARE" SearchRadius="1" />
@@ -312,6 +311,9 @@
 
 		<!-- FEATURE_MAPU_A_VAEA_BLOWHOLES : shape=TWO | terrain=COAST | biome=MARINE | tags: ADJACENTCLIFF, ADJACENTTOLAND, SHALLOWWATER, NOTADJACENTTOICE, NOLANDOPPOSITECLIFF — Tonga, Pacific (near TONGA TSL 3,16) -->
 		<Replace MapName="GreatestEarthMap" X="2" Y="15" FeatureType="FEATURE_MAPU_A_VAEA_BLOWHOLES" PreservePlacementRule="1" Direction="5" SearchRadius="12" />
+
+		<!-- FEATURE_BERMUDA_TRIANGLE : shape=THREETRIANGLEDEEPOCEAN | terrain=OCEAN | biome=MARINE | tags: NOTADJACENTTOLAND, ADJACENTTOCOAST — Bermuda Triangle, North Atlantic (open ocean east of the Bahamas) -->
+		<Replace MapName="GreatestEarthMap" X="31" Y="37" FeatureType="FEATURE_BERMUDA_TRIANGLE" />
 
 	</NaturalWonderPosition>
 </Database>

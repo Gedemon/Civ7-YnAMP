@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Database>
+	<!--
+		YnAMP final realism resource rules.
+		Covers all matrix-backed Regional and Multi-area resources.
+		Resource is the first field in both schema-facing comments and XML rows.
+	-->
+
+    <!--
+        ResourceRegionExclusive Purpose:
+        Declare resources that are region-specific.
+        Each <Row> maps a Resource to a Region, telling the regional placement/cleanup logic that this Resource belongs (or should be prioritized) in that Region.
+        Attributes: 
+         - Resource: e.g. RESOURCE_CAMELS 
+         - Region: e.g. NORTH_AFRICA 
+        Notes:
+         - Use one <Row> per Region->Resource mapping.
+         - Multiple rows for the same Resource allow that resource in multiple regions.
+    -->
+	<ResourceRegionExclusive>
+		<!-- Antiquity-start resources -->
+		<Row Resource="RESOURCE_CAMELS" Region="NORTH_AFRICA"/>
+		<Row Resource="RESOURCE_CAMELS" Region="MIDDLE_EAST"/>
+		<Row Resource="RESOURCE_CAMELS" Region="CENTRAL_ASIA"/>
+		<Row Resource="RESOURCE_COTTON" Region="NORTH_AFRICA"/>
+		<Row Resource="RESOURCE_COTTON" Region="SOUTH_ASIA"/>
+		<Row Resource="RESOURCE_COTTON" Region="CENTRAL_AFRICA"/>
+		<Row Resource="RESOURCE_COTTON" Region="CENTRAL_AMERICA"/>
+		<Row Resource="RESOURCE_COTTON" Region="SOUTH_AMERICA_EAST"/>
+		<Row Resource="RESOURCE_COWRIE" Region="SOUTH_ASIA"/>
+		<Row Resource="RESOURCE_COWRIE" Region="EAST_ASIA"/>
+		<Row Resource="RESOURCE_COWRIE" Region="MADAGASCAR"/>
+		<Row Resource="RESOURCE_COWRIE" Region="OCEANIA"/>
+		<Row Resource="RESOURCE_DATES" Region="NORTH_AFRICA"/>
+		<Row Resource="RESOURCE_DATES" Region="MIDDLE_EAST"/>
+		<Row Resource="RESOURCE_DYES" Region="MEDITERRANEAN"/>
+		<Row Resource="RESOURCE_DYES" Region="MIDDLE_EAST"/>
+		<Row Resource="RESOURCE_DYES" Region="SOUTH_ASIA"/>
+		<Row Resource="RESOURCE_DYES" Region="EAST_ASIA"/>
+		<Row Resource="RESOURCE_FLAX" Region="NORTH_EUROPA"/>
+		<Row Resource="RESOURCE_FLAX" Region="WEST_EUROPA"/>
+		<Row Resource="RESOURCE_FLAX" Region="EAST_EUROPA"/>
+		<Row Resource="RESOURCE_FLAX" Region="CENTRAL_ASIA"/>
+		<Row Resource="RESOURCE_GYPSUM" Region="NORTH_AFRICA"/>
+		<Row Resource="RESOURCE_GYPSUM" Region="MIDDLE_EAST"/>
+		<Row Resource="RESOURCE_GYPSUM" Region="SOUTH_EUROPA"/>
+		<Row Resource="RESOURCE_GYPSUM" Region="CENTRAL_AMERICA"/>
+		<Row Resource="RESOURCE_GYPSUM" Region="SOUTH_AMERICA_WEST"/>
+		<Row Resource="RESOURCE_INCENSE" Region="MIDDLE_EAST"/>
+		<Row Resource="RESOURCE_INCENSE" Region="SOUTH_ASIA"/>
+		<Row Resource="RESOURCE_INCENSE" Region="EAST_ASIA"/>
+		<Row Resource="RESOURCE_INCENSE" Region="MADAGASCAR"/>
+		<Row Resource="RESOURCE_IVORY" Region="CENTRAL_AFRICA"/>
+		<Row Resource="RESOURCE_IVORY" Region="SOUTH_AFRICA"/>
+		<Row Resource="RESOURCE_IVORY" Region="SOUTH_ASIA"/>
+		<Row Resource="RESOURCE_JADE" Region="EAST_ASIA"/>
+		<Row Resource="RESOURCE_JADE" Region="CENTRAL_AMERICA"/>
+		<Row Resource="RESOURCE_KAOLIN" Region="EAST_ASIA"/>
+		<Row Resource="RESOURCE_KAOLIN" Region="MEDITERRANEAN"/>
+		<Row Resource="RESOURCE_KAOLIN" Region="CENTRAL_AMERICA"/>
+		<Row Resource="RESOURCE_KAOLIN" Region="SOUTH_AMERICA_EAST"/>
+		<Row Resource="RESOURCE_LAPIS_LAZULI" Region="MIDDLE_EAST"/>
+		<Row Resource="RESOURCE_LAPIS_LAZULI" Region="CENTRAL_ASIA"/>
+		<Row Resource="RESOURCE_LIMESTONE" Region="MEDITERRANEAN"/>
+		<Row Resource="RESOURCE_LIMESTONE" Region="NORTH_AFRICA"/>
+		<Row Resource="RESOURCE_LIMESTONE" Region="SOUTH_ASIA"/>
+		<Row Resource="RESOURCE_LIMESTONE" Region="CENTRAL_AMERICA"/>
+		<Row Resource="RESOURCE_LLAMAS" Region="SOUTH_AMERICA_WEST"/>
+		<Row Resource="RESOURCE_MANGOS" Region="CENTRAL_AMERICA"/>
+		<Row Resource="RESOURCE_MANGOS" Region="SOUTH_AMERICA_EAST"/>
+		<Row Resource="RESOURCE_MANGOS" Region="SOUTH_ASIA"/>
+		<Row Resource="RESOURCE_MANGOS" Region="EAST_ASIA"/>
+		<Row Resource="RESOURCE_MANGOS" Region="OCEANIA"/>
+		<Row Resource="RESOURCE_MARBLE" Region="MEDITERRANEAN"/>
+		<Row Resource="RESOURCE_MARBLE" Region="TURKEY"/>
+		<Row Resource="RESOURCE_MARBLE" Region="SOUTH_EUROPA"/>
+		<Row Resource="RESOURCE_MARBLE" Region="SOUTH_ASIA"/>
+		<Row Resource="RESOURCE_MARBLE" Region="CENTRAL_AMERICA"/>
+		<Row Resource="RESOURCE_PEARLS" Region="MIDDLE_EAST"/>
+		<Row Resource="RESOURCE_PEARLS" Region="SOUTH_ASIA"/>
+		<Row Resource="RESOURCE_PEARLS" Region="EAST_ASIA"/>
+		<Row Resource="RESOURCE_PEARLS" Region="OCEANIA"/>
+		<Row Resource="RESOURCE_PEARLS" Region="AUSTRALIA"/>
+		<Row Resource="RESOURCE_RUBIES" Region="SOUTH_ASIA"/>
+		<Row Resource="RESOURCE_RUBIES" Region="MIDDLE_EAST"/>
+		<Row Resource="RESOURCE_RUBIES" Region="CENTRAL_AFRICA"/>
+		<Row Resource="RESOURCE_RUBIES" Region="CENTRAL_AMERICA"/>
+		<Row Resource="RESOURCE_SILK" Region="EAST_ASIA"/>
+		<Row Resource="RESOURCE_SILK" Region="SOUTH_ASIA"/>
+		<Row Resource="RESOURCE_SILK" Region="CENTRAL_ASIA"/>
+		<Row Resource="RESOURCE_TIN" Region="SOUTH_ASIA"/>
+		<Row Resource="RESOURCE_TIN" Region="EAST_ASIA"/>
+		<Row Resource="RESOURCE_TIN" Region="CENTRAL_AFRICA"/>
+		<Row Resource="RESOURCE_TIN" Region="CENTRAL_AMERICA"/>
+		<Row Resource="RESOURCE_TURTLES" Region="CENTRAL_AMERICA"/>
+		<Row Resource="RESOURCE_TURTLES" Region="SOUTH_AMERICA_EAST"/>
+		<Row Resource="RESOURCE_TURTLES" Region="SOUTH_ASIA"/>
+		<Row Resource="RESOURCE_TURTLES" Region="OCEANIA"/>
+		<Row Resource="RESOURCE_TURTLES" Region="AUSTRALIA"/>
+		<Row Resource="RESOURCE_WILD_GAME" Region="NORTH_AMERICA"/>
+		<Row Resource="RESOURCE_WILD_GAME" Region="EAST_EUROPA"/>
+		<Row Resource="RESOURCE_WILD_GAME" Region="CENTRAL_ASIA"/>
+		<Row Resource="RESOURCE_WILD_GAME" Region="EAST_ASIA"/>
+		<Row Resource="RESOURCE_WILD_GAME" Region="CENTRAL_AFRICA"/>
+		<Row Resource="RESOURCE_WINE" Region="MEDITERRANEAN"/>
+		<Row Resource="RESOURCE_WINE" Region="SOUTH_EUROPA"/>
+		<Row Resource="RESOURCE_WINE" Region="WEST_EUROPA"/>
+		<Row Resource="RESOURCE_WINE" Region="EAST_EUROPA"/>
+		<Row Resource="RESOURCE_WINE" Region="TURKEY"/>
+		<Row Resource="RESOURCE_WINE" Region="CENTRAL_AMERICA"/>
+		<Row Resource="RESOURCE_WINE" Region="SOUTH_AMERICA_WEST"/>
+
+		<!-- Exploration-start resources -->
+		<Row Resource="RESOURCE_CLOVES" Region="SOUTH_ASIA"/>
+		<Row Resource="RESOURCE_CLOVES" Region="OCEANIA"/>
+		<Row Resource="RESOURCE_COCOA" Region="CENTRAL_AMERICA"/>
+		<Row Resource="RESOURCE_COCOA" Region="SOUTH_AMERICA_EAST"/>
+		<Row Resource="RESOURCE_COCOA" Region="CENTRAL_AFRICA"/>
+		<Row Resource="RESOURCE_COCOA" Region="OCEANIA"/>
+		<Row Resource="RESOURCE_FURS" Region="NORTH_AMERICA"/>
+		<Row Resource="RESOURCE_FURS" Region="ARCTIC_AMERICA"/>
+		<Row Resource="RESOURCE_FURS" Region="NORTH_EUROPA"/>
+		<Row Resource="RESOURCE_FURS" Region="NORTH_ASIA"/>
+		<Row Resource="RESOURCE_PITCH" Region="NORTH_AMERICA"/>
+		<Row Resource="RESOURCE_PITCH" Region="NORTH_EUROPA"/>
+		<Row Resource="RESOURCE_PITCH" Region="NORTH_ASIA"/>
+		<Row Resource="RESOURCE_PITCH" Region="EAST_ASIA"/>
+		<Row Resource="RESOURCE_SPICES" Region="SOUTH_ASIA"/>
+		<Row Resource="RESOURCE_SPICES" Region="EAST_ASIA"/>
+		<Row Resource="RESOURCE_SPICES" Region="CENTRAL_AFRICA"/>
+		<Row Resource="RESOURCE_SPICES" Region="MADAGASCAR"/>
+		<Row Resource="RESOURCE_SPICES" Region="OCEANIA"/>
+		<Row Resource="RESOURCE_SUGAR" Region="CENTRAL_AMERICA"/>
+		<Row Resource="RESOURCE_SUGAR" Region="SOUTH_AMERICA_EAST"/>
+		<Row Resource="RESOURCE_SUGAR" Region="SOUTH_ASIA"/>
+		<Row Resource="RESOURCE_SUGAR" Region="EAST_ASIA"/>
+		<Row Resource="RESOURCE_SUGAR" Region="OCEANIA"/>
+		<Row Resource="RESOURCE_TEA" Region="EAST_ASIA"/>
+		<Row Resource="RESOURCE_TEA" Region="SOUTH_ASIA"/>
+		<Row Resource="RESOURCE_TRUFFLES" Region="WEST_EUROPA"/>
+		<Row Resource="RESOURCE_TRUFFLES" Region="SOUTH_EUROPA"/>
+		<Row Resource="RESOURCE_TRUFFLES" Region="TURKEY"/>
+		<Row Resource="RESOURCE_TRUFFLES" Region="EAST_ASIA"/>
+		<Row Resource="RESOURCE_WHALES" Region="NORTH_AMERICA"/>
+		<Row Resource="RESOURCE_WHALES" Region="ARCTIC_AMERICA"/>
+		<Row Resource="RESOURCE_WHALES" Region="SOUTH_AMERICA_WEST"/>
+		<Row Resource="RESOURCE_WHALES" Region="AUSTRALIA"/>
+		<Row Resource="RESOURCE_WHALES" Region="OCEANIA"/>
+
+		<!-- Modern-start resources -->
+		<Row Resource="RESOURCE_CITRUS" Region="MEDITERRANEAN"/>
+		<Row Resource="RESOURCE_CITRUS" Region="NORTH_AFRICA"/>
+		<Row Resource="RESOURCE_CITRUS" Region="CENTRAL_AMERICA"/>
+		<Row Resource="RESOURCE_CITRUS" Region="SOUTH_AMERICA_EAST"/>
+		<Row Resource="RESOURCE_CITRUS" Region="AUSTRALIA"/>
+		<Row Resource="RESOURCE_COFFEE" Region="MIDDLE_EAST"/>
+		<Row Resource="RESOURCE_COFFEE" Region="SOUTH_ASIA"/>
+		<Row Resource="RESOURCE_COFFEE" Region="CENTRAL_AMERICA"/>
+		<Row Resource="RESOURCE_COFFEE" Region="SOUTH_AMERICA_WEST"/>
+		<Row Resource="RESOURCE_COFFEE" Region="EAST_ASIA"/>
+		<Row Resource="RESOURCE_NICKEL" Region="NORTH_AMERICA"/>
+		<Row Resource="RESOURCE_NICKEL" Region="NORTH_ASIA"/>
+		<Row Resource="RESOURCE_NICKEL" Region="AUSTRALIA"/>
+		<Row Resource="RESOURCE_NICKEL" Region="OCEANIA"/>
+		<Row Resource="RESOURCE_OIL" Region="MIDDLE_EAST"/>
+		<Row Resource="RESOURCE_OIL" Region="CENTRAL_ASIA"/>
+		<Row Resource="RESOURCE_OIL" Region="NORTH_AFRICA"/>
+		<Row Resource="RESOURCE_OIL" Region="NORTH_AMERICA"/>
+		<Row Resource="RESOURCE_OIL" Region="SOUTH_AMERICA_EAST"/>
+		<Row Resource="RESOURCE_QUININE" Region="SOUTH_AMERICA_WEST"/>
+		<Row Resource="RESOURCE_QUININE" Region="CENTRAL_AFRICA"/>
+		<Row Resource="RESOURCE_QUININE" Region="SOUTH_ASIA"/>
+		<Row Resource="RESOURCE_QUININE" Region="MADAGASCAR"/>
+		<Row Resource="RESOURCE_RUBBER" Region="SOUTH_AMERICA_EAST"/>
+		<Row Resource="RESOURCE_RUBBER" Region="CENTRAL_AFRICA"/>
+		<Row Resource="RESOURCE_RUBBER" Region="EAST_ASIA"/>
+		<Row Resource="RESOURCE_RUBBER" Region="OCEANIA"/>
+		<Row Resource="RESOURCE_TOBACCO" Region="NORTH_AMERICA"/>
+		<Row Resource="RESOURCE_TOBACCO" Region="CENTRAL_AMERICA"/>
+		<Row Resource="RESOURCE_TOBACCO" Region="SOUTH_AMERICA_EAST"/>
+		<Row Resource="RESOURCE_TOBACCO" Region="SOUTH_EUROPA"/>
+	</ResourceRegionExclusive>
+
+    <!-- 
+        ResourceRegionDeposit Purpose: Specify deposit/profile used when placing a Resource in a Region.
+        Attributes:
+		- Resource: resource code
+		- Region: named region identifier
+        - Deposit: deposit template to use (affects appearance/placement rules)
+        - MinYield: minimum resource yield for placed deposit
+        - MaxYield: maximum resource yield for placed deposit
+        Notes:
+        - Use to control local abundance and deposit templates per-region.
+        - Ensure Deposit names match available deposit templates used by the placement system. 
+    -->
+	<ResourceRegionDeposit>
+		<!-- Antiquity-start resources -->
+		<Row Resource="RESOURCE_CAMELS" Region="NORTH_AFRICA" Deposit="NORTH_AFRICA" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_CAMELS" Region="MIDDLE_EAST" Deposit="MIDDLE_EAST" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_CAMELS" Region="CENTRAL_ASIA" Deposit="CENTRAL_ASIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_COTTON" Region="NORTH_AFRICA" Deposit="NORTH_AFRICA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_COTTON" Region="SOUTH_ASIA" Deposit="SOUTH_ASIA" MinYield="2" MaxYield="4"/>
+		<Row Resource="RESOURCE_COTTON" Region="CENTRAL_AFRICA" Deposit="CENTRAL_AFRICA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_COTTON" Region="CENTRAL_AMERICA" Deposit="CENTRAL_AMERICA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_COTTON" Region="SOUTH_AMERICA_EAST" Deposit="SOUTH_AMERICA_EAST" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_COWRIE" Region="SOUTH_ASIA" Deposit="SOUTH_ASIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_COWRIE" Region="EAST_ASIA" Deposit="EAST_ASIA" MinYield="1" MaxYield="1"/>
+		<Row Resource="RESOURCE_COWRIE" Region="MADAGASCAR" Deposit="MADAGASCAR" MinYield="1" MaxYield="1"/>
+		<Row Resource="RESOURCE_COWRIE" Region="OCEANIA" Deposit="OCEANIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_DATES" Region="NORTH_AFRICA" Deposit="NORTH_AFRICA" MinYield="2" MaxYield="4"/>
+		<Row Resource="RESOURCE_DATES" Region="MIDDLE_EAST" Deposit="MIDDLE_EAST" MinYield="2" MaxYield="4"/>
+		<Row Resource="RESOURCE_DYES" Region="MEDITERRANEAN" Deposit="MEDITERRANEAN" MinYield="2" MaxYield="4"/>
+		<Row Resource="RESOURCE_DYES" Region="MIDDLE_EAST" Deposit="MIDDLE_EAST" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_DYES" Region="SOUTH_ASIA" Deposit="SOUTH_ASIA" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_DYES" Region="EAST_ASIA" Deposit="EAST_ASIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_FLAX" Region="NORTH_EUROPA" Deposit="NORTH_EUROPA" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_FLAX" Region="WEST_EUROPA" Deposit="WEST_EUROPA" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_FLAX" Region="EAST_EUROPA" Deposit="EAST_EUROPA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_FLAX" Region="CENTRAL_ASIA" Deposit="CENTRAL_ASIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_GYPSUM" Region="NORTH_AFRICA" Deposit="NORTH_AFRICA" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_GYPSUM" Region="MIDDLE_EAST" Deposit="MIDDLE_EAST" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_GYPSUM" Region="SOUTH_EUROPA" Deposit="SOUTH_EUROPA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_GYPSUM" Region="CENTRAL_AMERICA" Deposit="CENTRAL_AMERICA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_GYPSUM" Region="SOUTH_AMERICA_WEST" Deposit="SOUTH_AMERICA_WEST" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_INCENSE" Region="MIDDLE_EAST" Deposit="MIDDLE_EAST" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_INCENSE" Region="SOUTH_ASIA" Deposit="SOUTH_ASIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_INCENSE" Region="EAST_ASIA" Deposit="EAST_ASIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_INCENSE" Region="MADAGASCAR" Deposit="MADAGASCAR" MinYield="1" MaxYield="1"/>
+		<Row Resource="RESOURCE_IVORY" Region="CENTRAL_AFRICA" Deposit="CENTRAL_AFRICA" MinYield="3" MaxYield="5"/>
+		<Row Resource="RESOURCE_IVORY" Region="SOUTH_AFRICA" Deposit="SOUTH_AFRICA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_IVORY" Region="SOUTH_ASIA" Deposit="SOUTH_ASIA" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_JADE" Region="EAST_ASIA" Deposit="EAST_ASIA" MinYield="2" MaxYield="4"/>
+		<Row Resource="RESOURCE_JADE" Region="CENTRAL_AMERICA" Deposit="CENTRAL_AMERICA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_KAOLIN" Region="EAST_ASIA" Deposit="EAST_ASIA" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_KAOLIN" Region="MEDITERRANEAN" Deposit="MEDITERRANEAN" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_KAOLIN" Region="CENTRAL_AMERICA" Deposit="CENTRAL_AMERICA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_KAOLIN" Region="SOUTH_AMERICA_EAST" Deposit="SOUTH_AMERICA_EAST" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_LAPIS_LAZULI" Region="MIDDLE_EAST" Deposit="MIDDLE_EAST" MinYield="1" MaxYield="1"/>
+		<Row Resource="RESOURCE_LAPIS_LAZULI" Region="CENTRAL_ASIA" Deposit="CENTRAL_ASIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_LIMESTONE" Region="MEDITERRANEAN" Deposit="MEDITERRANEAN" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_LIMESTONE" Region="NORTH_AFRICA" Deposit="NORTH_AFRICA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_LIMESTONE" Region="SOUTH_ASIA" Deposit="SOUTH_ASIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_LIMESTONE" Region="CENTRAL_AMERICA" Deposit="CENTRAL_AMERICA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_LLAMAS" Region="SOUTH_AMERICA_WEST" Deposit="SOUTH_AMERICA_WEST" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_MANGOS" Region="CENTRAL_AMERICA" Deposit="CENTRAL_AMERICA" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_MANGOS" Region="SOUTH_AMERICA_EAST" Deposit="SOUTH_AMERICA_EAST" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_MANGOS" Region="SOUTH_ASIA" Deposit="SOUTH_ASIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_MANGOS" Region="EAST_ASIA" Deposit="EAST_ASIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_MANGOS" Region="OCEANIA" Deposit="OCEANIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_MARBLE" Region="MEDITERRANEAN" Deposit="MEDITERRANEAN" MinYield="2" MaxYield="4"/>
+		<Row Resource="RESOURCE_MARBLE" Region="TURKEY" Deposit="TURKEY" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_MARBLE" Region="SOUTH_EUROPA" Deposit="SOUTH_EUROPA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_MARBLE" Region="SOUTH_ASIA" Deposit="SOUTH_ASIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_MARBLE" Region="CENTRAL_AMERICA" Deposit="CENTRAL_AMERICA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_PEARLS" Region="MIDDLE_EAST" Deposit="MIDDLE_EAST" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_PEARLS" Region="SOUTH_ASIA" Deposit="SOUTH_ASIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_PEARLS" Region="EAST_ASIA" Deposit="EAST_ASIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_PEARLS" Region="OCEANIA" Deposit="OCEANIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_PEARLS" Region="AUSTRALIA" Deposit="AUSTRALIA" MinYield="1" MaxYield="1"/>
+		<Row Resource="RESOURCE_RUBIES" Region="SOUTH_ASIA" Deposit="SOUTH_ASIA" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_RUBIES" Region="MIDDLE_EAST" Deposit="MIDDLE_EAST" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_RUBIES" Region="CENTRAL_AFRICA" Deposit="CENTRAL_AFRICA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_RUBIES" Region="CENTRAL_AMERICA" Deposit="CENTRAL_AMERICA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_SILK" Region="EAST_ASIA" Deposit="EAST_ASIA" MinYield="3" MaxYield="5"/>
+		<Row Resource="RESOURCE_SILK" Region="SOUTH_ASIA" Deposit="SOUTH_ASIA" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_SILK" Region="CENTRAL_ASIA" Deposit="CENTRAL_ASIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_TIN" Region="SOUTH_ASIA" Deposit="SOUTH_ASIA" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_TIN" Region="EAST_ASIA" Deposit="EAST_ASIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_TIN" Region="CENTRAL_AFRICA" Deposit="CENTRAL_AFRICA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_TIN" Region="CENTRAL_AMERICA" Deposit="CENTRAL_AMERICA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_TURTLES" Region="CENTRAL_AMERICA" Deposit="CENTRAL_AMERICA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_TURTLES" Region="SOUTH_AMERICA_EAST" Deposit="SOUTH_AMERICA_EAST" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_TURTLES" Region="SOUTH_ASIA" Deposit="SOUTH_ASIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_TURTLES" Region="OCEANIA" Deposit="OCEANIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_TURTLES" Region="AUSTRALIA" Deposit="AUSTRALIA" MinYield="1" MaxYield="1"/>
+		<Row Resource="RESOURCE_WILD_GAME" Region="NORTH_AMERICA" Deposit="NORTH_AMERICA" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_WILD_GAME" Region="EAST_EUROPA" Deposit="EAST_EUROPA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_WILD_GAME" Region="CENTRAL_ASIA" Deposit="CENTRAL_ASIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_WILD_GAME" Region="EAST_ASIA" Deposit="EAST_ASIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_WILD_GAME" Region="CENTRAL_AFRICA" Deposit="CENTRAL_AFRICA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_WINE" Region="MEDITERRANEAN" Deposit="MEDITERRANEAN" MinYield="2" MaxYield="4"/>
+		<Row Resource="RESOURCE_WINE" Region="SOUTH_EUROPA" Deposit="SOUTH_EUROPA" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_WINE" Region="WEST_EUROPA" Deposit="WEST_EUROPA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_WINE" Region="EAST_EUROPA" Deposit="EAST_EUROPA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_WINE" Region="TURKEY" Deposit="TURKEY" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_WINE" Region="CENTRAL_AMERICA" Deposit="CENTRAL_AMERICA" MinYield="1" MaxYield="1"/>
+		<Row Resource="RESOURCE_WINE" Region="SOUTH_AMERICA_WEST" Deposit="SOUTH_AMERICA_WEST" MinYield="1" MaxYield="2"/>
+
+		<!-- Exploration-start resources -->
+		<Row Resource="RESOURCE_CLOVES" Region="SOUTH_ASIA" Deposit="SOUTH_ASIA" MinYield="1" MaxYield="1"/>
+		<Row Resource="RESOURCE_CLOVES" Region="OCEANIA" Deposit="OCEANIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_COCOA" Region="CENTRAL_AMERICA" Deposit="CENTRAL_AMERICA" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_COCOA" Region="SOUTH_AMERICA_EAST" Deposit="SOUTH_AMERICA_EAST" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_COCOA" Region="CENTRAL_AFRICA" Deposit="CENTRAL_AFRICA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_COCOA" Region="OCEANIA" Deposit="OCEANIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_FURS" Region="NORTH_AMERICA" Deposit="NORTH_AMERICA" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_FURS" Region="ARCTIC_AMERICA" Deposit="ARCTIC_AMERICA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_FURS" Region="NORTH_EUROPA" Deposit="NORTH_EUROPA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_FURS" Region="NORTH_ASIA" Deposit="NORTH_ASIA" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_PITCH" Region="NORTH_AMERICA" Deposit="NORTH_AMERICA" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_PITCH" Region="NORTH_EUROPA" Deposit="NORTH_EUROPA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_PITCH" Region="NORTH_ASIA" Deposit="NORTH_ASIA" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_PITCH" Region="EAST_ASIA" Deposit="EAST_ASIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_SPICES" Region="SOUTH_ASIA" Deposit="SOUTH_ASIA" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_SPICES" Region="EAST_ASIA" Deposit="EAST_ASIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_SPICES" Region="CENTRAL_AFRICA" Deposit="CENTRAL_AFRICA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_SPICES" Region="MADAGASCAR" Deposit="MADAGASCAR" MinYield="1" MaxYield="1"/>
+		<Row Resource="RESOURCE_SPICES" Region="OCEANIA" Deposit="OCEANIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_SUGAR" Region="CENTRAL_AMERICA" Deposit="CENTRAL_AMERICA" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_SUGAR" Region="SOUTH_AMERICA_EAST" Deposit="SOUTH_AMERICA_EAST" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_SUGAR" Region="SOUTH_ASIA" Deposit="SOUTH_ASIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_SUGAR" Region="EAST_ASIA" Deposit="EAST_ASIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_SUGAR" Region="OCEANIA" Deposit="OCEANIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_TEA" Region="EAST_ASIA" Deposit="EAST_ASIA" MinYield="3" MaxYield="5"/>
+		<Row Resource="RESOURCE_TEA" Region="SOUTH_ASIA" Deposit="SOUTH_ASIA" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_TRUFFLES" Region="WEST_EUROPA" Deposit="WEST_EUROPA" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_TRUFFLES" Region="SOUTH_EUROPA" Deposit="SOUTH_EUROPA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_TRUFFLES" Region="TURKEY" Deposit="TURKEY" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_TRUFFLES" Region="EAST_ASIA" Deposit="EAST_ASIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_WHALES" Region="NORTH_AMERICA" Deposit="NORTH_AMERICA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_WHALES" Region="ARCTIC_AMERICA" Deposit="ARCTIC_AMERICA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_WHALES" Region="SOUTH_AMERICA_WEST" Deposit="SOUTH_AMERICA_WEST" MinYield="1" MaxYield="1"/>
+		<Row Resource="RESOURCE_WHALES" Region="AUSTRALIA" Deposit="AUSTRALIA" MinYield="1" MaxYield="1"/>
+		<Row Resource="RESOURCE_WHALES" Region="OCEANIA" Deposit="OCEANIA" MinYield="1" MaxYield="2"/>
+
+		<!-- Modern-start resources -->
+		<Row Resource="RESOURCE_CITRUS" Region="MEDITERRANEAN" Deposit="MEDITERRANEAN" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_CITRUS" Region="NORTH_AFRICA" Deposit="NORTH_AFRICA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_CITRUS" Region="CENTRAL_AMERICA" Deposit="CENTRAL_AMERICA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_CITRUS" Region="SOUTH_AMERICA_EAST" Deposit="SOUTH_AMERICA_EAST" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_CITRUS" Region="AUSTRALIA" Deposit="AUSTRALIA" MinYield="1" MaxYield="1"/>
+		<Row Resource="RESOURCE_COFFEE" Region="MIDDLE_EAST" Deposit="MIDDLE_EAST" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_COFFEE" Region="SOUTH_ASIA" Deposit="SOUTH_ASIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_COFFEE" Region="CENTRAL_AMERICA" Deposit="CENTRAL_AMERICA" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_COFFEE" Region="SOUTH_AMERICA_WEST" Deposit="SOUTH_AMERICA_WEST" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_COFFEE" Region="EAST_ASIA" Deposit="EAST_ASIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_NICKEL" Region="NORTH_AMERICA" Deposit="NORTH_AMERICA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_NICKEL" Region="NORTH_ASIA" Deposit="NORTH_ASIA" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_NICKEL" Region="AUSTRALIA" Deposit="AUSTRALIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_NICKEL" Region="OCEANIA" Deposit="OCEANIA" MinYield="1" MaxYield="1"/>
+		<Row Resource="RESOURCE_OIL" Region="MIDDLE_EAST" Deposit="MIDDLE_EAST" MinYield="3" MaxYield="5"/>
+		<Row Resource="RESOURCE_OIL" Region="CENTRAL_ASIA" Deposit="CENTRAL_ASIA" MinYield="2" MaxYield="4"/>
+		<Row Resource="RESOURCE_OIL" Region="NORTH_AFRICA" Deposit="NORTH_AFRICA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_OIL" Region="NORTH_AMERICA" Deposit="NORTH_AMERICA" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_OIL" Region="SOUTH_AMERICA_EAST" Deposit="SOUTH_AMERICA_EAST" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_QUININE" Region="SOUTH_AMERICA_WEST" Deposit="SOUTH_AMERICA_WEST" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_QUININE" Region="CENTRAL_AFRICA" Deposit="CENTRAL_AFRICA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_QUININE" Region="SOUTH_ASIA" Deposit="SOUTH_ASIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_QUININE" Region="MADAGASCAR" Deposit="MADAGASCAR" MinYield="1" MaxYield="1"/>
+		<Row Resource="RESOURCE_RUBBER" Region="SOUTH_AMERICA_EAST" Deposit="SOUTH_AMERICA_EAST" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_RUBBER" Region="CENTRAL_AFRICA" Deposit="CENTRAL_AFRICA" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_RUBBER" Region="EAST_ASIA" Deposit="EAST_ASIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_RUBBER" Region="OCEANIA" Deposit="OCEANIA" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_TOBACCO" Region="NORTH_AMERICA" Deposit="NORTH_AMERICA" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_TOBACCO" Region="CENTRAL_AMERICA" Deposit="CENTRAL_AMERICA" MinYield="2" MaxYield="3"/>
+		<Row Resource="RESOURCE_TOBACCO" Region="SOUTH_AMERICA_EAST" Deposit="SOUTH_AMERICA_EAST" MinYield="1" MaxYield="2"/>
+		<Row Resource="RESOURCE_TOBACCO" Region="SOUTH_EUROPA" Deposit="SOUTH_EUROPA" MinYield="1" MaxYield="1"/>
+	</ResourceRegionDeposit>
+
+    <!--
+        ResourcePlacementPriority Purpose: Define placement ordering and fallback tiers for resources.
+        Attributes:
+        - Resource: resource code
+        - Tier: placement category (e.g., REGIONAL_PRIORITY, GLOBAL_FALLBACK)
+        - Priority: integer ordering (lower numbers run earlier/have higher priority)
+        Notes:
+        - Use REGIONAL_PRIORITY for curated regional deposits (place first).
+        - Use GLOBAL_FALLBACK for later-placement resources or distant-lands fallbacks.
+        - Priority is used to sort within a Tier; 0 is highest priority.
+    -->
+	<ResourcePlacementPriority>
+		<Row Resource="RESOURCE_CAMELS" Tier="REGIONAL_PRIORITY" Priority="0"/>
+		<Row Resource="RESOURCE_DATES" Tier="REGIONAL_PRIORITY" Priority="1"/>
+		<Row Resource="RESOURCE_SILK" Tier="REGIONAL_PRIORITY" Priority="2"/>
+		<Row Resource="RESOURCE_TEA" Tier="REGIONAL_PRIORITY" Priority="3"/>
+		<Row Resource="RESOURCE_LAPIS_LAZULI" Tier="REGIONAL_PRIORITY" Priority="4"/>
+		<Row Resource="RESOURCE_CLOVES" Tier="REGIONAL_PRIORITY" Priority="5"/>
+		<Row Resource="RESOURCE_LLAMAS" Tier="REGIONAL_PRIORITY" Priority="6"/>
+		<Row Resource="RESOURCE_IVORY" Tier="REGIONAL_PRIORITY" Priority="6"/>
+		<Row Resource="RESOURCE_JADE" Tier="REGIONAL_PRIORITY" Priority="6"/>
+		<Row Resource="RESOURCE_DYES" Tier="REGIONAL_PRIORITY" Priority="6"/>
+		<Row Resource="RESOURCE_PEARLS" Tier="REGIONAL_PRIORITY" Priority="6"/>
+		<Row Resource="RESOURCE_HORSES" Tier="GLOBAL_FALLBACK" Priority="0"/>
+		<Row Resource="RESOURCE_IRON" Tier="GLOBAL_FALLBACK" Priority="1"/>
+		<Row Resource="RESOURCE_SALT" Tier="GLOBAL_FALLBACK" Priority="2"/>
+		<Row Resource="RESOURCE_GOLD" Tier="GLOBAL_FALLBACK" Priority="3"/>
+		<Row Resource="RESOURCE_SILVER" Tier="GLOBAL_FALLBACK" Priority="5"/>
+		<Row Resource="RESOURCE_FISH" Tier="GLOBAL_FALLBACK" Priority="7"/>
+		<Row Resource="RESOURCE_HIDES" Tier="GLOBAL_FALLBACK" Priority="8"/>
+		<Row Resource="RESOURCE_GYPSUM" Tier="GLOBAL_FALLBACK" Priority="9"/>
+		<Row Resource="RESOURCE_MARBLE" Tier="GLOBAL_FALLBACK" Priority="10"/>
+		<Row Resource="RESOURCE_COTTON" Tier="GLOBAL_FALLBACK" Priority="11"/>
+		<Row Resource="RESOURCE_INCENSE" Tier="GLOBAL_FALLBACK" Priority="12"/>
+		<Row Resource="RESOURCE_SUGAR" Tier="GLOBAL_FALLBACK" Priority="13"/>
+		<Row Resource="RESOURCE_WINE" Tier="GLOBAL_FALLBACK" Priority="14"/>
+		<Row Resource="RESOURCE_RICE" Tier="GLOBAL_FALLBACK" Priority="15"/>
+		<Row Resource="RESOURCE_CRABS" Tier="GLOBAL_FALLBACK" Priority="16"/>
+		<Row Resource="RESOURCE_WOOL" Tier="GLOBAL_FALLBACK" Priority="17"/>
+		<Row Resource="RESOURCE_WILD_GAME" Tier="GLOBAL_FALLBACK" Priority="18"/>
+	</ResourcePlacementPriority>
+</Database>

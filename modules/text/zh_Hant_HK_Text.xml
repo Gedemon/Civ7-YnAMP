@@ -13,23 +13,11 @@
     <Replace Tag="LOC_MAPSIZE_LUDICROUS_NAME" Language="zh_Hant_HK">
       <Text>Ludicrous (230x116)[n][icon:BUILDING_WARNING] 127 > 的瓦片無紋理</Text>
     </Replace>
-    <Replace Tag="LOC_MAP_CONTINENTS_YNAMP_NAME" Language="zh_Hant_HK">
-      <Text>Continents++ (YnAMP)</Text>
-    </Replace>
-    <Replace Tag="LOC_MAP_CONTINENTS_YNAMP_DESCRIPTION" Language="zh_Hant_HK">
-      <Text>適用於 YnAMP 地圖大小和設置的 continents 風格腳本。</Text>
-    </Replace>
     <Replace Tag="LOC_MAP_TERRA_YNAMP_NAME" Language="zh_Hant_HK">
       <Text>Terra (YnAMP)</Text>
     </Replace>
     <Replace Tag="LOC_MAP_TERRA_YNAMP_DESCRIPTION" Language="zh_Hant_HK">
       <Text>採用 1/3 : 2/3 陸地比例的 Terra 風格 Voronoi 地圖，專為不均衡大陸生成優化。</Text>
-    </Replace>
-    <Replace Tag="LOC_MAP_FRACTAL_YNAMP_NAME" Language="zh_Hant_HK">
-      <Text>分形 (YnAMP)</Text>
-    </Replace>
-    <Replace Tag="LOC_MAP_FRACTAL_YNAMP_DESCRIPTION" Language="zh_Hant_HK">
-      <Text>適用於 YnAMP 地圖大小和設置的分形風格腳本。</Text>
     </Replace>
     <Replace Tag="LOC_MAP_GIANT_EARTH_YNAMP_NAME" Language="zh_Hant_HK">
       <Text>Giant Earth Map (YnAMP)</Text>
@@ -55,29 +43,23 @@
     <Replace Tag="LOC_MAPSIZE_LUDICROUS_DESCRIPTION" Language="zh_Hant_HK">
       <Text>YnAMP 場景和腳本使用的 Ludicrous 地圖大小。</Text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_REGION_MODE_NAME" Language="zh_Hant_HK">
+    <Replace Tag="LOC_YNAMP_HOMELAND_MODE_NAME" Language="zh_Hant_HK">
       <Text>區域標籤模式（用於 YnAMP 地圖）</Text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_REGION_MODE_DESC" Language="zh_Hant_HK">
-      <Text>控制家鄉和遙遠地區區域如何分類。Landmass 使用玩家起始位置的海洋分離。East-West 使用簡單的列分割。Region 使用 XML 定義的超級區域（僅限地球地圖；若無 XML 數據則回退到 East-West）。</Text>
+    <Replace Tag="LOC_YNAMP_HOMELAND_MODE_DESC" Language="zh_Hant_HK">
+      <Text>控制家鄉和遙遠地區區域的分類方式。Landmass 使用從玩家起始位置的海上分隔。Region 在支援的地球地圖上使用 XML 定義的超級區域，當 XML 區域數據不可用時回退到 Landmass。</Text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_REGION_MODE_LANDMASS_NAME" Language="zh_Hant_HK">
+    <Replace Tag="LOC_YNAMP_HOMELAND_MODE_LANDMASS_NAME" Language="zh_Hant_HK">
       <Text>Landmass（預設）</Text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_REGION_MODE_LANDMASS_DESC" Language="zh_Hant_HK">
+    <Replace Tag="LOC_YNAMP_HOMELAND_MODE_LANDMASS_DESC" Language="zh_Hant_HK">
       <Text>家鄉和遙遠地區由玩家起始位置被海洋阻斷的連接性決定。孤立的島嶼和海洋保持中立。</Text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_REGION_MODE_EAST_WEST_NAME" Language="zh_Hant_HK">
-      <Text>東西分割</Text>
-    </Replace>
-    <Replace Tag="LOC_YNAMP_REGION_MODE_EAST_WEST_DESC" Language="zh_Hant_HK">
-      <Text>家鄉和遙遠地區由簡單的垂直列邊界分隔，符合原始 YnAMP 行為。</Text>
-    </Replace>
-    <Replace Tag="LOC_YNAMP_REGION_MODE_REGION_NAME" Language="zh_Hant_HK">
+    <Replace Tag="LOC_YNAMP_HOMELAND_MODE_REGION_NAME" Language="zh_Hant_HK">
       <Text>區域（XML）</Text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_REGION_MODE_REGION_DESC" Language="zh_Hant_HK">
-      <Text>為地球地圖使用 XML 定義的超級區域數據（歐亞、非洲、美洲、大洋洲）。如果所選地圖沒有可用的 XML 數據，則回退到東西分割。</Text>
+    <Replace Tag="LOC_YNAMP_HOMELAND_MODE_REGION_DESC" Language="zh_Hant_HK">
+      <Text>在支援的地球地圖上使用 XML 定義的超級區域數據（歐亞、非洲、美洲、大洋洲）。如果所選地圖沒有 XML 數據，則回退到 Landmass。</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_START_POSITION_RELATIVE_DISTANCE_NAME" Language="zh_Hant_HK">
       <Text>相對距離</Text>
@@ -102,6 +84,144 @@
     </Replace>
     <Replace Tag="LOC_YNAMP_START_POSITION_REGION_BALANCED_DESC" Language="zh_Hant_HK">
       <Text>與文化區域（Terra）類似，但在半球之間重新分配文化組，使文明數量盡可能相等。同一文化組的所有文明始終留在同一半球。在每個半球內，文化上相鄰的組彼此靠近放置。忽略文明的起始偏見。</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_REGIONAL_EARTH_MASSIVE_YNAMP_NAME" Language="zh_Hant_HK">
+      <Text>Regional Earth Map (Massive) (YnAMP)</Text>
+    </Replace>
+    <Replace Tag="LOC_MAP_REGIONAL_EARTH_MASSIVE_YNAMP_DESCRIPTION" Language="zh_Hant_HK">
+      <Text>一個 128x80 的 Regional Earth 地圖，通過部分偏移量重用 Giant Earth 地理、真實起始和 XML 區域。從經典的 Colonization 裁剪開始。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGIONAL_EARTH_SECTION_NAME" Language="zh_Hant_HK">
+      <Text>Regional Earth 部分</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGIONAL_EARTH_SECTION_DESC" Language="zh_Hant_HK">
+      <Text>選擇哪個 Giant Earth 子部分投影到這個固定的 128x80 Regional Earth 畫布上。</Text>
+    </Replace>
+    <Replace Tag="LOC_MASSIVE_COLONIZATION_NAME" Language="zh_Hant_HK">
+      <Text>殖民化</Text>
+    </Replace>
+    <Replace Tag="LOC_MASSIVE_COLONIZATION_DESC" Language="zh_Hant_HK">
+      <Text>歐洲、北大西洋和美洲在 128x80 畫布上，使用 YnAMP 的經典 Colonization 偏移量。</Text>
+    </Replace>
+    <Replace Tag="LOC_MASSIVE_OLD_WORLD_NAME" Language="zh_Hant_HK">
+      <Text>舊世界</Text>
+    </Replace>
+    <Replace Tag="LOC_MASSIVE_OLD_WORLD_DESC" Language="zh_Hant_HK">
+      <Text>歐洲、非洲和亞洲在 128x80 畫布上，使用無環繞的 Giant Earth 裁剪。</Text>
+    </Replace>
+    <Replace Tag="LOC_MASSIVE_INDO_PACIFIC_NAME" Language="zh_Hant_HK">
+      <Text>印度-太平洋</Text>
+    </Replace>
+    <Replace Tag="LOC_MASSIVE_INDO_PACIFIC_DESC" Language="zh_Hant_HK">
+      <text>南亞、東南亞、大洋洲和太平洋盆地，在 128x80 畫布上，使用無環繞的 Giant Earth 裁剪。</text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_WRAPX_OLD_WORLD_NAME" Language="zh_Hant_HK">
+      <text>無環繞</text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_WRAPX_OLD_WORLD_DESC" Language="zh_Hant_HK">
+      <text>如果您能夠向西航行環繞舊世界並到達東印度，請禁用此選項以刪除邊緣的不可通行地形。</text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_RATIO_NAME" Language="zh_Hant_HK">
+      <text>Terra YnAMP 的陸地比例</text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_RATIO_DESC" Language="zh_Hant_HK">
+      <text>分配給較小陸地（"新世界"）的總陸地面積百分比。較大的陸地（舊世界）接收其餘部分。較小的值會產生更極端的尺寸差異。</text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_RATIO_40_NAME" Language="zh_Hant_HK">
+      <text>新世界 40%</text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_RATIO_33_NAME" Language="zh_Hant_HK">
+      <text>新世界 33%</text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_RATIO_25_NAME" Language="zh_Hant_HK">
+      <text>新世界 25%</text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_RATIO_20_NAME" Language="zh_Hant_HK">
+      <text>新世界 20%</text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_RATIO_15_NAME" Language="zh_Hant_HK">
+      <text>新世界 15%</text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_RATIO_10_NAME" Language="zh_Hant_HK">
+      <text>新世界 10%</text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_SPAWN_MODE_NAME" Language="zh_Hant_HK">
+      <text>Terra YnAMP 的起始分佈</text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_SPAWN_MODE_DESC" Language="zh_Hant_HK">
+      <text>控制文明如何在兩個陸地之間分佈。Split 按大小比例將文明放置在兩個陸地上。Same landmass 將所有文明放置在較大的陸地上。</text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_SPAWN_SPLIT_NAME" Language="zh_Hant_HK">
+      <text>在陸地上分割文明</text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_SPAWN_SAME_NAME" Language="zh_Hant_HK">
+      <text>所有文明在較大的陸地上</text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_NW_PLACEMENT_MODE_NAME" Language="zh_Hant_HK">
+      <text>TSL 地圖上的自然奇觀放置</text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_NW_PLACEMENT_MODE_DESC" Language="zh_Hant_HK">
+      <text>控制自然奇觀如何在真實位置地球地圖上放置。"真實世界 + 隨機"首先使用 XML 的真實世界位置，然後隨機填充剩餘的槽位。"僅真實世界"僅使用 XML 位置（相鄰和高程要求被放寬）。"隨機"忽略所有真實世界位置。</text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_NW_PLACEMENT_RANDOM_NAME" Language="zh_Hant_HK">
+      <text>隨機</text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_NW_PLACEMENT_RANDOM_DESC" Language="zh_Hant_HK">
+      <text>自然奇觀完全隨機放置，忽略真實世界位置。</text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_NW_PLACEMENT_REAL_AND_RANDOM_NAME" Language="zh_Hant_HK">
+      <text>真實世界 + 隨機（預設）</text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_NW_PLACEMENT_REAL_AND_RANDOM_DESC" Language="zh_Hant_HK">
+      <text>首先使用 XML 的真實世界位置，然後隨機填充任何剩餘的自然奇觀槽位。</text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_NW_PLACEMENT_REAL_ONLY_NAME" Language="zh_Hant_HK">
+      <text>僅真實世界</text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_NW_PLACEMENT_REAL_ONLY_DESC" Language="zh_Hant_HK">
+      <text>僅使用 XML 的真實世界位置。無隨機填充。為了改善放置，從遊戲資料庫中刪除相鄰和高程要求。</text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGIONAL_RESOURCE_MODE_NAME" Language="zh_Hant_HK">
+      <text>TSL 地圖上的區域資源放置</text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGIONAL_RESOURCE_MODE_DESC" Language="zh_Hant_HK">
+      <text>控制地球區域資源的真實性。Curated 在正常生成或匯入地圖放置後，為少量地理上獨特的資源應用一組策劃規則。</text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGIONAL_RESOURCE_OFF_NAME" Language="zh_Hant_HK">
+      <text>禁用</text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGIONAL_RESOURCE_OFF_DESC" Language="zh_Hant_HK">
+      <text>不應用區域清理或回填。資源保持 YnAMP 的當前行為。</text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGIONAL_RESOURCE_CURATED_NAME" Language="zh_Hant_HK">
+      <text>策劃的區域規則（預設）</text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_REGIONAL_RESOURCE_CURATED_DESC" Language="zh_Hant_HK">
+      <text>為獨特資源應用狹窄的第一次陸地規則集，刪除區域外的明顯放置，並在預期的位置保證一些區域礦床。</text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_MODE_NAME" Language="zh_Hant_HK">
+      <text>地理文明解鎖</text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_MODE_DESC" Language="zh_Hant_HK">
+      <text>控制地理如何影響地球 TSL 地圖上文明的可用性。No Unlock 僅保留放置真實性。Add Unlock 保留遊戲的正常解鎖路徑並添加地理路徑。Strict Unlock 僅保留地理解鎖和明確保留的原始本地或相鄰解鎖。</text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_NONE_NAME" Language="zh_Hant_HK">
+      <text>無解鎖（預設）</text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_NONE_DESC" Language="zh_Hant_HK">
+      <text>不應用基於地理的解鎖更改。真實資源放置可以獨立運行。</text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_ADD_NAME" Language="zh_Hant_HK">
+      <text>添加解鎖</text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_ADD_DESC" Language="zh_Hant_HK">
+      <text>保留遊戲現有的解鎖路徑，當玩家控制符合條件的區域資源時添加地理解鎖。</text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_STRICT_NAME" Language="zh_Hant_HK">
+      <text>嚴格解鎖</text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_STRICT_DESC" Language="zh_Hant_HK">
+      <text>將文明的可用性限制為地理解鎖和明確保留的原始相鄰解鎖，刪除其他非地理解鎖路徑，如按領袖或獎勵的可用性。</text>
     </Replace>
   </LocalizedText>
 </Database>

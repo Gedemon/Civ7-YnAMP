@@ -68,14 +68,11 @@ For generated maps:
 ## Documentation
 
 - [MAPS.md](MAPS.md): active maps, sizes, and configuration notes.
-- [CHANGELOG.md](CHANGELOG.md): documented release history from the current refactor onward.
 - [MODDING NOTES.md](MODDING%20NOTES.md): Civ7 MapScript development notes and debugging guidance.
 - [PORTING_NOTES.md](PORTING_NOTES.md): API changes that mattered while aligning YnAMP to Civ7 v1.3.2.
 - [GEOGRAPHIC_UNLOCK.md](GEOGRAPHIC_UNLOCK.md): design notes for geography-driven civilization unlocks.
-- [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md): practical checks for map generation and setup issues.
 
 ## Known limitations
 
-- Fractal and rotated Giant Earth entries exist in the repo but are not currently enabled in the map list.
+- Civ7 engine doesn't render textures on tiles where x > 128 on larger map sizes.
 - Some natural wonder footprint notes are still empirical and need more validation across repeated runs.
-- Historical changelog entries before v1.0.14 are not fully reconstructed in the docs yet.

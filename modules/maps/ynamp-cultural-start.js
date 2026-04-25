@@ -50,15 +50,15 @@ import {
     buildIslandStartMetadata,
     findFallbackIslandStartPlot,
 } from '/ged-ynamp/maps/ynamp-utilities.js';
+import { getActiveEarthMapContext, getDefaultCulturalCoord, getEarthMapSourceMapName, mapSourceToLocalCoordinate } from '/ged-ynamp/maps/earth-map-context.js';
 
 console.log("Loading ynamp-cultural-start.js");
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
-// The canonical map whose StartPosition entries are used as real-world geographic anchors.
+// Fallback canonical map when no explicit Earth map context is active.
 const CANONICAL_MAP_NAME     = "GiantEarth";
-// Fallback coordinate for civs with no GiantEarth TSL entry (center of the Giant Earth map).
-const DEFAULT_CULTURAL_COORD = { X: 90, Y: 46 };
+const NO_REGION_ID           = -1;
 // Weight applied to pairs whose TSL distance is 1 (closest possible).
 // At tslDist 1 → coefficient 50/1 = 50 (≈ Civ6 same-group ×5 amplified).
 // At tslDist 10 → coefficient 5 (≈ Civ6 SAME_GROUP_WEIGHT for neighboring cultures).
@@ -132,11 +132,16 @@ function isRegionBalancedEnabled() {
 
 function buildTSLCoordMap() {
     const coordMap = {};
+    const earthMapContext = getActiveEarthMapContext();
+    const sourceMapName = getEarthMapSourceMapName(earthMapContext) || CANONICAL_MAP_NAME;
     for (let i = 0; i < GameInfo.StartPosition.length; ++i) {
         const row = GameInfo.StartPosition[i];
         // Use first (usually Antiquity) entry per civ in the canonical map.
-        if (row.MapName === CANONICAL_MAP_NAME && !coordMap[row.Civilization]) {
-            coordMap[row.Civilization] = { X: row.X, Y: row.Y };
+        if (row.MapName === sourceMapName && !coordMap[row.Civilization]) {
+            const localCoord = earthMapContext ? mapSourceToLocalCoordinate(row.X, row.Y, earthMapContext) : { X: row.X, Y: row.Y, SourceX: row.X, SourceY: row.Y };
+            if (localCoord) {
+                coordMap[row.Civilization] = localCoord;
+            }
         }
     }
     return coordMap;
@@ -151,7 +156,7 @@ function getCivTypeName(iPlayer) {
 }
 
 function getTSLCoord(civTypeName, coordMap) {
-    return coordMap[civTypeName] || DEFAULT_CULTURAL_COORD;
+    return coordMap[civTypeName] || getDefaultCulturalCoord(getActiveEarthMapContext());
 }
 
 // ── Score functions ───────────────────────────────────────────────────────────
@@ -218,7 +223,8 @@ function runCulturalDistanceShuffle() {
             if (coord) {
                 console.log("[YnAMP Cultural]  " + civ + " TSL anchor: (" + coord.X + ", " + coord.Y + ")");
             } else {
-                console.log("[YnAMP Cultural]  " + civ + " TSL anchor: DEFAULT fallback (" + DEFAULT_CULTURAL_COORD.X + ", " + DEFAULT_CULTURAL_COORD.Y + ")");
+                let defaultCoord = getDefaultCulturalCoord(getActiveEarthMapContext());
+                console.log("[YnAMP Cultural]  " + civ + " TSL anchor: DEFAULT fallback (" + defaultCoord.X + ", " + defaultCoord.Y + ")");
             }
         }
     }
@@ -291,11 +297,15 @@ function buildRegionToCultureGroupMap() {
 function getTSLRegion(tslCoord) {
     const rows = GameInfo.RegionPosition;
     if (!rows) return null;
+    const earthMapContext = getActiveEarthMapContext();
+    const sourceMapName = getEarthMapSourceMapName(earthMapContext) || CANONICAL_MAP_NAME;
+    const sourceX = tslCoord.SourceX ?? tslCoord.X;
+    const sourceY = tslCoord.SourceY ?? tslCoord.Y;
     for (let i = 0; i < rows.length; i++) {
         const row = rows[i];
-        if (row.MapName !== CANONICAL_MAP_NAME) continue;
-        if (tslCoord.X >= row.X && tslCoord.X < row.X + row.Width &&
-            tslCoord.Y >= row.Y && tslCoord.Y < row.Y + row.Height) {
+        if (row.MapName !== sourceMapName) continue;
+        if (sourceX >= row.X && sourceX < row.X + row.Width &&
+            sourceY >= row.Y && sourceY < row.Y + row.Height) {
             return row.Region;
         }
     }
@@ -312,7 +322,8 @@ function buildCivProfileMap(aliveMajorIds) {
     for (let i = 0; i < aliveMajorIds.length; i++) {
         const pid  = aliveMajorIds[i];
         const civ  = getCivTypeName(pid);
-        const tsl  = civ ? (coordMap[civ] || DEFAULT_CULTURAL_COORD) : DEFAULT_CULTURAL_COORD;
+        const defaultCoord = getDefaultCulturalCoord(getActiveEarthMapContext());
+        const tsl  = civ ? (coordMap[civ] || defaultCoord) : defaultCoord;
         const region = getTSLRegion(tsl);
         const superRegion   = (region && regionToSuper[region])   || DEFAULT_SUPER_REGION;
         const cultureGroup  = (region && regionToCulture[region]) || DEFAULT_CULTURE_GROUP;
@@ -360,7 +371,7 @@ function assignCivsBySuperRegion(aliveMajorIds, civProfiles, iWidth, iHeight) {
     for (let i = 0; i < aliveMajorIds.length; i++) {
         const pid   = aliveMajorIds[i];
         const plot  = StartPositioner.getStartPosition(pid);
-        if (!isValidPlot(plot)) { playerRegionId.set(pid, -1); continue; }
+        if (!isValidPlot(plot)) { playerRegionId.set(pid, NO_REGION_ID); continue; }
         const x = plot % iWidth, y = Math.floor(plot / iWidth);
         playerRegionId.set(pid, GameplayMap.getLandmassRegionId(x, y));
     }
@@ -371,10 +382,10 @@ function assignCivsBySuperRegion(aliveMajorIds, civProfiles, iWidth, iHeight) {
         const pid = aliveMajorIds[i];
         if ((civProfiles.get(pid) || {}).superRegion !== "EURASIA") continue;
         const rid = playerRegionId.get(pid);
-        if (rid < 0) continue;
+        if (rid === NO_REGION_ID) continue;
         eurasiaVotes[rid] = (eurasiaVotes[rid] || 0) + 1;
     }
-    let eurasiaRegionId = -1;
+    let eurasiaRegionId = NO_REGION_ID;
     let bestVotes = -1;
     for (const rid in eurasiaVotes) {
         if (eurasiaVotes[rid] > bestVotes || (eurasiaVotes[rid] === bestVotes && Number(rid) < eurasiaRegionId)) {
@@ -387,15 +398,15 @@ function assignCivsBySuperRegion(aliveMajorIds, civProfiles, iWidth, iHeight) {
     const allRegionIds = new Set();
     for (let i = 0; i < aliveMajorIds.length; i++) {
         const rid = playerRegionId.get(aliveMajorIds[i]);
-        if (rid >= 0) allRegionIds.add(rid);
+        if (rid !== NO_REGION_ID) allRegionIds.add(rid);
     }
 
-    let americasRegionId = -1;
+    let americasRegionId = NO_REGION_ID;
     for (const rid of allRegionIds) {
         if (rid !== eurasiaRegionId) { americasRegionId = rid; break; }
     }
 
-    if (eurasiaRegionId < 0 || americasRegionId < 0) {
+    if (eurasiaRegionId === NO_REGION_ID || americasRegionId === NO_REGION_ID) {
         console.log("[YnAMP Region] Phase 1 skipped: could not determine two distinct regionIDs " +
             "(eurasiaRid=" + eurasiaRegionId + " americasRid=" + americasRegionId + ")");
         return;
@@ -582,7 +593,7 @@ function prepareOceaniaIslandStarts(playerIds, civProfiles, iWidth, iHeight) {
         const pid = oceaniaPlayers[i];
         const civ = getCivTypeName(pid) || ("player" + pid);
         const currentPlot = StartPositioner.getStartPosition(pid);
-        let preferredRegionId = -1;
+        let preferredRegionId = NO_REGION_ID;
         if (isValidPlot(currentPlot)) {
             const currentX = currentPlot % iWidth;
             const currentY = Math.floor(currentPlot / iWidth);
@@ -614,7 +625,7 @@ function prepareOceaniaIslandStarts(playerIds, civProfiles, iWidth, iHeight) {
 
         const finalX = islandStart.plot % iWidth;
         const finalY = Math.floor(islandStart.plot / iWidth);
-        const finalRegionId = islandStart.regionId >= 0 ? islandStart.regionId : GameplayMap.getLandmassRegionId(finalX, finalY);
+        const finalRegionId = islandStart.regionId !== NO_REGION_ID ? islandStart.regionId : GameplayMap.getLandmassRegionId(finalX, finalY);
         console.log("[YnAMP Region]  Oceania island start " + civ +
             " preferredRegionId=" + preferredRegionId +
             " → (" + finalX + "," + finalY + ")" +
@@ -815,8 +826,9 @@ function runRelativeDistanceTerraShhuffle() {
             if (coord) {
                 console.log("[YnAMP TerraRelDist]  " + civ + " TSL anchor: (" + coord.X + ", " + coord.Y + ")");
             } else {
+                let defaultCoord = getDefaultCulturalCoord(getActiveEarthMapContext());
                 console.log("[YnAMP TerraRelDist]  " + civ + " TSL anchor: DEFAULT fallback (" +
-                    DEFAULT_CULTURAL_COORD.X + ", " + DEFAULT_CULTURAL_COORD.Y + ")");
+                    defaultCoord.X + ", " + defaultCoord.Y + ")");
             }
         }
     }
@@ -868,7 +880,7 @@ function detectHemisphereRegionIds(aliveMajorIds, civProfiles, iWidth) {
             eurasiaVotes[rid] = (eurasiaVotes[rid] || 0) + 1;
         }
     }
-    let eurasiaRegionId = -1, bestVotes = -1;
+    let eurasiaRegionId = NO_REGION_ID, bestVotes = -1;
     for (const rid in eurasiaVotes) {
         if (eurasiaVotes[rid] > bestVotes ||
                 (eurasiaVotes[rid] === bestVotes && Number(rid) < eurasiaRegionId)) {
@@ -876,11 +888,11 @@ function detectHemisphereRegionIds(aliveMajorIds, civProfiles, iWidth) {
             eurasiaRegionId = Number(rid);
         }
     }
-    let americasRegionId = -1;
+    let americasRegionId = NO_REGION_ID;
     for (const rid of allRegionIds) {
         if (rid !== eurasiaRegionId) { americasRegionId = rid; break; }
     }
-    if (eurasiaRegionId < 0 || americasRegionId < 0) {
+    if (eurasiaRegionId === NO_REGION_ID || americasRegionId === NO_REGION_ID) {
         console.log("[YnAMP Balanced] Could not determine two distinct regionIDs " +
             "(eurasiaRid=" + eurasiaRegionId + " americasRid=" + americasRegionId + ")");
         return null;
@@ -1008,7 +1020,7 @@ function assignCivsByGroupAssignment(aliveMajorIds, playerTargetRegion, iWidth, 
     for (let i = 0; i < aliveMajorIds.length; i++) {
         const pid  = aliveMajorIds[i];
         const plot = StartPositioner.getStartPosition(pid);
-        if (!isValidPlot(plot)) { playerRegionId.set(pid, -1); continue; }
+        if (!isValidPlot(plot)) { playerRegionId.set(pid, NO_REGION_ID); continue; }
         const x = plot % iWidth, y = Math.floor(plot / iWidth);
         playerRegionId.set(pid, GameplayMap.getLandmassRegionId(x, y));
     }
@@ -1016,7 +1028,7 @@ function assignCivsByGroupAssignment(aliveMajorIds, playerTargetRegion, iWidth, 
     // Collect distinct target regionIds.
     const targetRegionIds = new Set();
     for (const rid of playerTargetRegion.values()) {
-        if (rid !== undefined && rid >= 0) targetRegionIds.add(rid);
+        if (rid !== undefined && rid !== NO_REGION_ID) targetRegionIds.add(rid);
     }
 
     // Build usedPlots set and pool of available plots per regionId.
