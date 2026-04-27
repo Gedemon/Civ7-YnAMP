@@ -160,6 +160,35 @@
 			<Text>All civs on larger landmass</Text>
 		</Replace>
 
+		<Replace Tag="LOC_TERRA_YNAMP_OCEAN_SEPARATION_NAME">
+			<Text>Ocean Separation for Terra YnAMP</Text>
+		</Replace>
+		<Replace Tag="LOC_TERRA_YNAMP_OCEAN_SEPARATION_DESC">
+			<Text>Controls how much ocean the generator keeps between the Old World and New World landmasses. Wide raises the minimal distance between landmasses. Standard uses the base Continents spacing.</Text>
+		</Replace>
+		<Replace Tag="LOC_TERRA_YNAMP_OCEAN_SEPARATION_STANDARD_NAME">
+			<Text>Standard</Text>
+		</Replace>
+		<Replace Tag="LOC_TERRA_YNAMP_OCEAN_SEPARATION_WIDE_NAME">
+			<Text>Wide</Text>
+		</Replace>
+
+		<Replace Tag="LOC_TERRA_YNAMP_SEA_LEVEL_NAME">
+			<Text>Sea Level for Terra YnAMP</Text>
+		</Replace>
+		<Replace Tag="LOC_TERRA_YNAMP_SEA_LEVEL_DESC">
+			<Text>Controls the total amount of land generated. Higher water settings reduce the total land area.</Text>
+		</Replace>
+		<Replace Tag="LOC_TERRA_YNAMP_SEA_LEVEL_STANDARD_NAME">
+			<Text>Standard</Text>
+		</Replace>
+		<Replace Tag="LOC_TERRA_YNAMP_SEA_LEVEL_PLUS_25_NAME">
+			<Text>+25% Water</Text>
+		</Replace>
+		<Replace Tag="LOC_TERRA_YNAMP_SEA_LEVEL_PLUS_35_NAME">
+			<Text>+35% Water</Text>
+		</Replace>
+
 		<Replace Tag="LOC_YNAMP_NW_PLACEMENT_MODE_NAME">
 			<Text>Natural Wonders Placement on TSL Maps</Text>
 		</Replace>
@@ -225,6 +254,42 @@
 		</Replace>
 		<Replace Tag="LOC_YNAMP_NW_PLACEMENT_REAL_ONLY_DESC">
 			<Text>Only XML real-world positions are used. No random fill. Adjacency and elevation placement requirements are removed from the game database to improve placement success.</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_MODE_NAME">
+			<Text>Exploration Ocean Travel on Large Maps</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_MODE_DESC">
+			<Text>Controls deep-ocean movement on Large and larger maps during the Exploration Age. Standard keeps vanilla rules. Relaxed Movement removes the turn-ending ocean obstacle. Relaxed Movement + Reduced Damage also lowers base ocean attrition.</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_STANDARD_NAME">
+			<Text>Standard</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_STANDARD_DESC">
+			<Text>Keeps the vanilla Exploration deep-ocean movement and damage rules.</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_RELAXED_MOVEMENT_NAME">
+			<Text>Relaxed Movement</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_RELAXED_MOVEMENT_DESC">
+			<Text>On Large and larger maps, entering Ocean no longer ends a unit's turn. Cartography grants embarked units +1 Movement when starting on an Ocean tile, Astronomy grants naval units +1 Movement when starting on an Ocean tile, and Shipbuilding grants +1 Movement when starting on an Ocean tile to all units.</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_RELAXED_MOVEMENT_DAMAGE_NAME">
+			<Text>Relaxed Movement + Reduced Damage</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_RELAXED_MOVEMENT_DAMAGE_DESC">
+			<Text>Also reduces base deep-ocean damage on Large and larger maps.</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_MOD_EXPLORATION_OCEAN_OBSTACLE_MOVEMENT_DESCRIPTION">
+			<Text>All units gain +1 Movement when starting on an Ocean tile.</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_MOD_EXPLORATION_OCEAN_DAMAGE_MOVEMENT_DESCRIPTION">
+			<Text>Additional +1 Movement when starting on an Ocean tile.</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_MOD_EXPLORATION_OCEAN_NAVAL_MOVEMENT_DESCRIPTION">
+			<Text>Naval units gain +1 Movement when starting on an Ocean tile.</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_MOD_EXPLORATION_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION">
+			<Text>Embarked units gain +1 Movement when starting on an Ocean tile.</Text>
 		</Replace>
 	</EnglishText>
 </Database>

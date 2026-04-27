@@ -27,6 +27,22 @@
 				<Value>DISABLE_ICE</Value>
 			</ConfigurationValueMatches>
 		</Criteria>
+		<Criteria id="exploration-ocean-travel-relaxed-movement">
+			<AgeInUse>AGE_EXPLORATION</AgeInUse>
+			<ConfigurationValueContains>
+				<Group>Map</Group>
+				<ConfigurationId>ExplorationOceanTravelMode</ConfigurationId>
+				<Value>YNAMP_EXPLORATION_OCEAN_TRAVEL_RELAXED_MOVEMENT,YNAMP_EXPLORATION_OCEAN_TRAVEL_RELAXED_MOVEMENT_DAMAGE</Value>
+			</ConfigurationValueContains>
+		</Criteria>
+		<Criteria id="exploration-ocean-travel-relaxed-damage">
+			<AgeInUse>AGE_EXPLORATION</AgeInUse>
+			<ConfigurationValueMatches>
+				<Group>Map</Group>
+				<ConfigurationId>ExplorationOceanTravelMode</ConfigurationId>
+				<Value>YNAMP_EXPLORATION_OCEAN_TRAVEL_RELAXED_MOVEMENT_DAMAGE</Value>
+			</ConfigurationValueMatches>
+		</Criteria>
 	</ActionCriteria>
 	<ActionGroups>
 		<ActionGroup id="base-game-init-ynamp" scope="game" criteria="always">
@@ -56,6 +72,26 @@
 			<Actions>
 				<UpdateDatabase>
 					<Item>data/options/region-no-ice.sql</Item>
+				</UpdateDatabase>
+			</Actions>
+		</ActionGroup>
+		<ActionGroup id="base-game-exploration-ocean-travel-movement" scope="game" criteria="exploration-ocean-travel-relaxed-movement">
+			<Properties>
+				<LoadOrder>600</LoadOrder>
+			</Properties>
+			<Actions>
+				<UpdateDatabase>
+					<Item>data/options/exploration-ocean-travel-movement.sql</Item>
+				</UpdateDatabase>
+			</Actions>
+		</ActionGroup>
+		<ActionGroup id="base-game-exploration-ocean-travel-damage" scope="game" criteria="exploration-ocean-travel-relaxed-damage">
+			<Properties>
+				<LoadOrder>610</LoadOrder>
+			</Properties>
+			<Actions>
+				<UpdateDatabase>
+					<Item>data/options/exploration-ocean-travel-damage.sql</Item>
 				</UpdateDatabase>
 			</Actions>
 		</ActionGroup>

@@ -2,8 +2,7 @@
 
 Yet (not) Another Maps Pack for Civilization VII.
 
-Last reviewed: 2026-04-15  
-YnAMP version: 1.0.14  
+Last reviewed: 2026-04-25
 Verified against: Civ7 v1.3.2
 
 ## What this mod adds
@@ -14,7 +13,7 @@ Included content:
 
 - Larger playable map sizes for custom scripts and Earth maps.
 - Giant Earth and Greatest Earth maps with true-start support.
-- Continents++ and Terra variants adapted for YnAMP sizes and options.
+- Terra Map with Old World/New World civilization split.
 - Custom start-position shuffles for cultural and Terra-style distribution.
 - TSL natural wonder placement modes for Earth maps.
 
@@ -24,10 +23,10 @@ Active map scripts in the current build:
 
 | Map | Type | Main use |
 |---|---|---|
-| Continents++ (YnAMP) | Generated | Large random map with YnAMP sizes and settings |
 | Terra (YnAMP) | Generated | Two-landmass Terra-style Voronoi map |
 | Greatest Earth Map (YnAMP) | Fixed geography / TSL | Compact Earth map with true starts |
 | Giant Earth Map (YnAMP) | Fixed geography / TSL | Large Earth map with true starts |
+| Massive Regional Earth Map (YnAMP) | Fixed geography / TSL | "Colonization", "Old World", "Indo-Pacific" regions with true starts |
 
 See [MAPS.md](MAPS.md) for dimensions, options, and map-specific notes.
 

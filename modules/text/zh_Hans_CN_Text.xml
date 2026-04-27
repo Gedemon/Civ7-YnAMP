@@ -115,7 +115,7 @@
     <Replace Tag="LOC_MASSIVE_INDO_PACIFIC_DESC" Language="zh_Hans_CN">
       <text>南亚、东南亚、大洋洲和太平洋盆地，在 128x80 画布上，使用无环绕的 Giant Earth 裁剪。</text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_WRAPX_OLD_WORLD_NAME" Language="zh_Hans_CN">
+    <Replace Tag="LOC_YNAMP_REGIONAL_WRAPX_OLD_WORLD_NAME" Language="zh_Hans_CN">
       <text>无环绕</text>
     </Replace>
     <Replace Tag="LOC_YNAMP_WRAPX_OLD_WORLD_DESC" Language="zh_Hans_CN">
@@ -156,6 +156,33 @@
     </Replace>
     <Replace Tag="LOC_TERRA_YNAMP_SPAWN_SAME_NAME" Language="zh_Hans_CN">
       <text>所有文明在较大的陆地上</text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_OCEAN_SEPARATION_NAME" Language="zh_Hans_CN">
+      <Text>Terra YnAMP 的海洋分隔</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_OCEAN_SEPARATION_DESC" Language="zh_Hans_CN">
+      <Text>控制生成器在旧世界与新世界两块大陆之间保留多少海洋。宽阔会提高大陆之间的最小距离。标准使用 Continents 的基础间距。</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_OCEAN_SEPARATION_STANDARD_NAME" Language="zh_Hans_CN">
+      <Text>标准</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_OCEAN_SEPARATION_WIDE_NAME" Language="zh_Hans_CN">
+      <Text>宽阔</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_SEA_LEVEL_NAME" Language="zh_Hans_CN">
+      <Text>Terra YnAMP 的海平面</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_SEA_LEVEL_DESC" Language="zh_Hans_CN">
+      <Text>控制生成的陆地总量。更高的水量设置会减少陆地总面积。</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_SEA_LEVEL_STANDARD_NAME" Language="zh_Hans_CN">
+      <Text>标准</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_SEA_LEVEL_PLUS_25_NAME" Language="zh_Hans_CN">
+      <Text>+25% 水域</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_SEA_LEVEL_PLUS_35_NAME" Language="zh_Hans_CN">
+      <Text>+35% 水域</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_NW_PLACEMENT_MODE_NAME" Language="zh_Hans_CN">
       <text>TSL 地图上的自然奇观放置</text>
@@ -222,6 +249,44 @@
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_STRICT_DESC" Language="zh_Hans_CN">
       <text>将文明的可用性限制为地理解锁和明确保留的原始相邻解锁，删除其他非地理解锁路径，如按领袖或奖励的可用性。</text>
+    </Replace>
+  </LocalizedText>
+  <LocalizedText>
+    <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_MODE_NAME" Language="zh_Hans_CN">
+      <Text>大型及以上地图上的探索时代远洋航行</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_MODE_DESC" Language="zh_Hans_CN">
+      <Text>控制探索时代在大型及以上地图上的深海移动。标准保留原版规则。宽松移动会移除进入远洋即结束回合的障碍。宽松移动 + 降低伤害 还会降低远洋的基础损耗。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_STANDARD_NAME" Language="zh_Hans_CN">
+      <Text>标准</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_STANDARD_DESC" Language="zh_Hans_CN">
+      <Text>保留原版探索时代的远洋移动和伤害规则。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_RELAXED_MOVEMENT_NAME" Language="zh_Hans_CN">
+      <Text>宽松移动</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_RELAXED_MOVEMENT_DESC" Language="zh_Hans_CN">
+      <Text>在大型及以上地图上，进入远洋不再结束单位的回合。制图学会让在远洋地块上开始回合的登船单位获得 +1 移动力，天文学会让在远洋地块上开始回合的海军单位获得 +1 移动力，而造船术会让在远洋地块上开始回合的所有单位获得 +1 移动力。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_RELAXED_MOVEMENT_DAMAGE_NAME" Language="zh_Hans_CN">
+      <Text>宽松移动 + 降低伤害</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_RELAXED_MOVEMENT_DAMAGE_DESC" Language="zh_Hans_CN">
+      <Text>在大型及以上地图上，还会降低深海的基础伤害。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_EXPLORATION_OCEAN_OBSTACLE_MOVEMENT_DESCRIPTION" Language="zh_Hans_CN">
+      <Text>所有单位在远洋地块上开始回合时获得 +1 移动力。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_EXPLORATION_OCEAN_DAMAGE_MOVEMENT_DESCRIPTION" Language="zh_Hans_CN">
+      <Text>在远洋地块上开始回合时额外获得 +1 移动力。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_EXPLORATION_OCEAN_NAVAL_MOVEMENT_DESCRIPTION" Language="zh_Hans_CN">
+      <Text>海军单位在远洋地块上开始回合时获得 +1 移动力。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_EXPLORATION_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION" Language="zh_Hans_CN">
+      <Text>登船单位在远洋地块上开始回合时获得 +1 移动力。</Text>
     </Replace>
   </LocalizedText>
 </Database>

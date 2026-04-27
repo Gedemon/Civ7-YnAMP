@@ -2,22 +2,22 @@
 <Database>
   <LocalizedText>
     <Replace Tag="LOC_MAP_GREATEST_EARTH_SIZE_NAME" Language="pt_BR">
-      <Text>Custom Huge for Greatest Earth (104x64)</Text>
+      <Text>Custom Huge (YnAMP 104x64)</Text>
     </Replace>
     <Replace Tag="LOC_MAPSIZE_MASSIVE_NAME" Language="pt_BR">
-      <Text>Massive (128x80)</Text>
+      <Text>Massive (YnAMP 128x80)</Text>
     </Replace>
     <Replace Tag="LOC_MAPSIZE_GIANT_NAME" Language="pt_BR">
-      <Text>Gigante (180x94)[n][icon:BUILDING_WARNING] sem texturas em tiles > 127</Text>
+      <Text>Gigante (YnAMP 180x94)[n][icon:BUILDING_WARNING] sem texturas em tiles > 127</Text>
     </Replace>
     <Replace Tag="LOC_MAPSIZE_LUDICROUS_NAME" Language="pt_BR">
-      <Text>Ludicrous (230x116)[n][icon:BUILDING_WARNING] sem texturas em tiles > 127</Text>
+      <Text>Ludicrous (YnAMP 230x116)[n][icon:BUILDING_WARNING] sem texturas em tiles > 127</Text>
     </Replace>
     <Replace Tag="LOC_MAP_TERRA_YNAMP_NAME" Language="pt_BR">
       <Text>Terra (YnAMP)</Text>
     </Replace>
     <Replace Tag="LOC_MAP_TERRA_YNAMP_DESCRIPTION" Language="pt_BR">
-      <Text>Um mapa estilo Terra com proporção de terra 1/3 : 2/3, otimizado para geração desigual de continentes.</Text>
+      <Text>Um mapa Voronoi estilo Terra com uma massa terrestre maior ("Velho Mundo") e uma menor ("Novo Mundo"). Script de mapa sugerido para as opções de posição de início "Terra".</Text>
     </Replace>
     <Replace Tag="LOC_MAP_GIANT_EARTH_YNAMP_NAME" Language="pt_BR">
       <Text>Giant Earth Map (YnAMP)</Text>
@@ -44,7 +44,7 @@
       <Text>Tamanho de mapa ludicrous para cenários e scripts do YnAMP.</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_HOMELAND_MODE_NAME" Language="pt_BR">
-      <Text>Modo de etiquetagem de regiões (para mapas do YnAMP)</Text>
+      <Text>Modo de etiquetagem de regiões (para mapas TSL YnAMP)</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_HOMELAND_MODE_DESC" Language="pt_BR">
       <Text>Controla como as regiões de terra natal e terras distantes são classificadas. Landmass usa separação oceânica a partir das posições de início do jogador. Region usa super-regiões definidas no XML nos mapas Terra suportados e volta para Landmass quando os dados da região XML não estão disponíveis.</Text>
@@ -86,22 +86,22 @@
       <Text>Como Região Cultural (Terra), mas redistribui grupos culturais entre hemisférios para manter o número de civilizações o mais igual possível. Todas as civilizações do mesmo grupo cultural sempre permanecem no mesmo hemisfério. Dentro de cada hemisfério, grupos culturalmente adjacentes são colocados próximos uns dos outros. Ignora os vieses de início das civilizações.</Text>
     </Replace>
     <Replace Tag="LOC_MAP_REGIONAL_EARTH_MASSIVE_YNAMP_NAME" Language="pt_BR">
-      <Text>Regional Earth Map (Massive) (YnAMP)</Text>
+      <Text>Massive Regional Earth (YnAMP)</Text>
     </Replace>
     <Replace Tag="LOC_MAP_REGIONAL_EARTH_MASSIVE_YNAMP_DESCRIPTION" Language="pt_BR">
-      <Text>Um mapa Regional Earth 128x80 que reutiliza a geografia do Giant Earth, inícios reais e regiões XML através de offsets de seção. Comece com o corte Colonization clássico.</Text>
+      <Text>Um mapa Regional Earth 128x80 que importa um corte 1:1 do Giant Earth, depois substitui as colunas de costura das bordas para preservar o comportamento sem envolvimento. Comece com a seção Colonização clássica.</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_REGIONAL_EARTH_SECTION_NAME" Language="pt_BR">
       <Text>Seção Regional Earth</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_REGIONAL_EARTH_SECTION_DESC" Language="pt_BR">
-      <Text>Seleciona qual subseção do Giant Earth é projetada neste canvas Regional Earth fixo 128x80.</Text>
+      <Text>Seleciona uma subseção do Giant Earth.</Text>
     </Replace>
     <Replace Tag="LOC_MASSIVE_COLONIZATION_NAME" Language="pt_BR">
       <Text>Colonização</Text>
     </Replace>
     <Replace Tag="LOC_MASSIVE_COLONIZATION_DESC" Language="pt_BR">
-      <Text>Europa, Atlântico Norte e Américas em um canvas 128x80, usando os offsets Colonização clássicos do YnAMP.</Text>
+      <Text>Europa, Atlântico Norte e Américas.</Text>
     </Replace>
     <Replace Tag="LOC_MASSIVE_OLD_WORLD_NAME" Language="pt_BR">
       <Text>Velho Mundo</Text>
@@ -115,10 +115,10 @@
     <Replace Tag="LOC_MASSIVE_INDO_PACIFIC_DESC" Language="pt_BR">
       <Text>Ásia do Sul, Sudeste Asiático, Oceania e bacia do Pacífico em um canvas 128x80, usando um corte Giant Earth sem envolvimento.</Text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_WRAPX_OLD_WORLD_NAME" Language="pt_BR">
+    <Replace Tag="LOC_YNAMP_REGIONAL_WRAPX_OLD_WORLD_NAME" Language="pt_BR">
       <Text>Sem Envolvimento</Text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_WRAPX_OLD_WORLD_DESC" Language="pt_BR">
+    <Replace Tag="LOC_YNAMP_REGIONAL_WRAPX_OLD_WORLD_DESC" Language="pt_BR">
       <Text>Desative esta opção para remover o terreno intransitável nas bordas, se você quiser poder circum-navegar o Velho Mundo e chegar às Índias Orientais navegando para oeste.</text>
     </Replace>
     <Replace Tag="LOC_TERRA_YNAMP_RATIO_NAME" Language="pt_BR">
@@ -156,6 +156,33 @@
     </Replace>
     <Replace Tag="LOC_TERRA_YNAMP_SPAWN_SAME_NAME" Language="pt_BR">
       <text>Todas as civilizações na maior massa terrestre</text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_OCEAN_SEPARATION_NAME" Language="pt_BR">
+      <Text>Separação oceânica para Terra YnAMP</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_OCEAN_SEPARATION_DESC" Language="pt_BR">
+      <Text>Controla quanto oceano o gerador mantém entre as massas de terra do Velho Mundo e do Novo Mundo. Amplo aumenta a distância mínima entre as massas de terra. Padrão usa o espaçamento base de Continents.</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_OCEAN_SEPARATION_STANDARD_NAME" Language="pt_BR">
+      <Text>Padrão</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_OCEAN_SEPARATION_WIDE_NAME" Language="pt_BR">
+      <Text>Amplo</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_SEA_LEVEL_NAME" Language="pt_BR">
+      <Text>Nível do mar para Terra YnAMP</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_SEA_LEVEL_DESC" Language="pt_BR">
+      <Text>Controla a quantidade total de terra gerada. Níveis de água mais altos reduzem a área terrestre total.</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_SEA_LEVEL_STANDARD_NAME" Language="pt_BR">
+      <Text>Padrão</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_SEA_LEVEL_PLUS_25_NAME" Language="pt_BR">
+      <Text>+25% de água</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_SEA_LEVEL_PLUS_35_NAME" Language="pt_BR">
+      <Text>+35% de água</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_NW_PLACEMENT_MODE_NAME" Language="pt_BR">
       <text>Colocação de maravilhas naturais em mapas TSL</text>
@@ -222,6 +249,44 @@
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_STRICT_DESC" Language="pt_BR">
       <text>Limita a disponibilidade de civilizações a desbloqueios geográficos e desbloqueios originais vizinhos explicitamente preservados, removendo outros caminhos de desbloqueio não geográficos como disponibilidade por líder ou por recompensa.</text>
+    </Replace>
+  </LocalizedText>
+  <LocalizedText>
+    <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_MODE_NAME" Language="pt_BR">
+      <Text>Viagem oceânica na Era da Exploração em mapas grandes</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_MODE_DESC" Language="pt_BR">
+      <Text>Controla o movimento em oceano profundo em mapas Grandes ou maiores durante a Era da Exploração. Padrão mantém as regras originais. Movimento relaxado remove o obstáculo oceânico que encerra o turno. Movimento relaxado + dano reduzido também reduz o atrito básico no oceano.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_STANDARD_NAME" Language="pt_BR">
+      <Text>Padrão</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_STANDARD_DESC" Language="pt_BR">
+      <Text>Mantém as regras originais da Era da Exploração para movimento e dano em alto-mar.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_RELAXED_MOVEMENT_NAME" Language="pt_BR">
+      <Text>Movimento relaxado</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_RELAXED_MOVEMENT_DESC" Language="pt_BR">
+      <Text>Em mapas Grandes ou maiores, entrar em Oceano não encerra mais o turno de uma unidade. Cartografia concede +1 de Movimento a unidades embarcadas ao começarem em um hexágono de Oceano, Astronomia concede +1 de Movimento a unidades navais ao começarem em um hexágono de Oceano, e Construção Naval concede +1 de Movimento a todas as unidades ao começarem em um hexágono de Oceano.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_RELAXED_MOVEMENT_DAMAGE_NAME" Language="pt_BR">
+      <Text>Movimento relaxado + dano reduzido</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_RELAXED_MOVEMENT_DAMAGE_DESC" Language="pt_BR">
+      <Text>Também reduz o dano base em oceanos profundos em mapas Grandes e maiores.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_EXPLORATION_OCEAN_OBSTACLE_MOVEMENT_DESCRIPTION" Language="pt_BR">
+      <Text>Todas as unidades recebem +1 de Movimento ao começarem em um hexágono de Oceano.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_EXPLORATION_OCEAN_DAMAGE_MOVEMENT_DESCRIPTION" Language="pt_BR">
+      <Text>+1 de Movimento adicional ao começar em um hexágono de Oceano.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_EXPLORATION_OCEAN_NAVAL_MOVEMENT_DESCRIPTION" Language="pt_BR">
+      <Text>Unidades navais recebem +1 de Movimento ao começarem em um hexágono de Oceano.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_EXPLORATION_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION" Language="pt_BR">
+      <Text>Unidades embarcadas recebem +1 de Movimento ao começarem em um hexágono de Oceano.</Text>
     </Replace>
   </LocalizedText>
 </Database>

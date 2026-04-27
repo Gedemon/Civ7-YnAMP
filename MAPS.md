@@ -16,12 +16,6 @@ Verified against: Civ7 v1.3.2
 
 ## Map details
 
-### Continents++ (YnAMP)
-
-- Purpose: random two-continent style map adapted to YnAMP sizes.
-- Best use: large generated games that still need homeland and distant-land logic.
-- Notes: works with the custom start-position options documented in the mod text and config.
-
 ### Terra (YnAMP)
 
 - Purpose: Terra-style generated map using a Voronoi two-landmass setup.
@@ -73,12 +67,3 @@ Verified against: Civ7 v1.3.2
 ### Available on supported generated maps
 
 - `StartPosition` domain entries for relative-distance and cultural-region shuffles.
-
-## Registered but not currently enabled
-
-These exist in the repo but are commented out or not exposed in the active map list:
-
-- `Fractal (YnAMP)`
-- rotated Giant Earth entry
-
-Do not document them as shipped user-facing maps unless they are re-enabled in `modules/config/config.xml`.

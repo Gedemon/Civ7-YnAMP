@@ -78,11 +78,58 @@ async function generateMap() {
   console.log(`DEBUG: calling voronoiMap.init(${mapInfo.$index})`);
   voronoiMap.init(mapInfo.$index);
   console.log("DEBUG: voronoiMap.init() complete");
+  const oceanSeparationRaw = Configuration.getMapValue("TerraOceanSeparation");
+  const seaLevelRaw = Configuration.getMapValue("TerraSeaLevel");
+  const oceanSeparationMode = oceanSeparationRaw === "STANDARD" ? "STANDARD" : "WIDE";
+  const seaLevelMode = seaLevelRaw === "STANDARD" || seaLevelRaw === "PLUS_25" ? seaLevelRaw : "PLUS_35";
+  let landSeaRatio = 1;
+  if (seaLevelMode === "PLUS_25") {
+    landSeaRatio = 0.75;
+  } else if (seaLevelMode === "PLUS_35") {
+    landSeaRatio = 0.65;
+  }
+  console.log(`DEBUG: oceanSeparation=${oceanSeparationMode} (raw: "${oceanSeparationRaw}"), seaLevel=${seaLevelMode} (raw: "${seaLevelRaw}")`);
   const rules = voronoiMap.getGenerator().getRules();
-  for (const value of Object.values(rules)) {
-    for (const rule of value) {
+  // Use Object.entries to get [categoryName, ruleArray]
+  for (const [category, ruleList] of Object.entries(rules)) {
+    for (const rule of ruleList) {
       if (rule.name == RuleAvoidEdge.getName()) {
         rule.configValues.poleDistance = g_PolarWaterRows;
+        // --- Target only the "Islands" category ---
+        if (category === "Islands") {
+          rule.configValues.isActive = false; // Disable
+          rule.configValues.meridianEnabled = 0; // Disable
+          //rule.configValues.meridianDistance = 2; // 2
+          //rule.configValues.meridianDistanceFalloff = 5; // 5
+        }
+        // --- Target only the "Landmasses" category ---
+        if (category === "Landmasses") {
+          //rule.configValues.meridianEnabled = 0; // Disable
+          rule.configValues.meridianDistance = 2; // 2
+          rule.configValues.meridianDistanceFalloff = 15; // 5
+          // --- Testing pole distance ---
+          rule.configValues.poleDistance = 2; // 2
+          rule.configValues.poleDistanceFalloff = 18; // 6
+        }
+      }
+      if (rule.name == "Avoid Other Regions") {
+        // --- Target only the "Landmasses" category ---
+        if (category === "Landmasses") {
+          if (oceanSeparationMode === "WIDE") {
+            rule.configValues.minDistance = 8; // 5
+            rule.configValues.distanceFalloff = 15; // 10
+          }
+        }
+      }
+      // --- Testing positions ---
+      if (rule.name == "Near Map Center") {
+        if (category === "Islands") {
+          rule.configValues.scaleFactor = 0; // 50
+        }
+        if (category === "Landmasses") {
+          rule.configValues.weight = 0.02; // 0.05
+          //rule.configValues.scaleFactor = 12; // 50
+        }
       }
     }
   }
@@ -98,9 +145,8 @@ async function generateMap() {
   const bSameLandmass = spawnRaw == "1";
   console.log(`DEBUG: sizeRatio=${sizeRatio.toFixed(4)} (raw: "${ratioRaw}"%); sameLandmass=${bSameLandmass} (raw: "${spawnRaw}")`);
 
-
-  // Apply landmass ratio
-  const totalSize = generatorSettings.landmass[0].size + generatorSettings.landmass[1].size;
+  // Apply landmass ratio and Sea Level option.
+  const totalSize = (generatorSettings.landmass[0].size + generatorSettings.landmass[1].size) * landSeaRatio;
   generatorSettings.landmass[0].size = totalSize * sizeRatio;
   generatorSettings.landmass[1].size = totalSize * (1 - sizeRatio);
   console.log(`DEBUG: landmass[0].size=${generatorSettings.landmass[0].size.toFixed(2)}%, landmass[1].size=${generatorSettings.landmass[1].size.toFixed(2)}%`);

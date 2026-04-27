@@ -2,22 +2,22 @@
 <Database>
   <LocalizedText>
     <Replace Tag="LOC_MAP_GREATEST_EARTH_SIZE_NAME" Language="ru_RU">
-      <Text>Огромная (Специально для Великой Земли) (104x64)</Text>
+      <Text>Custom Huge (YnAMP 104x64)</Text>
     </Replace>
     <Replace Tag="LOC_MAPSIZE_MASSIVE_NAME" Language="ru_RU">
-      <Text>Громадная (128x80)</Text>
+      <Text>Громадная (YnAMP 128x80)</Text>
     </Replace>
     <Replace Tag="LOC_MAPSIZE_GIANT_NAME" Language="ru_RU">
-      <Text>Гигантская (180x94)[n][icon:BUILDING_WARNING] нет текстур на клетках > 127</Text>
+      <Text>Гигантская (YnAMP 180x94)[n][icon:BUILDING_WARNING] нет текстур на клетках > 127</Text>
     </Replace>
     <Replace Tag="LOC_MAPSIZE_LUDICROUS_NAME" Language="ru_RU">
-      <Text>Колоссальная (230x116)[n][icon:BUILDING_WARNING] нет текстур на клетках > 127</Text>
+      <Text>Колоссальная (YnAMP 230x116)[n][icon:BUILDING_WARNING] нет текстур на клетках > 127</Text>
     </Replace>
     <Replace Tag="LOC_MAP_TERRA_YNAMP_NAME" Language="ru_RU">
       <Text>Terra (YnAMP)</Text>
     </Replace>
     <Replace Tag="LOC_MAP_TERRA_YNAMP_DESCRIPTION" Language="ru_RU">
-      <Text>Карта в стиле Terra с соотношением суши 1/3 : 2/3, оптимизирована для неравномерного генерирования континентов.</Text>
+      <Text>Карта Voronoi в стиле Terra с большей массой суши («Старый Свет») и меньшей («Новый Свет»). Рекомендуемый скрипт карты для опций начальной позиции «Terra».</Text>
     </Replace>
     <Replace Tag="LOC_MAP_GIANT_EARTH_YNAMP_NAME" Language="ru_RU">
       <Text>Гигантская Земля (YnAMP)</Text>
@@ -44,7 +44,7 @@
       <Text>Колоссальный размер карты для сценариев и скриптов YnAMP.</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_HOMELAND_MODE_NAME" Language="ru_RU">
-      <Text>Режим тегирования регионов (для карт YnAMP)</Text>
+      <Text>Режим тегирования регионов (для карт TSL YnAMP)</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_HOMELAND_MODE_DESC" Language="ru_RU">
       <Text>Контролирует, как классифицируются регионы родины и отдаленных земель. Landmass использует океаническое разделение от позиций старта игрока. Region использует суперрегионы, определенные в XML, на поддерживаемых картах Земли и возвращается к Landmass, когда данные региона XML недоступны.</Text>
@@ -86,22 +86,22 @@
       <Text>Как Культурный регион (Terra), но перераспределяет культурные группы между полушариями, чтобы поддерживать количество цивилизаций как можно более равным. Все цивилизации из одной и той же культурной группы всегда остаются на том же полушарии. Внутри каждого полушария культурно соседние группы размещаются рядом друг с другом. Игнорирует предвзятость старта цивилизаций.</Text>
     </Replace>
     <Replace Tag="LOC_MAP_REGIONAL_EARTH_MASSIVE_YNAMP_NAME" Language="ru_RU">
-      <Text>Regional Earth Map (Massive) (YnAMP)</Text>
+      <Text>Massive Regional Earth (YnAMP)</Text>
     </Replace>
     <Replace Tag="LOC_MAP_REGIONAL_EARTH_MASSIVE_YNAMP_DESCRIPTION" Language="ru_RU">
-      <Text>Карта Regional Earth 128x80, повторно использующая географию Giant Earth, истинные старты и регионы XML через смещения секций. Начните с классической обрезки Colonization.</Text>
+      <Text>Карта Regional Earth 128x80, которая импортирует обрезку 1:1 Giant Earth, затем заменяет крайние столбцы швов для сохранения поведения без обертки. Начните с классического раздела Colonization.</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_REGIONAL_EARTH_SECTION_NAME" Language="ru_RU">
       <Text>Секция Regional Earth</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_REGIONAL_EARTH_SECTION_DESC" Language="ru_RU">
-      <Text>Выбирает, какая подсекция Giant Earth проецируется на этот фиксированный холст Regional Earth 128x80.</Text>
+      <Text>Выбирает подсекцию Giant Earth.</Text>
     </Replace>
     <Replace Tag="LOC_MASSIVE_COLONIZATION_NAME" Language="ru_RU">
       <Text>Колонизация</Text>
     </Replace>
     <Replace Tag="LOC_MASSIVE_COLONIZATION_DESC" Language="ru_RU">
-      <Text>Европа, Северная Атлантика и Америки на холсте 128x80, используя классические смещения Colonization YnAMP.</Text>
+      <Text>Европа, Северная Атлантика и Америки.</Text>
     </Replace>
     <Replace Tag="LOC_MASSIVE_OLD_WORLD_NAME" Language="ru_RU">
       <Text>Старый Свет</Text>
@@ -115,10 +115,10 @@
     <Replace Tag="LOC_MASSIVE_INDO_PACIFIC_DESC" Language="ru_RU">
       <Text>Южная Азия, Юго-Восточная Азия, Океания и Тихоокеанский бассейн на холсте 128x80, используя обрезку Giant Earth без обертки.</Text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_WRAPX_OLD_WORLD_NAME" Language="ru_RU">
+    <Replace Tag="LOC_YNAMP_REGIONAL_WRAPX_OLD_WORLD_NAME" Language="ru_RU">
       <Text>Без обертки</Text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_WRAPX_OLD_WORLD_DESC" Language="ru_RU">
+    <Replace Tag="LOC_YNAMP_REGIONAL_WRAPX_OLD_WORLD_DESC" Language="ru_RU">
       <text>Отключите эту опцию, чтобы удалить непроходимую местность по краям, если вы хотите иметь возможность обогнуть Старый Свет и достичь Восточной Индии, плывя на запад.</text>
     </Replace>
     <Replace Tag="LOC_TERRA_YNAMP_RATIO_NAME" Language="ru_RU">
@@ -156,6 +156,33 @@
     </Replace>
     <Replace Tag="LOC_TERRA_YNAMP_SPAWN_SAME_NAME" Language="ru_RU">
       <text>Все цивилизации на большей массе суши</text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_OCEAN_SEPARATION_NAME" Language="ru_RU">
+      <Text>Океаническое разделение для Terra YnAMP</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_OCEAN_SEPARATION_DESC" Language="ru_RU">
+      <Text>Управляет тем, сколько океана генератор оставляет между массивами суши Старого и Нового Света. Широкое увеличивает минимальное расстояние между массивами суши. Стандарт использует базовые интервалы карты Continents.</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_OCEAN_SEPARATION_STANDARD_NAME" Language="ru_RU">
+      <Text>Стандарт</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_OCEAN_SEPARATION_WIDE_NAME" Language="ru_RU">
+      <Text>Широкое</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_SEA_LEVEL_NAME" Language="ru_RU">
+      <Text>Уровень моря для Terra YnAMP</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_SEA_LEVEL_DESC" Language="ru_RU">
+      <Text>Управляет общим количеством создаваемой суши. Более высокие уровни воды уменьшают общую площадь суши.</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_SEA_LEVEL_STANDARD_NAME" Language="ru_RU">
+      <Text>Стандарт</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_SEA_LEVEL_PLUS_25_NAME" Language="ru_RU">
+      <Text>+25% воды</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_SEA_LEVEL_PLUS_35_NAME" Language="ru_RU">
+      <Text>+35% воды</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_NW_PLACEMENT_MODE_NAME" Language="ru_RU">
       <text>Размещение природных чудес на картах TSL</text>
@@ -222,6 +249,44 @@
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_STRICT_DESC" Language="ru_RU">
       <text>Ограничивает доступность цивилизаций географическими разблокированиями и явно сохраненными исходными соседними разблокированиями, удаляя другие негеографические пути разблокирования, такие как доступность по лидеру или по награде.</text>
+    </Replace>
+  </LocalizedText>
+  <LocalizedText>
+    <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_MODE_NAME" Language="ru_RU">
+      <Text>Океанские переходы в эпоху Исследований на больших картах</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_MODE_DESC" Language="ru_RU">
+      <Text>Управляет передвижением по глубокому океану на больших и более крупных картах в эпоху Исследований. Стандарт сохраняет базовые правила. Свободное передвижение убирает океанское препятствие, завершающее ход. Свободное передвижение + сниженный урон также уменьшает базовый урон от истощения в океане.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_STANDARD_NAME" Language="ru_RU">
+      <Text>Стандарт</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_STANDARD_DESC" Language="ru_RU">
+      <Text>Сохраняет базовые правила эпохи Исследований для передвижения и получения урона в открытом океане.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_RELAXED_MOVEMENT_NAME" Language="ru_RU">
+      <Text>Свободное передвижение</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_RELAXED_MOVEMENT_DESC" Language="ru_RU">
+      <Text>На больших и более крупных картах вход в Океан больше не завершает ход юнита. Картография даёт погружённым юнитам +1 к перемещению, если они начинают ход на клетке Океана, Астрономия даёт морским юнитам +1 к перемещению, если они начинают ход на клетке Океана, а Кораблестроение даёт +1 к перемещению всем юнитам, если они начинают ход на клетке Океана.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_RELAXED_MOVEMENT_DAMAGE_NAME" Language="ru_RU">
+      <Text>Свободное передвижение + сниженный урон</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_RELAXED_MOVEMENT_DAMAGE_DESC" Language="ru_RU">
+      <Text>Также уменьшает базовый урон от глубокого океана на картах «Большие» и больше.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_EXPLORATION_OCEAN_OBSTACLE_MOVEMENT_DESCRIPTION" Language="ru_RU">
+      <Text>Все юниты получают +1 к перемещению, если начинают ход на клетке Океана.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_EXPLORATION_OCEAN_DAMAGE_MOVEMENT_DESCRIPTION" Language="ru_RU">
+      <Text>Дополнительный +1 к перемещению, если ход начинается на клетке Океана.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_EXPLORATION_OCEAN_NAVAL_MOVEMENT_DESCRIPTION" Language="ru_RU">
+      <Text>Морские юниты получают +1 к перемещению, если начинают ход на клетке Океана.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_EXPLORATION_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION" Language="ru_RU">
+      <Text>Погружённые юниты получают +1 к перемещению, если начинают ход на клетке Океана.</Text>
     </Replace>
   </LocalizedText>
 </Database>

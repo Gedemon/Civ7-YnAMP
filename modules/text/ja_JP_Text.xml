@@ -2,22 +2,22 @@
 <Database>
   <LocalizedText>
     <Replace Tag="LOC_MAP_GREATEST_EARTH_SIZE_NAME" Language="ja_JP">
-      <Text>Custom Huge for Greatest Earth (104x64)</Text>
+      <Text>カスタム巨大 (YnAMP 104x64)</Text>
     </Replace>
     <Replace Tag="LOC_MAPSIZE_MASSIVE_NAME" Language="ja_JP">
-      <Text>Massive (128x80)</Text>
+      <Text>Massive (YnAMP 128x80)</Text>
     </Replace>
     <Replace Tag="LOC_MAPSIZE_GIANT_NAME" Language="ja_JP">
-      <Text>巨大 (180x94)[n][icon:BUILDING_WARNING] タイル > 127 にテクスチャなし</Text>
+      <Text>巨大 (YnAMP 180x94)[n][icon:BUILDING_WARNING] タイル > 127 にテクスチャなし</Text>
     </Replace>
     <Replace Tag="LOC_MAPSIZE_LUDICROUS_NAME" Language="ja_JP">
-      <Text>Ludicrous (230x116)[n][icon:BUILDING_WARNING] タイル > 127 にテクスチャなし</Text>
+      <Text>Ludicrous (YnAMP 230x116)[n][icon:BUILDING_WARNING] タイル > 127 にテクスチャなし</Text>
     </Replace>
     <Replace Tag="LOC_MAP_TERRA_YNAMP_NAME" Language="ja_JP">
       <Text>Terra (YnAMP)</Text>
     </Replace>
     <Replace Tag="LOC_MAP_TERRA_YNAMP_DESCRIPTION" Language="ja_JP">
-      <Text>1/3 : 2/3 の陸地比率を持つ Terra スタイルの Voronoi マップ、不均衡な大陸生成に最適化されています。</Text>
+      <Text>より大きな陸地（「旧世界」）とより小さな陸地（「新世界」）を持つ Terra スタイルの Voronoi マップ。「Terra」開始位置オプションに推奨されるマップスクリプト。</Text>
     </Replace>
     <Replace Tag="LOC_MAP_GIANT_EARTH_YNAMP_NAME" Language="ja_JP">
       <Text>Giant Earth Map (YnAMP)</Text>
@@ -44,7 +44,7 @@
       <Text>YnAMP シナリオとスクリプト用の Ludicrous マップサイズ。</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_HOMELAND_MODE_NAME" Language="ja_JP">
-      <Text>地域タグ付けモード (YnAMP マップ用)</Text>
+      <Text>地域タグ付けモード (YnAMP TSL マップ用)</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_HOMELAND_MODE_DESC" Language="ja_JP">
       <Text>故郷と遠隔地域の分類方法を制御します。Landmass はプレイヤーの開始位置からの海洋分離を使用します。Region はサポートされる地球マップで XML で定義されたスーパー地域を使用し、XML 地域データが利用できない場合は Landmass にフォールバックします。</Text>
@@ -86,22 +86,22 @@
       <Text>Cultural Region (Terra) と同様ですが、文化グループを半球間で再分配して文明数を可能な限り均等に保ちます。同じ文化グループのすべての文明は常に同じ半球に留まります。各半球内で、文化的に隣接するグループは互いに近接して配置されます。文明の開始バイアスを無視します。</Text>
     </Replace>
     <Replace Tag="LOC_MAP_REGIONAL_EARTH_MASSIVE_YNAMP_NAME" Language="ja_JP">
-      <Text>Regional Earth Map (Massive) (YnAMP)</Text>
+      <Text>Massive Regional Earth (YnAMP)</Text>
     </Replace>
     <Replace Tag="LOC_MAP_REGIONAL_EARTH_MASSIVE_YNAMP_DESCRIPTION" Language="ja_JP">
-      <Text>Giant Earth の地理、真の開始位置、および XML 地域をセクションオフセットで再利用する 128x80 の Regional Earth マップ。クラシックな Colonization クロップから始めます。</Text>
+      <Text>1:1 の Giant Earth クロップをインポートし、ラップなしの動作を保持するために端部のシーム列を置き換える 128x80 の Regional Earth マップ。クラシックな Colonization セクションから始めます。</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_REGIONAL_EARTH_SECTION_NAME" Language="ja_JP">
       <Text>Regional Earth セクション</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_REGIONAL_EARTH_SECTION_DESC" Language="ja_JP">
-      <Text>この固定された 128x80 Regional Earth キャンバスに投影される Giant Earth のどのサブセクションかを選擇します。</Text>
+      <Text>Giant Earth のサブセクションを選択します。</Text>
     </Replace>
     <Replace Tag="LOC_MASSIVE_COLONIZATION_NAME" Language="ja_JP">
       <Text>植民地化</Text>
     </Replace>
     <Replace Tag="LOC_MASSIVE_COLONIZATION_DESC" Language="ja_JP">
-      <Text>ヨーロッパ、北大西洋、およびアメリカを 128x80 キャンバスに、YnAMP のクラシックな Colonization オフセットを使用。</Text>
+      <Text>ヨーロッパ、北大西洋、およびアメリカ。</Text>
     </Replace>
     <Replace Tag="LOC_MASSIVE_OLD_WORLD_NAME" Language="ja_JP">
       <Text>旧世界</Text>
@@ -115,10 +115,10 @@
     <Replace Tag="LOC_MASSIVE_INDO_PACIFIC_DESC" Language="ja_JP">
       <Text>南アジア、東南アジア、オセアニア、および太平洋流域を 128x80 キャンバスに、ラップなしの Giant Earth クロップを使用。</Text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_WRAPX_OLD_WORLD_NAME" Language="ja_JP">
+    <Replace Tag="LOC_YNAMP_REGIONAL_WRAPX_OLD_WORLD_NAME" Language="ja_JP">
       <Text>ラップなし</Text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_WRAPX_OLD_WORLD_DESC" Language="ja_JP">
+    <Replace Tag="LOC_YNAMP_REGIONAL_WRAPX_OLD_WORLD_DESC" Language="ja_JP">
       <Text>西へ航行して旧世界を一周し東インドに到達できるように、端部の通過不可能な地形を削除するにはこれを無効にします。</Text>
     </Replace>
     <Replace Tag="LOC_TERRA_YNAMP_RATIO_NAME" Language="ja_JP">
@@ -156,6 +156,33 @@
     </Replace>
     <Replace Tag="LOC_TERRA_YNAMP_SPAWN_SAME_NAME" Language="ja_JP">
       <Text>すべての文明を大きな陸地に配置</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_OCEAN_SEPARATION_NAME" Language="ja_JP">
+      <Text>Terra YnAMP の海洋分離</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_OCEAN_SEPARATION_DESC" Language="ja_JP">
+      <Text>生成器が旧世界と新世界の陸地の間にどれだけ海を残すかを制御します。広い は陸地間の最小距離を大きくします。標準 は Continents の基本間隔を使用します。</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_OCEAN_SEPARATION_STANDARD_NAME" Language="ja_JP">
+      <Text>標準</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_OCEAN_SEPARATION_WIDE_NAME" Language="ja_JP">
+      <Text>広い</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_SEA_LEVEL_NAME" Language="ja_JP">
+      <Text>Terra YnAMP の海面</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_SEA_LEVEL_DESC" Language="ja_JP">
+      <Text>生成される総陸地量を制御します。水域が多い設定ほど総陸地面積は小さくなります。</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_SEA_LEVEL_STANDARD_NAME" Language="ja_JP">
+      <Text>標準</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_SEA_LEVEL_PLUS_25_NAME" Language="ja_JP">
+      <Text>水域 +25%</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_SEA_LEVEL_PLUS_35_NAME" Language="ja_JP">
+      <Text>水域 +35%</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_NW_PLACEMENT_MODE_NAME" Language="ja_JP">
       <Text>TSL マップでの自然奇观の配置</Text>
@@ -222,6 +249,44 @@
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_STRICT_DESC" Language="ja_JP">
       <Text>文明の利用可能性を地理的なアンロックと明示的に保持された近隣の元のアンロックに制限し、リーダーまたは報酬ベースの利用可能性などの他の非地理的なアンロックパスを削除します。</Text>
+    </Replace>
+  </LocalizedText>
+  <LocalizedText>
+    <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_MODE_NAME" Language="ja_JP">
+      <Text>大型以上のマップにおける探検時代の外洋航行</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_MODE_DESC" Language="ja_JP">
+      <Text>探検時代の大型以上のマップにおける外洋移動を制御します。標準はバニラのルールを維持します。緩和された移動は、ターン終了を引き起こす外洋障害を取り除きます。緩和された移動 + 被害軽減 は、外洋の基本損耗も減らします。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_STANDARD_NAME" Language="ja_JP">
+      <Text>標準</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_STANDARD_DESC" Language="ja_JP">
+      <Text>探検時代の外洋における移動とダメージのバニラ規則を維持します。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_RELAXED_MOVEMENT_NAME" Language="ja_JP">
+      <Text>緩和された移動</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_RELAXED_MOVEMENT_DESC" Language="ja_JP">
+      <Text>大型以上のマップでは、海洋に進入してもユニットのターンは終了しません。地図製作術は海洋タイルで開始した乗船ユニットに移動力+1、天文学は海洋タイルで開始した海軍ユニットに移動力+1、造船術は海洋タイルで開始したすべてのユニットに移動力+1を付与します。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_RELAXED_MOVEMENT_DAMAGE_NAME" Language="ja_JP">
+      <Text>緩和された移動 + 被害軽減</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_RELAXED_MOVEMENT_DAMAGE_DESC" Language="ja_JP">
+      <Text>また、大型マップ以上では深海の基本ダメージも軽減します。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_EXPLORATION_OCEAN_OBSTACLE_MOVEMENT_DESCRIPTION" Language="ja_JP">
+      <Text>すべてのユニットは海洋タイルでターンを開始すると移動力+1を得ます。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_EXPLORATION_OCEAN_DAMAGE_MOVEMENT_DESCRIPTION" Language="ja_JP">
+      <Text>海洋タイルでターンを開始すると追加で移動力+1を得ます。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_EXPLORATION_OCEAN_NAVAL_MOVEMENT_DESCRIPTION" Language="ja_JP">
+      <Text>海軍ユニットは海洋タイルでターンを開始すると移動力+1を得ます。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_EXPLORATION_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION" Language="ja_JP">
+      <Text>乗船ユニットは海洋タイルでターンを開始すると移動力+1を得ます。</Text>
     </Replace>
   </LocalizedText>
 </Database>
