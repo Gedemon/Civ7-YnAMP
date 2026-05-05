@@ -49,6 +49,18 @@
     <Replace Tag="LOC_YNAMP_HOMELAND_MODE_DESC" Language="de_DE">
       <Text>Steuert, wie Heimat- und Fernregionen klassifiziert werden. Landmasse nutzt die Trennung durch Ozeane von Spieler-Startpositionen. Region nutzt XML-definierte Superregionen auf unterstützten Erdkarten und fällt auf Landmasse zurück, wenn keine XML-Regiondaten verfügbar sind.</Text>
     </Replace>
+    <Replace Tag="LOC_YNAMP_CIVILIZATION_TSL_NAME" Language="de_DE">
+      <Text>Zivilisations-TSL</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_CIVILIZATION_TSL_DESC" Language="de_DE">
+      <Text>Wenn aktiviert, verwenden Zivilisationen auf Karten mit XML-TSL-Daten echte Startpositionen und kulturelle Startoptionen werden ignoriert. Wenn deaktiviert, werden XML-TSL-Einträge für Zivilisationen ignoriert und die Startpositionen folgen der gewählten Startpositionsoption.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_CUSTOM_AGE_TRANSITION_SCREEN_NAME" Language="de_DE">
+      <Text>Benutzerdefinierten Auswahlbildschirm für Zeitalterwechsel verwenden</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_CUSTOM_AGE_TRANSITION_SCREEN_DESC" Language="de_DE">
+      <Text>Wenn diese Option im Einzelspieler aktiviert ist, verwendet YnAMP einen benutzerdefinierten Zeitalterwechsel-Bildschirm, der zusätzliche Anführer- und Zivilisationsänderungen erlaubt.</Text>
+    </Replace>
     <Replace Tag="LOC_YNAMP_HOMELAND_MODE_LANDMASS_NAME" Language="de_DE">
       <Text>Landmass (Standard)</Text>
     </Replace>
@@ -287,6 +299,12 @@
     </Replace>
     <Replace Tag="LOC_YNAMP_MOD_EXPLORATION_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION" Language="de_DE">
       <Text>Eingeschiffte Einheiten erhalten +1 Bewegung, wenn sie ihren Zug auf einem Ozeanfeld beginnen.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_MODERN_OCEAN_NAVAL_MOVEMENT_DESCRIPTION" Language="de_DE">
+      <Text>Marineeinheiten erhalten +2 Bewegung, wenn sie ihren Zug auf einem Ozeanfeld beginnen.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_MODERN_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION" Language="de_DE">
+      <Text>Eingeschiffte Einheiten erhalten +2 Bewegung, wenn sie ihren Zug auf einem Ozeanfeld beginnen.</Text>
     </Replace>
   </LocalizedText>
 </Database>

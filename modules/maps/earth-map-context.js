@@ -89,7 +89,7 @@ function getConfiguredMapIntValue(configKey) {
     return Number.isFinite(value) ? Math.trunc(value) : null;
 }
 
-function getConfiguredMapBoolValue(configKey) {
+export function getConfiguredMapBoolValue(configKey) {
     let rawValue = getConfiguredMapValue(configKey);
     if (rawValue == null) {
         return null;
@@ -396,4 +396,59 @@ export function mapLocalToSourceCoordinate(localX, localY, mapContext, includeSy
         X: normalizeX(mapContext.sourceStartX + localX, mapContext.sourceWidth),
         Y: clamp(mapContext.sourceStartY + localY, 0, mapContext.sourceHeight - 1),
     };
+}
+
+// ── TSL / option helpers (canonical, shared across map scripts) ───────────────
+
+export function isCivilizationTSLEnabled() {
+    return getConfiguredMapBoolValue("CivilizationTSL") ?? true;
+}
+
+export function getCurrentTSLSourceMapName() {
+    const earthMapContext = getActiveEarthMapContext();
+    if (earthMapContext?.sourceMapName) {
+        return earthMapContext.sourceMapName;
+    }
+
+    const configuredSourceMapName = getConfiguredMapTextValue("SourceMapName");
+    if (configuredSourceMapName != null) {
+        return configuredSourceMapName;
+    }
+
+    return getConfiguredMapTextValue("MapName");
+}
+
+export function hasTSLDataForCurrentMap() {
+    const sourceMapName = getCurrentTSLSourceMapName();
+    if (!sourceMapName) {
+        return false;
+    }
+
+    for (let i = 0; i < GameInfo.StartPosition.length; ++i) {
+        const row = GameInfo.StartPosition[i];
+        if (row.MapName === sourceMapName) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+export function buildTSLCoordMap() {
+    const coordMap = {};
+    const earthMapContext = getActiveEarthMapContext();
+    const sourceMapName = getEarthMapSourceMapName(earthMapContext) || "GiantEarth";
+    for (let i = 0; i < GameInfo.StartPosition.length; ++i) {
+        const row = GameInfo.StartPosition[i];
+        // Use first (usually Antiquity) entry per civ in the canonical map.
+        if (row.MapName === sourceMapName && !coordMap[row.Civilization]) {
+            const localCoord = earthMapContext
+                ? mapSourceToLocalCoordinate(row.X, row.Y, earthMapContext)
+                : { X: row.X, Y: row.Y, SourceX: row.X, SourceY: row.Y };
+            if (localCoord) {
+                coordMap[row.Civilization] = localCoord;
+            }
+        }
+    }
+    return coordMap;
 }

@@ -495,26 +495,47 @@ Practical result:
 
 ### 9.4 Cross-context property bridge
 
-Status: `Archived research`
+Status: `Research`
 
-YnAMP no longer uses a cross-context App UI bridge for cropped-map ice cleanup.
+YnAMP no longer uses a cross-context App UI bridge for cropped-map ice cleanup, but bridge behavior has been re-evaluated for age-transition and geographic-unlock workflows.
 
 Current state:
 
-- The earlier `Game.setProperty(...)` / `Game.getProperty(...)` experiment for post-load edge-ice metadata has been retired from the live cropped-map ice workflow.
-- Cropped-map ice prevention is now handled entirely before gameplay starts through the hidden `DisableIceOnRegion` map configuration value, the `region-no-ice` action criteria in `ynamp.modinfo`, and the `data/options/region-no-ice.sql` database update.
-- No live YnAMP runtime consumer currently depends on `YnAMP.PostLoadContext` for edge-ice cleanup decisions.
+- The older `Game.setProperty(...)` / `Game.getProperty(...)` experiment for post-load edge-ice metadata remains retired from the live cropped-map ice workflow.
+- Cropped-map ice prevention is still handled entirely before gameplay starts through the hidden `DisableIceOnRegion` map configuration value, the `region-no-ice` action criteria in `ynamp.modinfo`, and the `data/options/region-no-ice.sql` database update.
+- New UI-context testing now shows two more useful bridge behaviors for age-transition work.
 
-What remains useful from this research:
+Current bridge findings:
 
-- `Game.getProperty(...)` was readable from the App UI runtime during testing.
-- `GameplayMap.getProperty(...)` returned `null` in the same tests, so `Game` remains the more plausible bridge if a future UI feature needs post-load data.
-- `GameTutorial.setProperty(...)` / `GameTutorial.getProperty(...)` are still plausible candidates for future investigation, but they are not part of the current ice-prevention implementation.
+- `Automation.setParameter("YnAMP", key, value)` / `Automation.getParameter("YnAMP", key[, defaultValue])` are usable within UI contexts as an ephemeral bridge. The values persist between games until the application is closed, but they are not saved with the game. Automation is unavailable in Tuner or Map generation contexts.
+- `GameTutorial.setProperty(...)` / `GameTutorial.getProperty(...)` are usable within UI contexts, tuner contexts and map generation contexts and do persist across save/load, but they do not persist across era change.
+- `Game.getProperty(...)` is still usable within UI contexts, but `GameplayMap.setProperty(...)` exists only in tuner or map generation contexts. For the current age-transition workflow, Automation and GameTutorial are now the preferred channels.
 
 Current recommendation:
 
-- Do not reintroduce a post-load bridge for cropped-map ice unless a future requirement cannot be handled by configuration or database changes.
-- If a future cross-context feature needs one, keep the payload namespaced, versioned, and narrowly scoped, then validate save/load and age-transition behavior before treating it as production-ready.
+- Use `Automation` as the primary lightweight bridge when data only needs to survive until the application closes.
+- Use `GameTutorial` only for the subset of UI-context data that must survive save/reload within the same era.
+- Do not assume either bridge survives era transition unless it has been explicitly re-verified for that exact workflow.
+- Keep bridge payloads namespaced, versioned, and narrowly scoped.
+- Keep the old `Game` property research as historical reference, not as the default choice for new age-transition features.
+
+#### 9.4.1 Age-transition leader write result
+
+Status: `Confirmed limitation in current custom SP screen`
+
+Testing the YnAMP custom SP age-transition screen showed that arbitrary-player `PlayerLeader` writes do not stick in this context. The shell probe recorded the same player before the write, after the civilization reconciliation step, immediately after `GameSetup.setPlayerParameterValue(playerId, "PlayerLeader", targetLeader)`, and again after the UI refresh. In the failing case, the target leader remained present in the `PlayerLeader` domain, `readOnly` remained `false`, and the immediate post-write reread already returned the original leader value.
+
+Current conclusion:
+
+- The failure is not explained by the custom row refresh alone, because the leader value is already restored before the row list is rebuilt.
+- The failure is not explained by the target leader leaving the setup domain, because the target leader remained selectable throughout the probe.
+- For the current custom SP age-transition screen, arbitrary-player leader mutation should be treated as a setup-layer or engine limitation until new evidence shows otherwise.
+
+Current YnAMP decision:
+
+- Keep civilization selection editable in the custom age-transition screen.
+- Keep leader information visible, but lock the leader control as read-only for now.
+- Do not attempt to force arbitrary-player leader changes in this screen without a new engine path or a nearby shipped example that proves it works.
 
 ### 9.5 Post-load feature-modification limitation
 

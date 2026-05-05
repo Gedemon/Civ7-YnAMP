@@ -43,6 +43,14 @@
 				<Value>YNAMP_EXPLORATION_OCEAN_TRAVEL_RELAXED_MOVEMENT_DAMAGE</Value>
 			</ConfigurationValueMatches>
 		</Criteria>
+		<Criteria id="modern-ocean-travel-relaxed-movement">
+			<AgeInUse>AGE_MODERN</AgeInUse>
+			<ConfigurationValueContains>
+				<Group>Map</Group>
+				<ConfigurationId>ExplorationOceanTravelMode</ConfigurationId>
+				<Value>YNAMP_EXPLORATION_OCEAN_TRAVEL_RELAXED_MOVEMENT,YNAMP_EXPLORATION_OCEAN_TRAVEL_RELAXED_MOVEMENT_DAMAGE</Value>
+			</ConfigurationValueContains>
+		</Criteria>
 	</ActionCriteria>
 	<ActionGroups>
 		<ActionGroup id="base-game-init-ynamp" scope="game" criteria="always">
@@ -95,6 +103,16 @@
 				</UpdateDatabase>
 			</Actions>
 		</ActionGroup>
+		<ActionGroup id="base-game-modern-ocean-travel-movement" scope="game" criteria="modern-ocean-travel-relaxed-movement">
+			<Properties>
+				<LoadOrder>600</LoadOrder>
+			</Properties>
+			<Actions>
+				<UpdateDatabase>
+					<Item>data/options/modern-ocean-travel-movement.sql</Item>
+				</UpdateDatabase>
+			</Actions>
+		</ActionGroup>
 		<ActionGroup id="base-game-main-ynamp" scope="game" criteria="always">
 			<Actions>
 				<UpdateDatabase>
@@ -131,6 +149,7 @@
 					<Item>icons/ynamp-icons.xml</Item>
 				</UpdateIcons>
 				<UIScripts>
+					<Item>ui/ynamp-ingame.js</Item>
 					<Item module="false">ui/tuner/ynamp-firetuner.js</Item>
 				</UIScripts>
 				<ScenarioScripts>
@@ -169,6 +188,8 @@
 				<ImportFiles>
 					<Item>icons/happy_cat.png</Item>
 					<Item>icons/civ6_earth.png</Item>
+					<Item>ui/shell/age-transition/age-transition-civ-select.js</Item>
+					<Item>ui/shell/age-transition/ynamp-age-transition-civ-select.js</Item>
 				</ImportFiles>
 				<UpdateIcons>
 					<Item>icons/ynamp-icons.xml</Item>

@@ -55,6 +55,18 @@
 		<Replace Tag="LOC_YNAMP_HOMELAND_MODE_DESC">
 			<Text>Controls how homeland and distant-lands regions are classified. Landmass uses ocean separation from player starts. Region uses XML-defined superregions on supported Earth maps and falls back to Landmass when XML region data is unavailable.</Text>
 		</Replace>
+		<Replace Tag="LOC_YNAMP_CIVILIZATION_TSL_NAME">
+			<Text>Civilization TSL</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_CIVILIZATION_TSL_DESC">
+			<Text>When enabled, maps with XML True Start Location data use civilization TSL placement and ignore Cultural Start options. When disabled, civilization XML TSL entries are ignored and start positions follow the selected Start Position behavior.</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_CUSTOM_AGE_TRANSITION_SCREEN_NAME">
+			<Text>Use Custom Age Transition Selection Screen</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_CUSTOM_AGE_TRANSITION_SCREEN_DESC">
+			<Text>When enabled in single-player, YnAMP uses a custom age transition screen that will allow leader and civilization editing beyond the default transition flow.</Text>
+		</Replace>
 		<Replace Tag="LOC_YNAMP_HOMELAND_MODE_LANDMASS_NAME">
 			<Text>Landmass (default)</Text>
 		</Replace>
@@ -290,6 +302,12 @@
 		</Replace>
 		<Replace Tag="LOC_YNAMP_MOD_EXPLORATION_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION">
 			<Text>Embarked units gain +1 Movement when starting on an Ocean tile.</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_MOD_MODERN_OCEAN_NAVAL_MOVEMENT_DESCRIPTION">
+			<Text>Naval units gain +2 Movement when starting on an Ocean tile.</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_MOD_MODERN_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION">
+			<Text>Embarked units gain +2 Movement when starting on an Ocean tile.</Text>
 		</Replace>
 	</EnglishText>
 </Database>

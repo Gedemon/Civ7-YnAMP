@@ -49,6 +49,18 @@
     <Replace Tag="LOC_YNAMP_HOMELAND_MODE_DESC" Language="zh_Hans_CN">
       <Text>控制家乡和遥远地区区域的分类方式。Landmass 使用从玩家起始位置的海上分隔。Region 在支持的地球地图上使用 XML 定义的超级区域，当 XML 区域数据不可用时回退到 Landmass。</Text>
     </Replace>
+    <Replace Tag="LOC_YNAMP_CIVILIZATION_TSL_NAME" Language="zh_Hans_CN">
+      <Text>文明 TSL</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_CIVILIZATION_TSL_DESC" Language="zh_Hans_CN">
+      <Text>启用后，在具有 XML TSL 数据的地图上，文明将使用真实起始位置，并忽略文化起始选项。禁用后，文明 XML TSL 条目将被忽略，起始位置将遵循所选的起始位置选项。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_CUSTOM_AGE_TRANSITION_SCREEN_NAME" Language="zh_Hans_CN">
+      <Text>使用自定义时代过渡选择界面</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_CUSTOM_AGE_TRANSITION_SCREEN_DESC" Language="zh_Hans_CN">
+      <Text>在单人模式启用后，YnAMP 会使用一个自定义时代过渡界面，允许在默认流程之外编辑领袖和文明。</Text>
+    </Replace>
     <Replace Tag="LOC_YNAMP_HOMELAND_MODE_LANDMASS_NAME" Language="zh_Hans_CN">
       <Text>Landmass（默认）</Text>
     </Replace>
@@ -287,6 +299,12 @@
     </Replace>
     <Replace Tag="LOC_YNAMP_MOD_EXPLORATION_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION" Language="zh_Hans_CN">
       <Text>登船单位在远洋地块上开始回合时获得 +1 移动力。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_MODERN_OCEAN_NAVAL_MOVEMENT_DESCRIPTION" Language="zh_Hans_CN">
+      <Text>海军单位在远洋地块上开始回合时获得 +2 移动力。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_MODERN_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION" Language="zh_Hans_CN">
+      <Text>登船单位在远洋地块上开始回合时获得 +2 移动力。</Text>
     </Replace>
   </LocalizedText>
 </Database>

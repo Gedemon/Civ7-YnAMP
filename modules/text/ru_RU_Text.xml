@@ -49,6 +49,18 @@
     <Replace Tag="LOC_YNAMP_HOMELAND_MODE_DESC" Language="ru_RU">
       <Text>Контролирует, как классифицируются регионы родины и отдаленных земель. Landmass использует океаническое разделение от позиций старта игрока. Region использует суперрегионы, определенные в XML, на поддерживаемых картах Земли и возвращается к Landmass, когда данные региона XML недоступны.</Text>
     </Replace>
+    <Replace Tag="LOC_YNAMP_CIVILIZATION_TSL_NAME" Language="ru_RU">
+      <Text>TSL цивилизаций</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_CIVILIZATION_TSL_DESC" Language="ru_RU">
+      <Text>Если включено, на картах с XML-данными TSL цивилизации используют реальные стартовые позиции, а параметры культурного старта игнорируются. Если выключено, XML-записи TSL цивилизаций игнорируются, и стартовые позиции определяются выбранным параметром стартовой позиции.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_CUSTOM_AGE_TRANSITION_SCREEN_NAME" Language="ru_RU">
+      <Text>Использовать пользовательский экран выбора перехода эпохи</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_CUSTOM_AGE_TRANSITION_SCREEN_DESC" Language="ru_RU">
+      <Text>Если включено в одиночной игре, YnAMP использует пользовательский экран перехода эпохи, который позволит изменять лидеров и цивилизации сверх стандартного процесса.</Text>
+    </Replace>
     <Replace Tag="LOC_YNAMP_HOMELAND_MODE_LANDMASS_NAME" Language="ru_RU">
       <Text>Landmass (по умолчанию)</Text>
     </Replace>
@@ -287,6 +299,12 @@
     </Replace>
     <Replace Tag="LOC_YNAMP_MOD_EXPLORATION_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION" Language="ru_RU">
       <Text>Погружённые юниты получают +1 к перемещению, если начинают ход на клетке Океана.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_MODERN_OCEAN_NAVAL_MOVEMENT_DESCRIPTION" Language="ru_RU">
+      <Text>Морские юниты получают +2 к перемещению, если начинают ход на клетке Океана.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_MODERN_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION" Language="ru_RU">
+      <Text>Погружённые юниты получают +2 к перемещению, если начинают ход на клетке Океана.</Text>
     </Replace>
   </LocalizedText>
 </Database>

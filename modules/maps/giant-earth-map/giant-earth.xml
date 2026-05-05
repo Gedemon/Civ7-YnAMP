@@ -43,7 +43,7 @@
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_AMERICA"		X="155" Y="64" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_BUGANDA"		X="31"  Y="30" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_FRENCH_EMPIRE"	X="13" Y="67" />
-		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_GREAT_BRITAIN"	X="12" Y="72" />
+		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_GREAT_BRITAIN"	X="11" Y="73" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_MEIJI"			X="96" Y="58" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_MEXICO"		X="138" Y="49" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_MUGHAL"		X="60" Y="52" />
@@ -200,7 +200,6 @@
 		<Replace MapName="GiantEarth" X="151" Y="34"	RuleSet="RULESET_EXPANSION_2"	TerrainType="TERRAIN_PLAINS_MOUNTAIN" FeatureType="FEATURE_VOLCANO" />
 		<Replace MapName="GiantEarth" X="78" Y="25"		RuleSet="RULESET_EXPANSION_2"	TerrainType="TERRAIN_PLAINS_MOUNTAIN" FeatureType="FEATURE_VOLCANO" DisabledByFeature="FEATURE_KRAKATOA"/>
 		<Replace MapName="GiantEarth" X="42" Y="58"		RuleSet="RULESET_EXPANSION_2"	TerrainType="TERRAIN_PLAINS_MOUNTAIN" FeatureType="FEATURE_VOLCANO" />
-		<Replace MapName="GiantEarth" X="98" Y="60"		RuleSet="RULESET_EXPANSION_2"	TerrainType="TERRAIN_PLAINS_MOUNTAIN" FeatureType="FEATURE_VOLCANO" DisabledByFeature="FEATURE_SUK_FUJI"/>
 		<Replace MapName="GiantEarth" X="111" Y="73"	RuleSet="RULESET_EXPANSION_2"	TerrainType="TERRAIN_PLAINS_MOUNTAIN" FeatureType="FEATURE_VOLCANO" />
 		<Replace MapName="GiantEarth" X="113" Y="78"	RuleSet="RULESET_EXPANSION_2"	TerrainType="TERRAIN_PLAINS_MOUNTAIN" FeatureType="FEATURE_VOLCANO" />
 		<Replace MapName="GiantEarth" X="154" Y="45"	RuleSet="RULESET_EXPANSION_2"	TerrainType="TERRAIN_PLAINS_MOUNTAIN" FeatureType="FEATURE_VOLCANO" />

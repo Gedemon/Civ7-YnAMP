@@ -44,13 +44,8 @@
 // Note: generateDiscoveries() is called by base-game maps before FertilityBuilder.recalculate,
 //   so discoveries will reflect pre-shuffle start positions. This is a known limitation.
 
-import {
-    isValidPlot,
-    findFallbackStartPlot,
-    buildIslandStartMetadata,
-    findFallbackIslandStartPlot,
-} from '/ged-ynamp/maps/ynamp-utilities.js';
-import { getActiveEarthMapContext, getDefaultCulturalCoord, getEarthMapSourceMapName, mapSourceToLocalCoordinate } from '/ged-ynamp/maps/earth-map-context.js';
+import { isValidPlot, findFallbackStartPlot, buildIslandStartMetadata, findFallbackIslandStartPlot } from '/ged-ynamp/maps/ynamp-utilities.js';
+import { buildTSLCoordMap, getActiveEarthMapContext, getDefaultCulturalCoord, getEarthMapSourceMapName, hasTSLDataForCurrentMap, isCivilizationTSLEnabled, mapSourceToLocalCoordinate } from '/ged-ynamp/maps/earth-map-context.js';
 
 console.log("Loading ynamp-cultural-start.js");
 
@@ -96,56 +91,33 @@ const REGION_MIN_DISTANCE    = 8;
 
 // ── Option / map detection ────────────────────────────────────────────────────
 
-function isRelativeDistanceEnabled() {
+/**
+ * Returns the active StartPosition mode key, or null if none of the YnAMP
+ * modes is selected. Reads Configuration once and compares against all known
+ * hashes, replacing the former four separate isXxxEnabled() functions.
+ * @returns {'RELATIVE_DISTANCE'|'REGION'|'RELATIVE_DISTANCE_TERRA'|'REGION_BALANCED'|null}
+ */
+function getStartPositionMode() {
     const val = Configuration.getMapValue("StartPosition");
-    if (val == null) return false;
+    if (val == null) return null;
     const valNum = Number(BigInt.asIntN(32, BigInt(val)));
-    const hash   = Number(BigInt.asIntN(32, BigInt(Database.makeHash("START_POSITION_RELATIVE_DISTANCE"))));
-    return valNum === hash;
-}
-
-function isRegionEnabled() {
-    const val = Configuration.getMapValue("StartPosition");
-    if (val == null) return false;
-    const valNum = Number(BigInt.asIntN(32, BigInt(val)));
-    const hash   = Number(BigInt.asIntN(32, BigInt(Database.makeHash("START_POSITION_REGION"))));
-    return valNum === hash;
-}
-
-function isRelativeDistanceTerraEnabled() {
-    const val = Configuration.getMapValue("StartPosition");
-    if (val == null) return false;
-    const valNum = Number(BigInt.asIntN(32, BigInt(val)));
-    const hash   = Number(BigInt.asIntN(32, BigInt(Database.makeHash("START_POSITION_RELATIVE_DISTANCE_TERRA"))));
-    return valNum === hash;
-}
-
-function isRegionBalancedEnabled() {
-    const val = Configuration.getMapValue("StartPosition");
-    if (val == null) return false;
-    const valNum = Number(BigInt.asIntN(32, BigInt(val)));
-    const hash   = Number(BigInt.asIntN(32, BigInt(Database.makeHash("START_POSITION_REGION_BALANCED"))));
-    return valNum === hash;
+    const modes = [
+        "RELATIVE_DISTANCE",
+        "REGION",
+        "RELATIVE_DISTANCE_TERRA",
+        "REGION_BALANCED",
+    ];
+    for (const mode of modes) {
+        if (valNum === Number(BigInt.asIntN(32, BigInt(Database.makeHash("START_POSITION_" + mode))))) {
+            return mode;
+        }
+    }
+    return null;
 }
 
 // ── TSL / civ helpers ─────────────────────────────────────────────────────────
-
-function buildTSLCoordMap() {
-    const coordMap = {};
-    const earthMapContext = getActiveEarthMapContext();
-    const sourceMapName = getEarthMapSourceMapName(earthMapContext) || CANONICAL_MAP_NAME;
-    for (let i = 0; i < GameInfo.StartPosition.length; ++i) {
-        const row = GameInfo.StartPosition[i];
-        // Use first (usually Antiquity) entry per civ in the canonical map.
-        if (row.MapName === sourceMapName && !coordMap[row.Civilization]) {
-            const localCoord = earthMapContext ? mapSourceToLocalCoordinate(row.X, row.Y, earthMapContext) : { X: row.X, Y: row.Y, SourceX: row.X, SourceY: row.Y };
-            if (localCoord) {
-                coordMap[row.Civilization] = localCoord;
-            }
-        }
-    }
-    return coordMap;
-}
+// getConfiguredBoolValue, isCivilizationTSLEnabled, getCurrentTSLSourceMapName,
+// hasTSLDataForCurrentMap, buildTSLCoordMap are imported from earth-map-context.js
 
 function getCivTypeName(iPlayer) {
     const everAlive = Players.getEverAlive()[iPlayer];
@@ -611,6 +583,13 @@ function prepareOceaniaIslandStarts(playerIds, civProfiles, iWidth, iHeight) {
             islandMetadata
         );
 
+        if (!islandStart || typeof islandStart !== "object") {
+            if (isValidPlot(currentPlot)) usedPlots.add(currentPlot);
+            console.log("[YnAMP Region]  WARNING: island fallback search returned invalid data for " + civ +
+                " (preferred regionId=" + preferredRegionId + ")");
+            continue;
+        }
+
         if (!isValidPlot(islandStart.plot)) {
             if (isValidPlot(currentPlot)) usedPlots.add(currentPlot);
             console.log("[YnAMP Region]  WARNING: no island start found for " + civ +
@@ -621,6 +600,7 @@ function prepareOceaniaIslandStarts(playerIds, civProfiles, iWidth, iHeight) {
         if (islandStart.plot !== currentPlot) {
             StartPositioner.setStartPosition(islandStart.plot, pid);
         }
+
         usedPlots.add(islandStart.plot);
 
         const finalX = islandStart.plot % iWidth;
@@ -806,7 +786,7 @@ function runPerRegionRelativeDistanceShuffle(regionPlayerIds, coordMap, iWidth, 
 // Relative Distance (Terra) orchestrator.
 // Phase 1: SuperRegion hemisphere split (same as Cultural Region Terra).
 // Phase 2: within each hemisphere, relative-distance swaps with no oversea penalty.
-function runRelativeDistanceTerraShhuffle() {
+function runRelativeDistanceTerraShuffle() {
     console.log("[YnAMP TerraRelDist] ═══ Relative Distance Terra Shuffle ══════════");
     const aliveMajorIds = Players.getAliveMajorIds();
     if (aliveMajorIds.length < 2) {
@@ -1176,11 +1156,12 @@ function runRegionBalancedShuffle() {
 // ── GenerateMap patch ─────────────────────────────────────────────────────────
 
 function generateMap() {
-    const relDist      = isRelativeDistanceEnabled();
-    const region       = isRegionEnabled();
-    const relDistTerra = isRelativeDistanceTerraEnabled();
-    const balanced     = isRegionBalancedEnabled();
-    if (!relDist && !region && !relDistTerra && !balanced) return;
+    const mode         = getStartPositionMode();
+    if (!mode) return;
+    const relDist      = mode === "RELATIVE_DISTANCE";
+    const region       = mode === "REGION";
+    const relDistTerra = mode === "RELATIVE_DISTANCE_TERRA";
+    const balanced     = mode === "REGION_BALANCED";
 
     if (relDist)      console.log("[YnAMP Cultural] START_POSITION_RELATIVE_DISTANCE detected.");
     if (region)       console.log("[YnAMP Cultural] START_POSITION_REGION detected.");
@@ -1197,11 +1178,20 @@ function generateMap() {
         // Restore immediately so any subsequent recalculate calls in the same session
         // go directly to the original function.
         FertilityBuilder.recalculate = _originalRecalculate;
+
+        const civilizationTSLEnabled = isCivilizationTSLEnabled();
+        const hasTSLData = hasTSLDataForCurrentMap();
+        if (civilizationTSLEnabled && hasTSLData) {
+            console.log("[YnAMP Cultural] CivilizationTSL is enabled and this map has XML TSL data; skipping cultural StartPosition shuffles.");
+            FertilityBuilder.recalculate();
+            return;
+        }
+
         // Run the appropriate shuffle while start positions are assigned but
         // before assignAdvancedStartRegions (which respects the shuffled positions).
         if (relDist)      runCulturalDistanceShuffle();
         if (region)       runRegionShuffle();
-        if (relDistTerra) runRelativeDistanceTerraShhuffle();
+        if (relDistTerra) runRelativeDistanceTerraShuffle();
         if (balanced)     runRegionBalancedShuffle();
         // Call the restored original.
         FertilityBuilder.recalculate();

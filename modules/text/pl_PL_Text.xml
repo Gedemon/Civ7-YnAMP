@@ -49,6 +49,18 @@
     <Replace Tag="LOC_YNAMP_HOMELAND_MODE_DESC" Language="pl_PL">
       <Text>Kontroluje klasyfikację regionów ojczyzny i odległych ziem. Landmass używa separacji oceanicznej od pozycji startowych gracza. Region używa superregionów zdefiniowanych w XML na obsługiwanych mapach Ziemi i powraca do Landmass, gdy dane regionu XML są niedostępne.</Text>
     </Replace>
+    <Replace Tag="LOC_YNAMP_CIVILIZATION_TSL_NAME" Language="pl_PL">
+      <Text>TSL cywilizacji</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_CIVILIZATION_TSL_DESC" Language="pl_PL">
+      <Text>Po włączeniu na mapach z danymi XML TSL cywilizacje używają rzeczywistych pozycji startowych, a opcje startu kulturowego są ignorowane. Po wyłączeniu wpisy XML TSL cywilizacji są ignorowane, a pozycje startowe wynikają z wybranej opcji Pozycja startowa.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_CUSTOM_AGE_TRANSITION_SCREEN_NAME" Language="pl_PL">
+      <Text>Użyj niestandardowego ekranu wyboru przejścia epoki</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_CUSTOM_AGE_TRANSITION_SCREEN_DESC" Language="pl_PL">
+      <Text>Po włączeniu w trybie jednego gracza YnAMP używa niestandardowego ekranu przejścia epoki, który pozwoli zmieniać przywódców i cywilizacje poza domyślnym przebiegiem.</Text>
+    </Replace>
     <Replace Tag="LOC_YNAMP_HOMELAND_MODE_LANDMASS_NAME" Language="pl_PL">
       <Text>Landmass (domyślny)</Text>
     </Replace>
@@ -287,6 +299,12 @@
     </Replace>
     <Replace Tag="LOC_YNAMP_MOD_EXPLORATION_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION" Language="pl_PL">
       <Text>Jednostki zaokrętowane otrzymują +1 do Ruchu, jeśli zaczynają turę na polu Oceanu.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_MODERN_OCEAN_NAVAL_MOVEMENT_DESCRIPTION" Language="pl_PL">
+      <Text>Jednostki morskie otrzymują +2 do Ruchu, jeśli zaczynają turę na polu Oceanu.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_MODERN_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION" Language="pl_PL">
+      <Text>Jednostki zaokrętowane otrzymują +2 do Ruchu, jeśli zaczynają turę na polu Oceanu.</Text>
     </Replace>
   </LocalizedText>
 </Database>

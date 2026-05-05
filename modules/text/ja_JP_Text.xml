@@ -49,6 +49,18 @@
     <Replace Tag="LOC_YNAMP_HOMELAND_MODE_DESC" Language="ja_JP">
       <Text>故郷と遠隔地域の分類方法を制御します。Landmass はプレイヤーの開始位置からの海洋分離を使用します。Region はサポートされる地球マップで XML で定義されたスーパー地域を使用し、XML 地域データが利用できない場合は Landmass にフォールバックします。</Text>
     </Replace>
+      <Replace Tag="LOC_YNAMP_CIVILIZATION_TSL_NAME" Language="ja_JP">
+        <Text>文明TSL</Text>
+      </Replace>
+      <Replace Tag="LOC_YNAMP_CIVILIZATION_TSL_DESC" Language="ja_JP">
+        <Text>有効な場合、XML の TSL データがあるマップでは文明は史実の開始地点を使用し、文化的開始オプションは無視されます。無効な場合、文明の XML TSL エントリーは無視され、開始地点は選択した開始位置オプションに従います。</Text>
+      </Replace>
+      <Replace Tag="LOC_YNAMP_CUSTOM_AGE_TRANSITION_SCREEN_NAME" Language="ja_JP">
+        <Text>カスタム時代移行選択画面を使用</Text>
+      </Replace>
+      <Replace Tag="LOC_YNAMP_CUSTOM_AGE_TRANSITION_SCREEN_DESC" Language="ja_JP">
+        <Text>シングルプレイヤーで有効にすると、YnAMP は既定の移行フローを超えて指導者と文明を編集できるカスタム時代移行画面を使用します。</Text>
+      </Replace>
     <Replace Tag="LOC_YNAMP_HOMELAND_MODE_LANDMASS_NAME" Language="ja_JP">
       <Text>Landmass (デフォルト)</Text>
     </Replace>
@@ -287,6 +299,12 @@
     </Replace>
     <Replace Tag="LOC_YNAMP_MOD_EXPLORATION_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION" Language="ja_JP">
       <Text>乗船ユニットは海洋タイルでターンを開始すると移動力+1を得ます。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_MODERN_OCEAN_NAVAL_MOVEMENT_DESCRIPTION" Language="ja_JP">
+      <Text>海軍ユニットは海洋タイルでターンを開始すると移動力+2を得ます。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_MODERN_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION" Language="ja_JP">
+      <Text>乗船ユニットは海洋タイルでターンを開始すると移動力+2を得ます。</Text>
     </Replace>
   </LocalizedText>
 </Database>

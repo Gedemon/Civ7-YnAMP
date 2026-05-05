@@ -1537,76 +1537,6 @@ export function overrideHomelandsWithLandmass(iWidth, iHeight) {
     console.log("overrideHomelandsWithLandmass: Coast water — homeland=" + waterTagCounts.homeland + " distant=" + waterTagCounts.distant + " island=" + waterTagCounts.island + " (ocean untouched: " + waterTagCounts.ocean + ")");
 }
 
-/**
- * @param {number} iWidth
- * @param {number} iHeight
- * @param {number[]} startPositions
- * @param {string|*} mapContextOrName
- */
-export function applyRegionBasedLandmassTags(iWidth, iHeight, startPositions, mapContextOrName) {
-    console.log("applyRegionBasedLandmassTags: Starting with mapName=" + getEarthMapLabel(mapContextOrName));
-    console.log("applyRegionBasedLandmassTags: startPositions type=" + typeof startPositions + " length=" + (Array.isArray(startPositions) ? startPositions.length : "not array"));
-    if (Array.isArray(startPositions) && startPositions.length > 0) {
-        console.log("applyRegionBasedLandmassTags: startPositions[0]=" + startPositions[0]);
-    }
-    
-    // Build region grid from XML
-    let regionByTile = buildRegionGrid(iWidth, iHeight, mapContextOrName);
-    if (!regionByTile) {
-        console.log("applyRegionBasedLandmassTags: No RegionPosition data found");
-        return;
-    }
-    
-    // Identify human player's starting region
-    let homelandRegions = {};
-    if (Array.isArray(startPositions) && startPositions.length > 0) {
-        let startIndex = startPositions[0]; // Human player is always index 0
-        console.log("applyRegionBasedLandmassTags: Processing startIndex=" + startIndex);
-        if (typeof startIndex === 'number' && !isNaN(startIndex)) {
-            let startX = startIndex % iWidth;
-            let startY = Math.floor(startIndex / iWidth);
-            console.log("applyRegionBasedLandmassTags: Converted to (" + startX + "," + startY + ")");
-            if (startX >= 0 && startX < iWidth && startY >= 0 && startY < iHeight) {
-                let regionName = regionByTile[startX][startY];
-                console.log("applyRegionBasedLandmassTags: regionByTile[" + startX + "][" + startY + "]=" + regionName);
-                if (regionName) {
-                    homelandRegions[regionName] = true;
-                    console.log("applyRegionBasedLandmassTags: Human player in region " + regionName + " at (" + startX + "," + startY + ")");
-                } else {
-                    console.log("applyRegionBasedLandmassTags: No region name found at this position");
-                }
-            } else {
-                console.log("applyRegionBasedLandmassTags: Coordinates out of bounds");
-            }
-        }
-    }
-    
-    // Apply landmass tags based on regions
-    // Tag ALL land tiles - homeland regions get WEST_LANDMASS, everything else (including unassigned) gets EAST_LANDMASS
-    let tagCounts = { homeland: 0, distant: 0 };
-    for (let iY = 0; iY < iHeight; iY++) {
-        for (let iX = 0; iX < iWidth; iX++) {
-            if (isEarthMapSyntheticWorldEndColumn(iX, getActiveEarthMapContext())) {
-                continue;
-            }
-            if (!GameplayMap.isWater(iX, iY)) {
-                let regionName = regionByTile[iX][iY];
-                let isHomeland = regionName ? homelandRegions[regionName] : false;
-                if (isHomeland) {
-                    TerrainBuilder.setPlotTag(iX, iY, PlotTags.PLOT_TAG_WEST_LANDMASS);
-                    tagCounts.homeland++;
-                } else {
-                    // All non-homeland tiles (including unassigned) are distant lands
-                    TerrainBuilder.setPlotTag(iX, iY, PlotTags.PLOT_TAG_EAST_LANDMASS);
-                    tagCounts.distant++;
-                }
-            }
-        }
-    }
-    
-    console.log("applyRegionBasedLandmassTags: Applied tags - homeland=" + tagCounts.homeland + " distant=" + tagCounts.distant);
-}
-
 export function dumpElevationPrecise(iWidth, iHeight) {
     // Dump it out as an ASCII map to "Scripting.log"
     for (let iY = iHeight - 1; iY >= 0; iY--) {
@@ -1749,9 +1679,16 @@ export function buildIslandStartMetadata(iWidth, iHeight) {
     let plotToComponentId = new Map();
     let islandPlots = new Set();
     let mainlandComponents = [];
+    let syntheticSkipped = 0;
+    let mapContext = getActiveEarthMapContext();
 
     for (let y = 0; y < iHeight; y++) {
         for (let x = 0; x < iWidth; x++) {
+            if (isEarthMapSyntheticWorldEndColumn(x, mapContext)) {
+                syntheticSkipped++;
+                continue;
+            }
+
             if (GameplayMap.getTerrainType(x, y) == globals.g_OceanTerrain) {
                 continue;
             }
@@ -1799,6 +1736,11 @@ export function buildIslandStartMetadata(iWidth, iHeight) {
             }
         }
     }
+
+    console.log("[YnAMP Region] [DEBUG-META] islandMetadata components=" + components.length +
+        " mainlandComponents=" + mainlandComponents.length +
+        " islandPlots=" + islandPlots.size +
+        " syntheticSkipped=" + syntheticSkipped);
 
     return {
         components,

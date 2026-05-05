@@ -49,6 +49,18 @@
     <Replace Tag="LOC_YNAMP_HOMELAND_MODE_DESC" Language="es_ES">
       <Text>Controla cómo se clasifican las regiones de tierra natal y tierras lejanas. Landmass usa la separación por océano desde las posiciones de inicio del jugador. Region usa superregiones definidas en XML en los mapas Tierra compatibles y vuelve a Landmass cuando los datos de región XML no están disponibles.</Text>
     </Replace>
+    <Replace Tag="LOC_YNAMP_CIVILIZATION_TSL_NAME" Language="es_ES">
+      <Text>TSL de civilizaciones</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_CIVILIZATION_TSL_DESC" Language="es_ES">
+      <Text>Si está activado, en los mapas con datos XML de TSL las civilizaciones usan posiciones de inicio reales y se ignoran las opciones de inicio cultural. Si está desactivado, se ignoran las entradas XML de TSL de civilizaciones y las posiciones de inicio siguen la opción de Posición inicial seleccionada.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_CUSTOM_AGE_TRANSITION_SCREEN_NAME" Language="es_ES">
+      <Text>Usar pantalla personalizada de selección para transición de era</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_CUSTOM_AGE_TRANSITION_SCREEN_DESC" Language="es_ES">
+      <Text>Cuando se activa en un jugador, YnAMP usa una pantalla personalizada de transición de era que permitirá editar líderes y civilizaciones más allá del flujo predeterminado.</Text>
+    </Replace>
     <Replace Tag="LOC_YNAMP_HOMELAND_MODE_LANDMASS_NAME" Language="es_ES">
       <Text>Landmass (predeterminado)</Text>
     </Replace>
@@ -287,6 +299,12 @@
     </Replace>
     <Replace Tag="LOC_YNAMP_MOD_EXPLORATION_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION" Language="es_ES">
       <Text>Las unidades embarcadas obtienen +1 de Movimiento al comenzar en una casilla de Océano.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_MODERN_OCEAN_NAVAL_MOVEMENT_DESCRIPTION" Language="es_ES">
+      <Text>Las unidades navales obtienen +2 de Movimiento al comenzar en una casilla de Océano.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_MODERN_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION" Language="es_ES">
+      <Text>Las unidades embarcadas obtienen +2 de Movimiento al comenzar en una casilla de Océano.</Text>
     </Replace>
   </LocalizedText>
 </Database>

@@ -18,7 +18,7 @@ import { dumpPermanentSnow } from '/base-standard/maps/snow-generator.js';
 import { dumpStartSectors, dumpContinents, dumpTerrain, dumpElevation, dumpRainfall, dumpBiomes, dumpFeatures, dumpResources, dumpNoisePredicate } from '/base-standard/maps/map-debug-helpers.js';
 import * as ynamp from '/ged-ynamp/maps/ynamp-utilities.js';
 import { isValidPlot, isSettlablePlot, isPlotTooCloseToUsed, findFallbackStartPlot } from '/ged-ynamp/maps/ynamp-utilities.js';
-import { buildEarthMapContext, getEarthMapLabel, isEarthMapSyntheticWorldEndColumn, mapSourceToLocalCoordinate, setActiveEarthMapContext } from '/ged-ynamp/maps/earth-map-context.js';
+import { buildEarthMapContext, buildTSLCoordMap, getConfiguredMapBoolValue, getEarthMapLabel, hasTSLDataForCurrentMap, isCivilizationTSLEnabled, isEarthMapSyntheticWorldEndColumn, mapSourceToLocalCoordinate, setActiveEarthMapContext } from '/ged-ynamp/maps/earth-map-context.js';
 import { getNWPlacementMode, placeCustomNaturalWonders } from '/ged-ynamp/maps/ynamp-natural-wonders.js';
 import { applyRegionalResourcePlacement } from '/ged-ynamp/maps/ynamp-regional-resources.js';
 
@@ -69,19 +69,8 @@ function findNearestValidPlotTo(tslX, tslY, usedPlots, iWidth, iHeight) {
     return bestPlot;
 }
 
-function buildTSLByCivilization(mapContext) {
-    const tsl = {};
-    for (let i = 0; i < GameInfo.StartPosition.length; ++i) {
-        let row = GameInfo.StartPosition[i];
-        if (row.MapName == mapContext.sourceMapName) {
-            let localCoord = mapSourceToLocalCoordinate(row.X, row.Y, mapContext);
-            if (localCoord) {
-                tsl[row.Civilization] = localCoord;
-            }
-        }
-    }
-    return tsl;
-}
+// getConfiguredBoolValue, isCivilizationTSLEnabled, hasTSLDataForCurrentMap, buildTSLCoordMap
+// are imported from earth-map-context.js
 
 function enforceHumanTSLStart(mapContext, iWidth) {
     let aliveMajorIds = Players.getAliveMajorIds();
@@ -107,7 +96,7 @@ function enforceHumanTSLStart(mapContext, iWidth) {
         return;
     }
 
-    let tslByCivilization = buildTSLByCivilization(mapContext);
+    let tslByCivilization = buildTSLCoordMap();
     let humanTSL = tslByCivilization[civRow.CivilizationType];
     if (!humanTSL) {
         return;
@@ -473,9 +462,20 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
 
     let playerRegions = buildPlayerRegionsFromSectors(iWidth, iHeight, iStartSectorRows, iStartSectorCols, startSectors, aliveMajorIds.length, mapContext);
     startPositions = phase("assignStartPositionsFromTiles", () => assignStartPositionsFromTiles(playerRegions));
-    startPositions = assignTSL(mapContext, startPositions);
+    const civilizationTSLEnabled = isCivilizationTSLEnabled();
+    const mapHasTSLStartData = hasTSLDataForCurrentMap();
+    const applyCivilizationTSL = civilizationTSLEnabled && mapHasTSLStartData;
 
-    enforceHumanTSLStart(mapContext, iWidth);
+    console.log("CivilizationTSL: " + (civilizationTSLEnabled ? "enabled" : "disabled") +
+        " mapHasTSLData=" + mapHasTSLStartData +
+        " sourceMap=" + (mapContext?.sourceMapName ?? "unknown"));
+
+    if (applyCivilizationTSL) {
+        startPositions = assignTSL(mapContext, startPositions);
+        enforceHumanTSLStart(mapContext, iWidth);
+    } else {
+        console.log("CivilizationTSL: skipping XML true-start placement; using tile-based start positions.");
+    }
 
     phase("generateDiscoveries", () => {
         // Limit to 10 players for discoveries (base game limitation)
@@ -485,17 +485,6 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
     ynamp.validate(iWidth, iHeight, iNumPlayers1, iNumPlayers2, null, null, startPositions, mapName);
     console.log("dumpResources...");
     dumpResources(iWidth, iHeight);
-    FertilityBuilder.recalculate(); // Must be after features are added.
-    dumpFinalMajorStarts(iWidth, iHeight, iMinFallbackDistance);
-    let seed = GameplayMap.getRandomSeed(); // can use any seed you want for different noises
-    let avgDistanceBetweenPoints = 3;
-    let normalizedRangeSmoothing = 2;
-    console.log("generatePoissonMap...");
-    let poisson = TerrainBuilder.generatePoissonMap(seed, avgDistanceBetweenPoints, normalizedRangeSmoothing);
-    let poissonPred = (val) => {
-        return val >= 1 ? "*" : " ";
-    };
-    dumpNoisePredicate(iWidth, iHeight, poisson, poissonPred);
     
     // Assign homeland/distant lands classification (post-placement, after all start positions are set)
     if (regionMode == "region") {
@@ -507,6 +496,21 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
         console.log("Using connectivity-based landmass classification (landmass mode)");
         ynamp.overrideHomelandsWithLandmass(iWidth, iHeight);
     }
+
+    // FertilityBuilder.recalculate Must be after features are added.
+    // Must also be after homeland/distant lands classification as Cultural Starting Position are patched in and requires the classification
+    FertilityBuilder.recalculate(); 
+
+    dumpFinalMajorStarts(iWidth, iHeight, iMinFallbackDistance);
+    let seed = GameplayMap.getRandomSeed(); // can use any seed you want for different noises
+    let avgDistanceBetweenPoints = 3;
+    let normalizedRangeSmoothing = 2;
+    console.log("generatePoissonMap...");
+    let poisson = TerrainBuilder.generatePoissonMap(seed, avgDistanceBetweenPoints, normalizedRangeSmoothing);
+    let poissonPred = (val) => {
+        return val >= 1 ? "*" : " ";
+    };
+    dumpNoisePredicate(iWidth, iHeight, poisson, poissonPred);
 
     let missingStartPlayerIds = getAlivePlayersWithoutStartPositions();
     if (missingStartPlayerIds.length == 0) {
@@ -551,7 +555,7 @@ function placeVolcanoes(mapName, mapContext) {
 function assignTSL(mapContext, defaultStartPositions) {
     console.log("Assigning YnAMP TSL for " + getEarthMapLabel(mapContext));
     const startPositions = []; // Plot indices for start positions chosen
-    const TSL = buildTSLByCivilization(mapContext);
+    const TSL = buildTSLCoordMap();
     const iWidth = GameplayMap.getGridWidth();
     const iHeight = GameplayMap.getGridHeight();
     const usedPlots = new Set();

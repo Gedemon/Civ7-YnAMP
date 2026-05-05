@@ -49,6 +49,18 @@
     <Replace Tag="LOC_YNAMP_HOMELAND_MODE_DESC" Language="pt_BR">
       <Text>Controla como as regiões de terra natal e terras distantes são classificadas. Landmass usa separação oceânica a partir das posições de início do jogador. Region usa super-regiões definidas no XML nos mapas Terra suportados e volta para Landmass quando os dados da região XML não estão disponíveis.</Text>
     </Replace>
+    <Replace Tag="LOC_YNAMP_CIVILIZATION_TSL_NAME" Language="pt_BR">
+      <Text>TSL de Civilizações</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_CIVILIZATION_TSL_DESC" Language="pt_BR">
+      <Text>Quando ativado, em mapas com dados XML de TSL as civilizações usam posições iniciais reais e as opções de início cultural são ignoradas. Quando desativado, as entradas XML de TSL das civilizações são ignoradas e as posições iniciais seguem a opção de Posição Inicial selecionada.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_CUSTOM_AGE_TRANSITION_SCREEN_NAME" Language="pt_BR">
+      <Text>Usar tela personalizada de seleção de transição de era</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_CUSTOM_AGE_TRANSITION_SCREEN_DESC" Language="pt_BR">
+      <Text>Quando ativado no modo um jogador, o YnAMP usa uma tela personalizada de transição de era que permitirá editar líderes e civilizações além do fluxo padrão.</Text>
+    </Replace>
     <Replace Tag="LOC_YNAMP_HOMELAND_MODE_LANDMASS_NAME" Language="pt_BR">
       <Text>Landmass (padrão)</Text>
     </Replace>
@@ -287,6 +299,12 @@
     </Replace>
     <Replace Tag="LOC_YNAMP_MOD_EXPLORATION_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION" Language="pt_BR">
       <Text>Unidades embarcadas recebem +1 de Movimento ao começarem em um hexágono de Oceano.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_MODERN_OCEAN_NAVAL_MOVEMENT_DESCRIPTION" Language="pt_BR">
+      <Text>Unidades navais recebem +2 de Movimento ao começarem em um hexágono de Oceano.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_MODERN_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION" Language="pt_BR">
+      <Text>Unidades embarcadas recebem +2 de Movimento ao começarem em um hexágono de Oceano.</Text>
     </Replace>
   </LocalizedText>
 </Database>

@@ -49,6 +49,18 @@
     <Replace Tag="LOC_YNAMP_HOMELAND_MODE_DESC" Language="ko_KR">
       <Text>고향과 먼 지역 분류 방법을 제어합니다. Landmass 는 플레이어 시작 위치에서의 해양 분리를 사용합니다. Region 은 지원되는 지구 맵에서 XML 로 정의된 슈퍼 지역을 사용하며, XML 지역 데이터가 사용 불가능한 경우 Landmass 로 폴백합니다.</Text>
     </Replace>
+      <Replace Tag="LOC_YNAMP_CIVILIZATION_TSL_NAME" Language="ko_KR">
+        <Text>문명 TSL</Text>
+      </Replace>
+      <Replace Tag="LOC_YNAMP_CIVILIZATION_TSL_DESC" Language="ko_KR">
+        <Text>활성화하면 XML TSL 데이터가 있는 맵에서 문명은 실제 시작 위치를 사용하고 문화 시작 옵션은 무시됩니다. 비활성화하면 문명 XML TSL 항목이 무시되며 시작 위치는 선택한 시작 위치 옵션을 따릅니다.</Text>
+      </Replace>
+      <Replace Tag="LOC_YNAMP_CUSTOM_AGE_TRANSITION_SCREEN_NAME" Language="ko_KR">
+        <Text>사용자 지정 시대 전환 선택 화면 사용</Text>
+      </Replace>
+      <Replace Tag="LOC_YNAMP_CUSTOM_AGE_TRANSITION_SCREEN_DESC" Language="ko_KR">
+        <Text>싱글 플레이어에서 활성화하면 YnAMP 는 기본 전환 흐름을 넘어 지도자와 문명을 편집할 수 있는 사용자 지정 시대 전환 화면을 사용합니다.</Text>
+      </Replace>
     <Replace Tag="LOC_YNAMP_HOMELAND_MODE_LANDMASS_NAME" Language="ko_KR">
       <Text>Landmass (기본)</Text>
     </Replace>
@@ -287,6 +299,12 @@
     </Replace>
     <Replace Tag="LOC_YNAMP_MOD_EXPLORATION_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION" Language="ko_KR">
       <Text>승선 유닛은 대양 타일에서 턴을 시작하면 이동력 +1을 얻습니다.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_MODERN_OCEAN_NAVAL_MOVEMENT_DESCRIPTION" Language="ko_KR">
+      <Text>해군 유닛은 대양 타일에서 턴을 시작하면 이동력 +2를 얻습니다.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_MODERN_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION" Language="ko_KR">
+      <Text>승선 유닛은 대양 타일에서 턴을 시작하면 이동력 +2를 얻습니다.</Text>
     </Replace>
   </LocalizedText>
 </Database>

@@ -49,6 +49,18 @@
     <Replace Tag="LOC_YNAMP_HOMELAND_MODE_DESC" Language="it_IT">
       <Text>Controlla come vengono classificate le regioni della terra natale e delle terre lontane. Landmass usa la separazione oceanica dalle posizioni di inizio del giocatore. Region usa le superregioni definite in XML sulle mappe Terra supportate e torna a Landmass quando i dati della regione XML non sono disponibili.</Text>
     </Replace>
+    <Replace Tag="LOC_YNAMP_CIVILIZATION_TSL_NAME" Language="it_IT">
+      <Text>TSL delle civiltà</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_CIVILIZATION_TSL_DESC" Language="it_IT">
+      <Text>Se attivo, nelle mappe con dati TSL XML le civiltà usano le posizioni di partenza reali e le opzioni di partenza culturale vengono ignorate. Se disattivo, le voci TSL XML delle civiltà vengono ignorate e le posizioni iniziali seguono l'opzione Posizione iniziale selezionata.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_CUSTOM_AGE_TRANSITION_SCREEN_NAME" Language="it_IT">
+      <Text>Usa schermata personalizzata di selezione per il passaggio d'età</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_CUSTOM_AGE_TRANSITION_SCREEN_DESC" Language="it_IT">
+      <Text>Quando attiva in giocatore singolo, YnAMP usa una schermata personalizzata di passaggio d'età che permetterà di modificare leader e civiltà oltre il flusso predefinito.</Text>
+    </Replace>
     <Replace Tag="LOC_YNAMP_HOMELAND_MODE_LANDMASS_NAME" Language="it_IT">
       <Text>Landmass (predefinito)</Text>
     </Replace>
@@ -287,6 +299,12 @@
     </Replace>
     <Replace Tag="LOC_YNAMP_MOD_EXPLORATION_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION" Language="it_IT">
       <Text>Le unità imbarcate ottengono +1 Movimento quando iniziano su una casella Oceano.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_MODERN_OCEAN_NAVAL_MOVEMENT_DESCRIPTION" Language="it_IT">
+      <Text>Le unità navali ottengono +2 Movimento quando iniziano su una casella Oceano.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_MOD_MODERN_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION" Language="it_IT">
+      <Text>Le unità imbarcate ottengono +2 Movimento quando iniziano su una casella Oceano.</Text>
     </Replace>
   </LocalizedText>
 </Database>
