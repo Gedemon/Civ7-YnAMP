@@ -242,25 +242,25 @@
       <Text>Sblocco geografico delle civiltà</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_MODE_DESC" Language="it_IT">
-      <Text>Controlla come la geografia influenza la disponibilità delle civiltà sulle mappe Terra TSL. No Unlock mantiene solo il realismo di posizionamento. Add Unlock mantiene i percorsi di sblocco normali del gioco e aggiunge quelli geografici. Strict Unlock mantiene solo gli sblocchi geografici e gli sblocchi originali locali o adiacenti esplicitamente preservati.</Text>
+      <Text>Controlla come la geografia influenza la disponibilità delle civiltà sulle mappe Terra TSL. Lo sblocco condiviso consente a più civiltà di sbloccare contemporaneamente la stessa civiltà dell'età successiva quando controllano territorio geografico idoneo. Lo sblocco rigido consente a una sola civiltà di sbloccare una civiltà dell'età successiva.</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_NONE_NAME" Language="it_IT">
       <Text>Nessun sblocco (predefinito)</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_NONE_DESC" Language="it_IT">
-      <Text>Nessun cambiamento di sblocco basato sulla geografia è applicato. Il posizionamento realistico delle risorse può funzionare in modo indipendente.</Text>
+      <Text>Non vengono applicati cambiamenti agli sblocchi delle civiltà basati sulla geografia.</Text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_ADD_NAME" Language="it_IT">
-      <Text>Aggiungi sblocco</Text>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_SHARED_NAME" Language="it_IT">
+      <Text>Sblocco condiviso</Text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_ADD_DESC" Language="it_IT">
-      <Text>Mantiene i percorsi di sblocco esistenti del gioco e aggiunge sblocchi geografici quando il giocatore controlla risorse regionali qualificate.</Text>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_SHARED_DESC" Language="it_IT">
+      <Text>Consente a piu civilta di sbloccare contemporaneamente la stessa civilta dell'eta successiva quando controllano territorio geografico idoneo.</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_STRICT_NAME" Language="it_IT">
       <Text>Sblocco rigoroso</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_STRICT_DESC" Language="it_IT">
-      <Text>Limita la disponibilità delle civiltà agli sblocchi geografici e agli sblocchi originali vicini esplicitamente preservati, rimuovendo altri percorsi di sblocco non geografici come la disponibilità per leader o per ricompensa.</Text>
+      <Text>Consente a una sola civiltà di sbloccare una civiltà dell'età successiva, in base al possesso per primo della casella della Capitale o della parte più ampia del territorio di sblocco.</Text>
     </Replace>
   </LocalizedText>
   <LocalizedText>
@@ -305,6 +305,39 @@
     </Replace>
     <Replace Tag="LOC_YNAMP_MOD_MODERN_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION" Language="it_IT">
       <Text>Le unità imbarcate ottengono +2 Movimento quando iniziano su una casella Oceano.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_WEIGHT_CAPITAL" Language="it_IT">
+      <Text>Casella della capitale</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_WEIGHT_AREA" Language="it_IT">
+      <Text>{1_num}% area di sblocco</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_GAIN_TITLE" Language="it_IT">
+      <Text>Sblocco geografico ottenuto</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_GAIN_DESC" Language="it_IT">
+      <Text>Il tuo territorio ora sblocca questa civiltà.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_LOSS_TITLE" Language="it_IT">
+      <Text>Sblocco geografico perso</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_LOSS_DESC" Language="it_IT">
+      <Text>Il tuo territorio non sblocca più questa civiltà.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_RANK_TITLE" Language="it_IT">
+      <Text>Ordine di sblocco geografico modificato</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_RANK_DESC" Language="it_IT">
+      <Text>La tua priorità attuale di sblocco geografico è cambiata.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_SECTION_UNLOCKED_BY" Language="it_IT">
+      <Text>Sbloccata da</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_SECTION_COMPETING_WITH" Language="it_IT">
+      <Text>In competizione con</Text>
+    </Replace>
+    <Replace Tag="LOC_LENS_NAME_YNAMP_GEOGRAPHIC_UNLOCK" Language="it_IT">
+      <Text>Sblocco geografico</Text>
     </Replace>
   </LocalizedText>
 </Database>

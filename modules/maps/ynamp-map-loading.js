@@ -24,6 +24,8 @@ import { applyRegionalResourcePlacement } from '/ged-ynamp/maps/ynamp-regional-r
 
 const DEBUG = false;
 const iMinFallbackDistance = 8;
+const GEOGRAPHIC_UNLOCK_MAP_CONTEXT_PROPERTY_KEY = "YnAMP_GeographicUnlockMapContext";
+const GEOGRAPHIC_UNLOCK_MAP_CONTEXT_SCHEMA_VERSION = 1;
 
 function phase(name, fn) {
     if (!DEBUG) {
@@ -38,6 +40,62 @@ function phase(name, fn) {
         console.log("[YnAMP] Phase " + name + " failed: " + err);
         throw err;
     }
+}
+
+function buildGeographicUnlockMapContextPayload(mapName, mapContext) {
+    if (!mapContext?.sourceMapName || mapContext.sourceStartX == null || mapContext.sourceEndX == null ||
+        mapContext.sourceStartY == null || mapContext.sourceEndY == null ||
+        mapContext.sourceWidth == null || mapContext.sourceHeight == null ||
+        mapContext.liveWidth == null || mapContext.liveHeight == null ||
+        mapContext.livePlayableStartX == null || mapContext.livePlayableEndX == null ||
+        mapContext.livePlayableWidth == null) {
+        return null;
+    }
+
+    return JSON.stringify({
+        schemaVersion: GEOGRAPHIC_UNLOCK_MAP_CONTEXT_SCHEMA_VERSION,
+        status: "ready",
+        mapName: mapContext.mapName ?? mapName ?? null,
+        sourceMapName: mapContext.sourceMapName,
+        sectionId: mapContext.sectionId ?? null,
+        sourceWidth: Number(mapContext.sourceWidth),
+        sourceHeight: Number(mapContext.sourceHeight),
+        sourceStartX: Number(mapContext.sourceStartX),
+        sourceEndX: Number(mapContext.sourceEndX),
+        sourceStartY: Number(mapContext.sourceStartY),
+        sourceEndY: Number(mapContext.sourceEndY),
+        liveWidth: Number(mapContext.liveWidth),
+        liveHeight: Number(mapContext.liveHeight),
+        livePlayableStartX: Number(mapContext.livePlayableStartX),
+        livePlayableEndX: Number(mapContext.livePlayableEndX),
+        livePlayableWidth: Number(mapContext.livePlayableWidth),
+        noWrapX: mapContext.noWrapX === true
+    });
+}
+
+function publishGeographicUnlockMapContext(mapName, mapContext) {
+    if (typeof GameTutorial === "undefined" || typeof GameTutorial.setProperty !== "function") {
+        console.log("[YnAMP GeographicUnlock] Unable to publish map context: GameTutorial.setProperty unavailable");
+        return;
+    }
+
+    const payload = buildGeographicUnlockMapContextPayload(mapName, mapContext);
+    if (!payload) {
+        console.log("[YnAMP GeographicUnlock] Unable to publish map context: incomplete earth map context for " + (mapName ?? "unknown"));
+        return;
+    }
+
+    const propertyHash = Database.makeHash(GEOGRAPHIC_UNLOCK_MAP_CONTEXT_PROPERTY_KEY);
+    GameTutorial.setProperty(propertyHash, payload);
+    console.log(
+        "[YnAMP GeographicUnlock] Published map context map=" + (mapContext.mapName ?? mapName ?? "unknown") +
+        " sourceMap=" + mapContext.sourceMapName +
+        " section=" + (mapContext.sectionId ?? "none") +
+        " sourceStart=(" + mapContext.sourceStartX + "," + mapContext.sourceStartY + ")" +
+        " sourceEnd=(" + mapContext.sourceEndX + "," + mapContext.sourceEndY + ")" +
+        " livePlayableStartX=" + mapContext.livePlayableStartX +
+        " livePlayableEndX=" + mapContext.livePlayableEndX
+    );
 }
 
 function getDiscoveryStartPositions(startPositions) {
@@ -343,6 +401,7 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
                 " livePlayableStartX=" + mapContext.livePlayableStartX
             );
         }
+        publishGeographicUnlockMapContext(mapName, mapContext);
     }
 
     ynamp.createMapTerrains(iWidth, iHeight,  importedMap, mapType, mapContext);

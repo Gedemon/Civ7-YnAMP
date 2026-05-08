@@ -242,25 +242,25 @@
       <text>地理文明解锁</text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_MODE_DESC" Language="zh_Hans_CN">
-      <text>控制地理如何影响地球 TSL 地图上文明的可用性。No Unlock 仅保留放置真实性。Add Unlock 保留游戏的正常解锁路径并添加地理路径。Strict Unlock 仅保留地理解锁和明确保留的原始本地或相邻解锁。</text>
+      <text>控制地理如何影响地球 TSL 地图上文明的可用性。共享解锁允许多个文明在控制符合条件的地理领土时同时解锁同一个下一时代文明。严格解锁只允许一个文明解锁一个下一时代文明。</text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_NONE_NAME" Language="zh_Hans_CN">
       <text>无解锁（默认）</text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_NONE_DESC" Language="zh_Hans_CN">
-      <text>不应用基于地理的解锁更改。真实资源放置可以独立运行。</text>
+      <text>不应用基于地理的文明解锁更改。</text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_ADD_NAME" Language="zh_Hans_CN">
-      <text>添加解锁</text>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_SHARED_NAME" Language="zh_Hans_CN">
+      <text>共享解锁</text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_ADD_DESC" Language="zh_Hans_CN">
-      <text>保留游戏现有的解锁路径，当玩家控制符合条件的区域资源时添加地理解锁。</text>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_SHARED_DESC" Language="zh_Hans_CN">
+      <text>当多个文明控制符合条件的地理领土时，它们可以同时解锁同一个下一时代文明。</text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_STRICT_NAME" Language="zh_Hans_CN">
       <text>严格解锁</text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_STRICT_DESC" Language="zh_Hans_CN">
-      <text>将文明的可用性限制为地理解锁和明确保留的原始相邻解锁，删除其他非地理解锁路径，如按领袖或奖励的可用性。</text>
+      <text>只允许一个文明解锁一个下一时代文明，依据是先拥有首都地块，或拥有解锁区域的最大部分。</text>
     </Replace>
   </LocalizedText>
   <LocalizedText>
@@ -305,6 +305,39 @@
     </Replace>
     <Replace Tag="LOC_YNAMP_MOD_MODERN_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION" Language="zh_Hans_CN">
       <Text>登船单位在远洋地块上开始回合时获得 +2 移动力。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_WEIGHT_CAPITAL" Language="zh_Hans_CN">
+      <Text>首都地块</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_WEIGHT_AREA" Language="zh_Hans_CN">
+      <Text>{1_num}% 解锁区域</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_GAIN_TITLE" Language="zh_Hans_CN">
+      <Text>已获得地理解锁</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_GAIN_DESC" Language="zh_Hans_CN">
+      <Text>你的领土现在可解锁这个文明。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_LOSS_TITLE" Language="zh_Hans_CN">
+      <Text>已失去地理解锁</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_LOSS_DESC" Language="zh_Hans_CN">
+      <Text>你的领土不再解锁这个文明。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_RANK_TITLE" Language="zh_Hans_CN">
+      <Text>地理解锁顺序已变更</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_RANK_DESC" Language="zh_Hans_CN">
+      <Text>你当前的地理解锁优先级已发生变化。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_SECTION_UNLOCKED_BY" Language="zh_Hans_CN">
+      <text>解锁者</text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_SECTION_COMPETING_WITH" Language="zh_Hans_CN">
+      <text>竞争者</text>
+    </Replace>
+    <Replace Tag="LOC_LENS_NAME_YNAMP_GEOGRAPHIC_UNLOCK" Language="zh_Hans_CN">
+      <text>地理解锁</text>
     </Replace>
   </LocalizedText>
 </Database>

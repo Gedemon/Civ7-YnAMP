@@ -242,25 +242,25 @@
       <Text>地理的文明アンロック</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_MODE_DESC" Language="ja_JP">
-      <Text>地理が地球 TSL マップでの文明の利用可能性にどのように影響するかを制御します。No Unlock は配置リアリズムのみを保持します。Add Unlock はゲームの通常のアンロックパスを保持し、地理的なものを追加します。Strict Unlock は地理的なアンロックと明示的に保持された近隣の元のアンロックのみを保持します。</Text>
+      <Text>地理が地球 TSL マップでの文明の利用可能性にどのように影響するかを制御します。共有アンロックでは、条件を満たす地理的領域を支配している場合、複数の文明が同時に同じ次の時代の文明をアンロックできます。厳格アンロックでは、1 つの文明だけが次の時代の文明をアンロックできます。</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_NONE_NAME" Language="ja_JP">
       <Text>アンロックなし（デフォルト）</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_NONE_DESC" Language="ja_JP">
-      <Text>地理ベースのアンロック変更は適用されません。リアリスティックなリソース配置は独立して実行できます。</Text>
+      <Text>地理に基づく文明アンロックの変更は適用されません。</Text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_ADD_NAME" Language="ja_JP">
-      <Text>アンロックを追加</Text>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_SHARED_NAME" Language="ja_JP">
+      <Text>共有アンロック</Text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_ADD_DESC" Language="ja_JP">
-      <Text>ゲームの既存のアンロックパスを保持し、プレイヤーが資格のある地域リソースを制御する際に地理的なアンロックを追加します。</Text>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_SHARED_DESC" Language="ja_JP">
+      <Text>条件を満たす地理的領域を支配している場合、複数の文明が同時に同じ次の時代の文明をアンロックできます。</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_STRICT_NAME" Language="ja_JP">
       <Text>厳格なアンロック</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_STRICT_DESC" Language="ja_JP">
-      <Text>文明の利用可能性を地理的なアンロックと明示的に保持された近隣の元のアンロックに制限し、リーダーまたは報酬ベースの利用可能性などの他の非地理的なアンロックパスを削除します。</Text>
+      <Text>首都プロットを最初に所有するか、アンロック領域の最大部分を所有している文明 1 つだけが次の時代の文明をアンロックできます。</Text>
     </Replace>
   </LocalizedText>
   <LocalizedText>
@@ -305,6 +305,39 @@
     </Replace>
     <Replace Tag="LOC_YNAMP_MOD_MODERN_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION" Language="ja_JP">
       <Text>乗船ユニットは海洋タイルでターンを開始すると移動力+2を得ます。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_WEIGHT_CAPITAL" Language="ja_JP">
+      <Text>首都タイル</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_WEIGHT_AREA" Language="ja_JP">
+      <Text>解禁エリア {1_num}%</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_GAIN_TITLE" Language="ja_JP">
+      <Text>地理的アンロックを獲得</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_GAIN_DESC" Language="ja_JP">
+      <Text>あなたの領土でこの文明がアンロックされるようになりました。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_LOSS_TITLE" Language="ja_JP">
+      <Text>地理的アンロックを喪失</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_LOSS_DESC" Language="ja_JP">
+      <Text>あなたの領土ではこの文明がアンロックされなくなりました。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_RANK_TITLE" Language="ja_JP">
+      <Text>地理的アンロック順が変化</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_RANK_DESC" Language="ja_JP">
+      <Text>現在の地理的アンロック優先順位が変化しました。</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_SECTION_UNLOCKED_BY" Language="ja_JP">
+      <Text>解禁した文明</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_SECTION_COMPETING_WITH" Language="ja_JP">
+      <Text>競合している文明</Text>
+    </Replace>
+    <Replace Tag="LOC_LENS_NAME_YNAMP_GEOGRAPHIC_UNLOCK" Language="ja_JP">
+      <Text>地理的アンロック</Text>
     </Replace>
   </LocalizedText>
 </Database>

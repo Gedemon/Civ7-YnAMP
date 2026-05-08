@@ -242,25 +242,25 @@
       <Text>Débloquage géographique des civilisations</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_MODE_DESC" Language="fr_FR">
-      <Text>Contrôle comment la géographie affecte la disponibilité des civilisations sur les cartes Terre TSL. No Unlock conserve uniquement le réalisme de placement. Add Unlock conserve les chemins de débloquage normaux du jeu et ajoute les chemins géographiques. Strict Unlock ne conserve que les débloquages géographiques et les débloquages originaux locaux ou adjacents explicitement préservés.</Text>
+      <Text>Contrôle comment la géographie affecte la disponibilité des civilisations sur les cartes Terre TSL. Le déverrouillage partagé permet à plusieurs civilisations de déverrouiller en même temps la même civilisation de l'âge suivant lorsqu'elles contrôlent un territoire géographique qualifiant. Le déverrouillage strict permet à une seule civilisation de déverrouiller une civilisation de l'âge suivant.</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_NONE_NAME" Language="fr_FR">
       <Text>Pas de débloquage (par défaut)</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_NONE_DESC" Language="fr_FR">
-      <Text>Aucun changement de débloquage basé sur la géographie n'est appliqué. Le placement réaliste des ressources peut fonctionner indépendamment.</Text>
+      <Text>Aucun changement de déverrouillage de civilisation basé sur la géographie n'est appliqué.</Text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_ADD_NAME" Language="fr_FR">
-      <Text>Ajouter le débloquage</Text>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_SHARED_NAME" Language="fr_FR">
+      <Text>Débloquage partagé</Text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_ADD_DESC" Language="fr_FR">
-      <Text>Conserve les chemins de débloquage existants du jeu et ajoute les débloquages géographiques lorsque le joueur contrôle des ressources régionales qualifiantes.</Text>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_SHARED_DESC" Language="fr_FR">
+      <Text>Permet à plusieurs civilisations de débloquer en même temps la même civilisation de l'âge suivant lorsqu'elles contrôlent un territoire géographique qualifiant.</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_STRICT_NAME" Language="fr_FR">
       <Text>Débloquage strict</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_STRICT_DESC" Language="fr_FR">
-      <Text>Limite la disponibilité des civilisations aux débloquages géographiques et aux débloquages originaux voisins explicitement préservés, en supprimant les autres chemins de débloquage non géographiques comme la disponibilité par leader ou par récompense.</Text>
+      <Text>Permet à une seule civilisation de déverrouiller une civilisation de l'âge suivant, selon qu'elle possède d'abord la case Capitale ou la plus grande partie du territoire de déverrouillage.</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_MODE_NAME" Language="fr_FR">
         <Text>Navigation océanique à l’ère de l’Exploration sur les grandes cartes</Text>
@@ -302,5 +302,39 @@
     </Replace>
     <Replace Tag="LOC_YNAMP_MOD_MODERN_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION" Language="fr_FR">
         <Text>Les unités embarquées gagnent +2 Mouvement lorsqu'elles commencent sur une case Océan.</Text>
-    </Replace>  </LocalizedText>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_WEIGHT_CAPITAL" Language="fr_FR">
+      <Text>Parcelle de capitale</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_WEIGHT_AREA" Language="fr_FR">
+      <Text>{1_num}% de zone de déverrouillage</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_GAIN_TITLE" Language="fr_FR">
+      <Text>Déverrouillage géographique obtenu</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_GAIN_DESC" Language="fr_FR">
+      <Text>Votre territoire déverrouille désormais cette civilisation.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_LOSS_TITLE" Language="fr_FR">
+      <Text>Déverrouillage géographique perdu</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_LOSS_DESC" Language="fr_FR">
+      <Text>Votre territoire ne déverrouille plus cette civilisation.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_RANK_TITLE" Language="fr_FR">
+      <Text>Ordre de déverrouillage géographique modifié</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_RANK_DESC" Language="fr_FR">
+      <Text>Votre priorité actuelle de déverrouillage géographique a changé.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_SECTION_UNLOCKED_BY" Language="fr_FR">
+      <Text>Débloquée par</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_SECTION_COMPETING_WITH" Language="fr_FR">
+      <Text>En concurrence avec</Text>
+    </Replace>
+    <Replace Tag="LOC_LENS_NAME_YNAMP_GEOGRAPHIC_UNLOCK" Language="fr_FR">
+      <Text>Débloquage géographique</Text>
+    </Replace>
+    </LocalizedText>
 </Database>

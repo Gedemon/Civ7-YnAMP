@@ -1,4 +1,4 @@
-# YnAMP Geographic Unlock
+# YnAMP Geographic Unlock (by Resource)
 
 Design notes for geography-driven civilization unlocks on Earth TSL maps.
 

@@ -242,25 +242,25 @@
       <text>Odblokowanie geograficzne cywilizacji</text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_MODE_DESC" Language="pl_PL">
-      <text>Kontroluje, jak geografia wpływa na dostępność cywilizacji na mapach Ziemi TSL. No Unlock zachowuje tylko realizm umieszczania. Add Unlock zachowuje normalne ścieżki odblokowania gry i dodaje geograficzne. Strict Unlock zachowuje tylko odblokowania geograficzne i oryginalne lokalne lub sąsiednie odblokowania wyraźnie zachowane.</text>
+      <text>Kontroluje, jak geografia wpływa na dostępność cywilizacji na mapach Ziemi TSL. Współdzielone odblokowanie pozwala wielu cywilizacjom jednocześnie odblokować tę samą cywilizację następnej epoki, gdy kontrolują kwalifikujące się terytorium geograficzne. Ścisłe odblokowanie pozwala tylko jednej cywilizacji odblokować cywilizację następnej epoki.</text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_NONE_NAME" Language="pl_PL">
       <text>Brak odblokowania (domyślne)</text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_NONE_DESC" Language="pl_PL">
-      <text>Nie stosuje się zmian odblokowania opartych na geografii. Realistyczne umieszczanie zasobów może działać niezależnie.</text>
+      <text>Nie stosuje się zmian odblokowania cywilizacji opartych na geografii.</text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_ADD_NAME" Language="pl_PL">
-      <text>Dodaj odblokowanie</text>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_SHARED_NAME" Language="pl_PL">
+      <text>Współdzielone odblokowanie</text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_ADD_DESC" Language="pl_PL">
-      <text>Zachowuje istniejące ścieżki odblokowania gry i dodaje odblokowania geograficzne, gdy gracz kontroluje kwalifikujące się zasoby regionalne.</text>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_SHARED_DESC" Language="pl_PL">
+      <text>Pozwala wielu cywilizacjom jednocześnie odblokować tę samą cywilizację następnej epoki, gdy kontrolują kwalifikujące się terytorium geograficzne.</text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_STRICT_NAME" Language="pl_PL">
       <text>Ścisłe odblokowanie</text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_STRICT_DESC" Language="pl_PL">
-      <text>Ogranicza dostępność cywilizacji do odblokowań geograficznych i wyraźnie zachowanych oryginalnych sąsiednich odblokowań, usuwając inne niegeograficzne ścieżki odblokowania, takie jak dostępność według lidera lub nagrody.</text>
+      <text>Pozwala tylko jednej cywilizacji odblokować cywilizację następnej epoki na podstawie wcześniejszego posiadania pola stolicy albo największej części terytorium odblokowania.</text>
     </Replace>
   </LocalizedText>
   <LocalizedText>
@@ -305,6 +305,39 @@
     </Replace>
     <Replace Tag="LOC_YNAMP_MOD_MODERN_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION" Language="pl_PL">
       <Text>Jednostki zaokrętowane otrzymują +2 do Ruchu, jeśli zaczynają turę na polu Oceanu.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_WEIGHT_CAPITAL" Language="pl_PL">
+      <Text>Pole stolicy</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_WEIGHT_AREA" Language="pl_PL">
+      <Text>{1_num}% obszaru odblokowania</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_GAIN_TITLE" Language="pl_PL">
+      <Text>Uzyskano odblokowanie geograficzne</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_GAIN_DESC" Language="pl_PL">
+      <Text>Twoje terytorium odblokowuje teraz tę cywilizację.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_LOSS_TITLE" Language="pl_PL">
+      <Text>Utracono odblokowanie geograficzne</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_LOSS_DESC" Language="pl_PL">
+      <Text>Twoje terytorium nie odblokowuje już tej cywilizacji.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_RANK_TITLE" Language="pl_PL">
+      <Text>Zmieniono kolejność odblokowania geograficznego</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_RANK_DESC" Language="pl_PL">
+      <Text>Twój bieżący priorytet odblokowania geograficznego uległ zmianie.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_SECTION_UNLOCKED_BY" Language="pl_PL">
+      <text>Odblokowana przez</text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_SECTION_COMPETING_WITH" Language="pl_PL">
+      <text>Rywalizują z</text>
+    </Replace>
+    <Replace Tag="LOC_LENS_NAME_YNAMP_GEOGRAPHIC_UNLOCK" Language="pl_PL">
+      <text>Odblokowanie geograficzne</text>
     </Replace>
   </LocalizedText>
 </Database>

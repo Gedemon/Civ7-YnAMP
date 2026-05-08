@@ -57,12 +57,6 @@ For generated maps:
 3. Optional: configure Region Tagging Mode and custom start-position options.
 4. Terra also exposes landmass ratio and spawn distribution options.
 
-## Compatibility notes
-
-- Current documentation is aligned with Civ7 v1.3.2 behavior.
-- The mod version source of truth is `modules/version.sql`, which currently reports `1.0.14`.
-- Giant and Ludicrous sizes still carry the in-game warning about missing tile textures above width 127.
-- ScenarioScripts are registered in the mod metadata, but gameplay-event support is not treated as reliable yet.
 
 ## Documentation
 

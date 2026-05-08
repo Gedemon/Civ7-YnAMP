@@ -242,25 +242,25 @@
       <Text>지리적 문명 잠금 해제</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_MODE_DESC" Language="ko_KR">
-      <Text>지리가 지구 TSL 맵에서 문명의 사용 가능성에 어떻게 영향을 미치는지 제어합니다. No Unlock 은 배치 리얼리즘만 유지합니다. Add Unlock 은 게임의 일반 잠금 해제 경로를 유지하고 지리적 경로를 추가합니다. Strict Unlock 은 지리적 잠금 해제와 명시적으로 보존된 인접한 원래 잠금 해제만 유지합니다.</Text>
+      <Text>지리가 지구 TSL 맵에서 문명의 사용 가능성에 어떻게 영향을 미치는지 제어합니다. 공유 잠금 해제는 조건을 충족하는 지리적 영토를 통제할 때 여러 문명이 같은 다음 시대 문명을 동시에 잠금 해제할 수 있게 합니다. 엄격 잠금 해제는 오직 하나의 문명만 다음 시대 문명을 잠금 해제할 수 있게 합니다.</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_NONE_NAME" Language="ko_KR">
       <Text>잠금 해제 없음 (기본)</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_NONE_DESC" Language="ko_KR">
-      <Text>지리 기반 잠금 해제 변경 사항이 적용되지 않습니다. 리얼리스틱한 자원 배치는 독립적으로 실행할 수 있습니다.</Text>
+      <Text>지리 기반 문명 잠금 해제 변경 사항이 적용되지 않습니다.</Text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_ADD_NAME" Language="ko_KR">
-      <Text>잠금 해제 추가</Text>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_SHARED_NAME" Language="ko_KR">
+      <Text>공유 잠금 해제</Text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_ADD_DESC" Language="ko_KR">
-      <Text>게임의 기존 잠금 해제 경로를 유지하고, 플레이어가 자격 있는 지역 자원을 제어할 때 지리적 잠금 해제를 추가합니다.</Text>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_SHARED_DESC" Language="ko_KR">
+      <Text>여러 문명이 조건을 충족하는 지리적 영토를 통제할 때 같은 다음 시대 문명을 동시에 잠금 해제할 수 있습니다.</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_STRICT_NAME" Language="ko_KR">
       <Text>엄격한 잠금 해제</Text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_STRICT_DESC" Language="ko_KR">
-      <Text>문명의 사용 가능성을 지리적 잠금 해제와 명시적으로 보존된 인접한 원래 잠금 해제로 제한하고, 리더 또는 보상 기반 사용 가능성과 같은 다른 비지리적 잠금 해제 경로를 제거합니다.</Text>
+      <Text>수도 타일을 먼저 소유하거나 잠금 해제 영토의 가장 큰 부분을 소유한 문명 하나만 다음 시대 문명을 잠금 해제할 수 있습니다.</Text>
     </Replace>
   </LocalizedText>
   <LocalizedText>
@@ -305,6 +305,39 @@
     </Replace>
     <Replace Tag="LOC_YNAMP_MOD_MODERN_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION" Language="ko_KR">
       <Text>승선 유닛은 대양 타일에서 턴을 시작하면 이동력 +2를 얻습니다.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_WEIGHT_CAPITAL" Language="ko_KR">
+      <Text>수도 타일</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_WEIGHT_AREA" Language="ko_KR">
+      <Text>잠금 해제 구역 {1_num}%</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_GAIN_TITLE" Language="ko_KR">
+      <Text>지리 잠금 해제 획득</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_GAIN_DESC" Language="ko_KR">
+      <Text>이제 당신의 영토가 이 문명을 잠금 해제합니다.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_LOSS_TITLE" Language="ko_KR">
+      <Text>지리 잠금 해제 상실</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_LOSS_DESC" Language="ko_KR">
+      <Text>당신의 영토가 더 이상 이 문명을 잠금 해제하지 않습니다.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_RANK_TITLE" Language="ko_KR">
+      <Text>지리 잠금 해제 순서 변경</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_RANK_DESC" Language="ko_KR">
+      <Text>현재 지리 잠금 해제 우선순위가 변경되었습니다.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_SECTION_UNLOCKED_BY" Language="ko_KR">
+      <Text>해금한 문명</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_SECTION_COMPETING_WITH" Language="ko_KR">
+      <Text>경쟁 중인 문명</Text>
+    </Replace>
+    <Replace Tag="LOC_LENS_NAME_YNAMP_GEOGRAPHIC_UNLOCK" Language="ko_KR">
+      <Text>지리 잠금 해제</Text>
     </Replace>
   </LocalizedText>
 </Database>

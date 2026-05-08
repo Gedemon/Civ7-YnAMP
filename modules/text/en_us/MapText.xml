@@ -95,16 +95,16 @@
 			<Text>Old World</Text>
 		</Replace>
 		<Replace Tag="LOC_MASSIVE_OLD_WORLD_DESC">
-			<Text>Europe, Africa, and Asia on a 128x80 canvas, using a no-wrap Giant Earth crop.</Text>
+			<Text>Europe, Africa, and Asia on a 128x80 canvas, using a Giant Earth crop.</Text>
 		</Replace>
 		<Replace Tag="LOC_MASSIVE_INDO_PACIFIC_NAME">
 			<Text>Indo-Pacific</Text>
 		</Replace>
 		<Replace Tag="LOC_MASSIVE_INDO_PACIFIC_DESC">
-			<Text>South Asia, Southeast Asia, Oceania, and the Pacific basin on a 128x80 canvas, using a no-wrap Giant Earth crop.</Text>
+			<Text>South Asia, Southeast Asia, Oceania, and the Pacific basin on a 128x80 canvas, using a Giant Earth crop.</Text>
 		</Replace>
 		<Replace Tag="LOC_YNAMP_REGIONAL_WRAPX_OLD_WORLD_NAME">
-			<Text>No Wrapping</Text>
+			<Text>No Wrapping (Impassable Edges)</Text>
 		</Replace>
 		<Replace Tag="LOC_YNAMP_REGIONAL_WRAPX_OLD_WORLD_DESC">
 			<Text>Disable this to remove the impassable terrain on the edges, if you want to be able to circumnavigate the Old World, and reach the East Indies by sailing west.</Text>
@@ -211,7 +211,7 @@
 			<Text>Regional Resource Placement on TSL Maps</Text>
 		</Replace>
 		<Replace Tag="LOC_YNAMP_REGIONAL_RESOURCE_MODE_DESC">
-			<Text>Controls Earth-region resource realism. Curated enforces a curated ruleset for a small set of geographically distinctive resources after normal generation or imported map placement..</Text>
+			<Text>Controls Earth-region resource realism. Curated enforces a curated ruleset for a small set of geographically distinctive resources after normal generation or imported map placement.</Text>
 		</Replace>
 		<Replace Tag="LOC_YNAMP_REGIONAL_RESOURCE_OFF_NAME">
 			<Text>Off</Text>
@@ -229,25 +229,25 @@
 			<Text>Geographic Civilization Unlocks</Text>
 		</Replace>
 		<Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_MODE_DESC">
-			<Text>Controls how geography affects civilization availability on Earth TSL maps. No Unlock keeps placement realism only. Add Unlock keeps the game's normal unlock paths and adds geographic ones. Strict Unlock keeps only geographic unlocks plus explicitly preserved local or adjacent original unlocks.</Text>
+			<Text>Controls how geography affects civilization availability on Earth TSL maps. Shared Unlock allows multiple civilizations to unlock the same next-age civilization at the same time when they control qualifying geographic territory. Strict Unlock allows only one civilization to unlock a next-age civilization.</Text>
 		</Replace>
 		<Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_NONE_NAME">
 			<Text>No Unlock (default)</Text>
 		</Replace>
 		<Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_NONE_DESC">
-			<Text>No geography-based unlock changes are applied. Realistic resource placement can still run independently.</Text>
+			<Text>No geography-based civilization unlock changes are applied.</Text>
 		</Replace>
-		<Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_ADD_NAME">
-			<Text>Add Unlock</Text>
+		<Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_SHARED_NAME">
+			<Text>Shared Unlock</Text>
 		</Replace>
-		<Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_ADD_DESC">
-			<Text>Keeps the game's existing unlock paths and adds geography-based unlocks when the player controls qualifying regional resources.</Text>
+		<Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_SHARED_DESC">
+			<Text>Allows multiple civilizations to unlock the same next-age civilization at the same time when they control qualifying geographic territory.</Text>
 		</Replace>
 		<Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_STRICT_NAME">
 			<Text>Strict Unlock</Text>
 		</Replace>
 		<Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_STRICT_DESC">
-			<Text>Limits civilization availability to geography-based unlocks and explicitly preserved nearby original unlocks, removing other non-geographic unlock paths such as leader or reward-driven availability.</Text>
+			<Text>Allows only one civilization to unlock a next-age civilization, based on owning the Capital plot first, or owning the largest portion of the unlocking territory.</Text>
 		</Replace>
 		<Replace Tag="LOC_YNAMP_NW_PLACEMENT_RANDOM_NAME">
 			<Text>Random</Text>
@@ -308,6 +308,39 @@
 		</Replace>
 		<Replace Tag="LOC_YNAMP_MOD_MODERN_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION">
 			<Text>Embarked units gain +2 Movement when starting on an Ocean tile.</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_WEIGHT_CAPITAL">
+			<Text>Capital plot</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_WEIGHT_AREA">
+			<Text>{1_num}% Unlocking Area</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_GAIN_TITLE">
+			<Text>Geographic Unlock Gained</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_GAIN_DESC">
+			<Text>Your territory now unlocks this civilization.</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_LOSS_TITLE">
+			<Text>Geographic Unlock Lost</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_LOSS_DESC">
+			<Text>Your territory no longer unlocks this civilization.</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_RANK_TITLE">
+			<Text>Geographic Unlock Order Changed</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_RANK_DESC">
+			<Text>Your current geographic unlock priority has changed.</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_SECTION_UNLOCKED_BY">
+			<Text>Unlocked by</Text>
+		</Replace>
+		<Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_SECTION_COMPETING_WITH">
+			<Text>Competing with</Text>
+		</Replace>
+		<Replace Tag="LOC_LENS_NAME_YNAMP_GEOGRAPHIC_UNLOCK">
+			<Text>Civ Unlock</Text>
 		</Replace>
 	</EnglishText>
 </Database>

@@ -51,6 +51,13 @@
 				<Value>YNAMP_EXPLORATION_OCEAN_TRAVEL_RELAXED_MOVEMENT,YNAMP_EXPLORATION_OCEAN_TRAVEL_RELAXED_MOVEMENT_DAMAGE</Value>
 			</ConfigurationValueContains>
 		</Criteria>
+		<Criteria id="geographic-unlock-active">
+			<ConfigurationValueContains>
+				<Group>Game</Group>
+				<ConfigurationId>GeographicUnlockMode</ConfigurationId>
+				<Value>YNAMP_GEOGRAPHIC_UNLOCK_SHARED,YNAMP_GEOGRAPHIC_UNLOCK_STRICT</Value>
+			</ConfigurationValueContains>
+		</Criteria>
 	</ActionCriteria>
 	<ActionGroups>
 		<ActionGroup id="base-game-init-ynamp" scope="game" criteria="always">
@@ -142,13 +149,14 @@
 				<ImportFiles>
 					<Item>icons/happy_cat.png</Item>
 					<Item>icons/civ6_earth.png</Item>
-					<Item>maps/ynamp-mapsize-patch.js</Item>
-					<Item>maps/ynamp-cultural-start.js</Item>
 				</ImportFiles>
 				<UpdateIcons>
 					<Item>icons/ynamp-icons.xml</Item>
 				</UpdateIcons>
 				<UIScripts>
+					<Item>ui/ynamp-geographic-unlocks.js</Item>
+					<Item>ui/ynamp-geographic-unlock-popup-manager.js</Item>
+					<Item>ui/ynamp-geographic-unlock-popup-screen.js</Item>
 					<Item>ui/ynamp-ingame.js</Item>
 					<Item module="false">ui/tuner/ynamp-firetuner.js</Item>
 				</UIScripts>
@@ -163,6 +171,21 @@
 					<Item>maps/ynamp-mapsize-patch.js</Item>
 					<Item>maps/ynamp-cultural-start.js</Item>
 				</MapGenScripts>
+			</Actions>
+		</ActionGroup>
+		<ActionGroup id="base-game-geographic-unlock-lens" scope="game" criteria="geographic-unlock-active">
+			<Properties>
+				<LoadOrder>100</LoadOrder>
+			</Properties>
+			<Actions>
+				<UpdateDatabase>
+					<Item>data/options/geographic-unlock-remove-rewards.sql</Item>
+				</UpdateDatabase>
+				<UIScripts>
+					<Item>ui/lenses/ynamp-geographic-unlock-layer.js</Item>
+					<Item>ui/lenses/ynamp-geographic-unlock-lens.js</Item>
+					<Item>ui/mini-map/ynamp-geographic-unlock-lens-panel-decorator.js</Item>
+				</UIScripts>
 			</Actions>
 		</ActionGroup>
 		<ActionGroup id="shell-ynamp" scope="shell" criteria="always">
@@ -188,6 +211,7 @@
 				<ImportFiles>
 					<Item>icons/happy_cat.png</Item>
 					<Item>icons/civ6_earth.png</Item>
+					<Item>ui/ynamp-geographic-unlock-text.js</Item>
 					<Item>ui/shell/age-transition/age-transition-civ-select.js</Item>
 					<Item>ui/shell/age-transition/ynamp-age-transition-civ-select.js</Item>
 				</ImportFiles>

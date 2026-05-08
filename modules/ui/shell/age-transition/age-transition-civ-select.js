@@ -37,6 +37,8 @@ const styles = "fs://game/core/ui/shell/age-transition/age-transition-civ-select
 
 class AgeTransitionCivSelect extends Panel {
   isMobileViewExperience = UI.getViewExperience() == UIViewExperience.Mobile;
+  // This screen keeps the preserved base-game single-player flow and the YnAMP custom flow in one file.
+  // Runtime branches choose between the custom path and the standard base-game path.
   useCustomSelectionScreen = YnAMPCustomAgeTransitionSelectionScreen.featureEnabled();
   civData;
   ageMap = GetAgeMap();
@@ -253,6 +255,7 @@ class AgeTransitionCivSelect extends Panel {
     );
     container.appendChild(filigreeRight);
     this.renderHeader(container);
+    // Branch between the YnAMP custom selection screen and the preserved base-game screen.
     if (this.useCustomSelectionScreen) {
       this.renderYnAMPLayout(container);
     } else {
@@ -262,6 +265,8 @@ class AgeTransitionCivSelect extends Panel {
     }
     this.Root.appendChild(container);
   }
+
+  // ===== YNAMP custom multi-player flow with geographic-unlock initialization hooks =====
   renderYnAMPLayout(container) {
     this.customBackgroundContainer = container;
     this.customPlayerSelectionStates = YnAMPCustomAgeTransitionSelectionScreen.getActivePlayerSelectionStates();
@@ -293,6 +298,52 @@ class AgeTransitionCivSelect extends Panel {
       this.updateCustomPlayerDetails();
     }
   }
+
+  // Repair selections that are no longer valid under the current filtered civilization list.
+  ensureValidCustomPlayerCivilization(playerId) {
+    if (playerId == null || !this.canEditCustomPlayer(playerId)) {
+      return false;
+    }
+    if (YnAMPCustomAgeTransitionSelectionScreen.isPlayerCivilizationSelectionValid(playerId)) {
+      return false;
+    }
+    const preferredCivilization = YnAMPCustomAgeTransitionSelectionScreen.getPreferredUnlockedCivilizationForPlayer(playerId);
+    if (!preferredCivilization) {
+      return false;
+    }
+    GameSetup.setPlayerParameterValue(
+      playerId,
+      YnAMPCustomAgeTransitionSelectionScreen.playerCivilizationParameter,
+      preferredCivilization
+    );
+    return true;
+  }
+
+  // Geographic unlock mode can replace an existing valid choice once on entry with the top-ranked default.
+  applyInitialCustomPlayerCivilizationDefault(playerId) {
+    if (playerId == null || !this.canEditCustomPlayer(playerId)) {
+      return false;
+    }
+    const defaultCivilization = YnAMPCustomAgeTransitionSelectionScreen.getDefaultWeightedCivilizationForPlayer(playerId);
+    if (!defaultCivilization) {
+      return false;
+    }
+    const civilizationSelection = YnAMPCustomAgeTransitionSelectionScreen.getPlayerParameterSelectionData(
+      playerId,
+      YnAMPCustomAgeTransitionSelectionScreen.playerCivilizationParameter
+    );
+    if (civilizationSelection?.valueId == defaultCivilization) {
+      return false;
+    }
+    GameSetup.setPlayerParameterValue(
+      playerId,
+      YnAMPCustomAgeTransitionSelectionScreen.playerCivilizationParameter,
+      defaultCivilization
+    );
+    return true;
+  }
+
+  // One-shot custom screen hydration runs before rows are built so defaults and repairs update GameSetup first.
   hydrateCustomPlayerCivilizations() {
     let hasChanges = false;
     for (const playerState of this.customPlayerSelectionStates) {
@@ -300,21 +351,8 @@ class AgeTransitionCivSelect extends Panel {
         continue;
       }
       this.hydratedCustomPlayerIds.add(playerState.playerId);
-      if (!this.canEditCustomPlayer(playerState.playerId)) {
-        continue;
-      }
-      const preferredCivilization = YnAMPCustomAgeTransitionSelectionScreen.getPreferredUnlockedCivilizationForPlayer(
-        playerState.playerId
-      );
-      if (!preferredCivilization) {
-        continue;
-      }
-      GameSetup.setPlayerParameterValue(
-        playerState.playerId,
-        YnAMPCustomAgeTransitionSelectionScreen.playerCivilizationParameter,
-        preferredCivilization
-      );
-      hasChanges = true;
+      hasChanges = this.applyInitialCustomPlayerCivilizationDefault(playerState.playerId) || hasChanges;
+      hasChanges = this.ensureValidCustomPlayerCivilization(playerState.playerId) || hasChanges;
     }
     if (hasChanges) {
       this.customPlayerSelectionStates = YnAMPCustomAgeTransitionSelectionScreen.getActivePlayerSelectionStates();
@@ -494,10 +532,25 @@ class AgeTransitionCivSelect extends Panel {
     const possibleValues = selectionData?.possibleValues ?? [];
     dropdown.whenComponentCreated((component) => component.updateDropdownItems(possibleValues));
     const selectedIndex = possibleValues.findIndex((value) => value.id == selectionData?.valueId);
-    const fallbackIndex = selectionData?.parameterId === YnAMPCustomAgeTransitionSelectionScreen.playerCivilizationParameter
-      ? possibleValues.findIndex((value) => value.id == "RANDOM")
+    const defaultWeightedCivilizationId = selectionData?.parameterId === YnAMPCustomAgeTransitionSelectionScreen.playerCivilizationParameter
+      ? YnAMPCustomAgeTransitionSelectionScreen.getDefaultWeightedCivilizationForPlayer(playerId)
+      : null;
+    const defaultWeightedIndex = defaultWeightedCivilizationId
+      ? possibleValues.findIndex((value) => value.id == defaultWeightedCivilizationId)
       : -1;
-    const resolvedIndex = selectedIndex >= 0 ? selectedIndex : fallbackIndex >= 0 ? fallbackIndex : 0;
+    const fallbackCivilizationId = selectionData?.parameterId === YnAMPCustomAgeTransitionSelectionScreen.playerCivilizationParameter
+      ? YnAMPCustomAgeTransitionSelectionScreen.getBridgeFallbackCivilizationId(playerId)
+      : null;
+    const fallbackIndex = fallbackCivilizationId
+      ? possibleValues.findIndex((value) => value.id == fallbackCivilizationId)
+      : -1;
+    const resolvedIndex = selectedIndex >= 0
+      ? selectedIndex
+      : defaultWeightedIndex >= 0
+        ? defaultWeightedIndex
+        : fallbackIndex >= 0
+          ? fallbackIndex
+          : 0;
     dropdown.setAttribute("selected-item-index", resolvedIndex.toString());
     if (!selectionData || selectionData.readOnly || forceDisabled) {
       dropdown.setAttribute("disabled", "true");
@@ -512,6 +565,8 @@ class AgeTransitionCivSelect extends Panel {
     dropdown.setAttribute("data-player-id", playerId.toString());
     return dropdown;
   }
+
+  // ===== YNAMP custom screen state sync shared by geographic and non-geographic custom selection =====
   renderCustomCivilizationEntries(container, civilizations) {
     container.innerHTML = "";
     for (const civilization of civilizations) {
@@ -586,6 +641,10 @@ class AgeTransitionCivSelect extends Panel {
     this.updateCustomPlayerDetails();
   }
   refreshCustomPlayerSelectionStates(selectedPlayerId = this.selectedCustomPlayerState?.playerId) {
+    let hasSelectionChanges = false;
+    for (const playerState of this.customPlayerSelectionStates) {
+      hasSelectionChanges = this.ensureValidCustomPlayerCivilization(playerState.playerId) || hasSelectionChanges;
+    }
     this.customPlayerSelectionStates = YnAMPCustomAgeTransitionSelectionScreen.getActivePlayerSelectionStates();
     this.customPlayerSelectionStates.forEach((playerState, index) => {
       const row = this.customPlayerRows[index];
@@ -600,13 +659,30 @@ class AgeTransitionCivSelect extends Panel {
           YnAMPCustomAgeTransitionSelectionScreen.playerCivilizationParameter
         );
         if (civSelection) {
+          civDropdown.whenComponentCreated((component) => component.updateDropdownItems(civSelection.possibleValues));
           const newIndex = civSelection.possibleValues.findIndex((v) => v.id === civSelection.valueId);
-          if (newIndex >= 0) {
-            civDropdown.setAttribute("selected-item-index", newIndex.toString());
-          }
+          const defaultWeightedCivilizationId = YnAMPCustomAgeTransitionSelectionScreen.getDefaultWeightedCivilizationForPlayer(playerState.playerId);
+          const defaultWeightedIndex = defaultWeightedCivilizationId
+            ? civSelection.possibleValues.findIndex((value) => value.id === defaultWeightedCivilizationId)
+            : -1;
+          const fallbackCivilizationId = YnAMPCustomAgeTransitionSelectionScreen.getBridgeFallbackCivilizationId(playerState.playerId);
+          const fallbackIndex = fallbackCivilizationId
+            ? civSelection.possibleValues.findIndex((value) => value.id === fallbackCivilizationId)
+            : -1;
+          const resolvedIndex = newIndex >= 0
+            ? newIndex
+            : defaultWeightedIndex >= 0
+              ? defaultWeightedIndex
+              : fallbackIndex >= 0
+                ? fallbackIndex
+                : 0;
+          civDropdown.setAttribute("selected-item-index", resolvedIndex.toString());
         }
       }
     });
+    if (hasSelectionChanges) {
+      this.captureCustomHistoricalSnapshots();
+    }
     if (selectedPlayerId == null) {
       this.selectedCustomPlayerState = undefined;
       this.selectedCustomPlayerRow = undefined;
@@ -650,7 +726,14 @@ class AgeTransitionCivSelect extends Panel {
     this.renderCustomCivilizationEntries(this.customLockedCivilizations, civilizationAvailability.lockedCivilizations);
     this.customUnlockedEmpty.classList.toggle("hidden", civilizationAvailability.unlockedCivilizations.length > 0);
     this.customLockedEmpty.classList.toggle("hidden", civilizationAvailability.lockedCivilizations.length > 0);
-    this.customConfirmButton.removeAttribute("disabled");
+    const hasInvalidPlayers = this.customPlayerSelectionStates.some((playerState) => {
+      return !playerState.leaderId || !YnAMPCustomAgeTransitionSelectionScreen.isPlayerCivilizationSelectionValid(playerState.playerId);
+    });
+    if (hasInvalidPlayers) {
+      this.customConfirmButton.setAttribute("disabled", "true");
+    } else {
+      this.customConfirmButton.removeAttribute("disabled");
+    }
   }
   canEditCustomPlayer(playerId) {
     const gameConfig = Configuration.editGame();
@@ -681,9 +764,10 @@ class AgeTransitionCivSelect extends Panel {
     this.refreshCustomPlayerSelectionStates(playerId);
   }
   startCustomGame() {
+    this.refreshCustomPlayerSelectionStates();
     this.customPlayerSelectionStates = YnAMPCustomAgeTransitionSelectionScreen.getActivePlayerSelectionStates();
     const invalidPlayers = this.customPlayerSelectionStates.filter(
-      (playerState) => !playerState.leaderId || !playerState.civilizationId
+      (playerState) => !playerState.leaderId || !YnAMPCustomAgeTransitionSelectionScreen.isPlayerCivilizationSelectionValid(playerState.playerId)
     );
     if (invalidPlayers.length > 0) {
       console.warn(
@@ -701,6 +785,8 @@ class AgeTransitionCivSelect extends Panel {
     }
     engine.call("startGame");
   }
+
+  // ===== Preserved base-game single-player age transition flow =====
   renderHeader(container) {
     const header = document.createElement("div");
     header.classList.add("flex", "flex-row", "relative", "items-center", "justify-center");

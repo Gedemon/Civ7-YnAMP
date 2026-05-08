@@ -242,25 +242,25 @@
       <text>Географическое разблокирование цивилизаций</text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_MODE_DESC" Language="ru_RU">
-      <text>Контролирует, как география влияет на доступность цивилизаций на картах Земли TSL. No Unlock сохраняет только реализм размещения. Add Unlock сохраняет обычные пути разблокирования игры и добавляет географические. Strict Unlock сохраняет только географические разблокирования и исходные локальные или соседние разблокирования, явно сохраненные.</text>
+      <text>Контролирует, как география влияет на доступность цивилизаций на картах Земли TSL. Общее разблокирование позволяет нескольким цивилизациям одновременно разблокировать одну и ту же цивилизацию следующей эпохи, когда они контролируют подходящую географическую территорию. Строгое разблокирование позволяет только одной цивилизации разблокировать цивилизацию следующей эпохи.</text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_NONE_NAME" Language="ru_RU">
       <text>Без разблокирования (по умолчанию)</text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_NONE_DESC" Language="ru_RU">
-      <text>Изменения разблокирования на основе географии не применяются. Реалистичное размещение ресурсов может работать независимо.</text>
+      <text>Изменения географического разблокирования цивилизаций не применяются.</text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_ADD_NAME" Language="ru_RU">
-      <text>Добавить разблокирование</text>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_SHARED_NAME" Language="ru_RU">
+      <text>Общее разблокирование</text>
     </Replace>
-    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_ADD_DESC" Language="ru_RU">
-      <text>Сохраняет существующие пути разблокирования игры и добавляет географические разблокирования, когда игрок контролирует квалифицированные региональные ресурсы.</text>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_SHARED_DESC" Language="ru_RU">
+      <text>Позволяет нескольким цивилизациям одновременно разблокировать одну и ту же цивилизацию следующей эпохи, когда они контролируют подходящую географическую территорию.</text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_STRICT_NAME" Language="ru_RU">
       <text>Строгое разблокирование</text>
     </Replace>
     <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_STRICT_DESC" Language="ru_RU">
-      <text>Ограничивает доступность цивилизаций географическими разблокированиями и явно сохраненными исходными соседними разблокированиями, удаляя другие негеографические пути разблокирования, такие как доступность по лидеру или по награде.</text>
+      <text>Позволяет только одной цивилизации разблокировать цивилизацию следующей эпохи на основе первичного владения клеткой столицы или наибольшей частью территории разблокирования.</text>
     </Replace>
   </LocalizedText>
   <LocalizedText>
@@ -305,6 +305,39 @@
     </Replace>
     <Replace Tag="LOC_YNAMP_MOD_MODERN_OCEAN_EMBARKED_MOVEMENT_DESCRIPTION" Language="ru_RU">
       <Text>Погружённые юниты получают +2 к перемещению, если начинают ход на клетке Океана.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_WEIGHT_CAPITAL" Language="ru_RU">
+      <Text>Клетка столицы</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_WEIGHT_AREA" Language="ru_RU">
+      <Text>{1_num}% области разблокировки</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_GAIN_TITLE" Language="ru_RU">
+      <Text>Географическая разблокировка получена</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_GAIN_DESC" Language="ru_RU">
+      <Text>Ваша территория теперь разблокирует эту цивилизацию.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_LOSS_TITLE" Language="ru_RU">
+      <Text>Географическая разблокировка потеряна</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_LOSS_DESC" Language="ru_RU">
+      <Text>Ваша территория больше не разблокирует эту цивилизацию.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_RANK_TITLE" Language="ru_RU">
+      <Text>Порядок географической разблокировки изменен</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_POPUP_RANK_DESC" Language="ru_RU">
+      <Text>Ваш текущий приоритет географической разблокировки изменился.</Text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_SECTION_UNLOCKED_BY" Language="ru_RU">
+      <text>Разблокирована благодаря</text>
+    </Replace>
+    <Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_SECTION_COMPETING_WITH" Language="ru_RU">
+      <text>Конкурируют с</text>
+    </Replace>
+    <Replace Tag="LOC_LENS_NAME_YNAMP_GEOGRAPHIC_UNLOCK" Language="ru_RU">
+      <text>Географическое разблокирование</text>
     </Replace>
   </LocalizedText>
 </Database>

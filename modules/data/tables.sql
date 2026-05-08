@@ -81,7 +81,10 @@ CREATE TABLE IF NOT EXISTS StartPosition
 		Leader TEXT,
 		DisabledByCivilization TEXT,
 		DisabledByLeader TEXT,
-		AlternateStart INT default 0,
+		AlternateStart  BOOLEAN,
+		UnlockRadius INT,			-- override the default value for unlocking territory radius
+		UnlockIgnoreCoast BOOLEAN,	-- when true, the unlock territory is not limited by the starting plot landmass and can reach land over coast (but not ocean)
+		UnlockDisabled BOOLEAN,		-- when true, this position doesn't generate an unlocking territory
 		X INT default 0,
 		Y INT default 0);
 		

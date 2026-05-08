@@ -44,10 +44,10 @@ function getGeographicUnlockMode() {
     }
 
     let mode = Number(BigInt.asIntN(32, BigInt(rawMode)));
-    const addHash = Number(BigInt.asIntN(32, BigInt(Database.makeHash("YNAMP_GEOGRAPHIC_UNLOCK_ADD"))));
+    const sharedHash = Number(BigInt.asIntN(32, BigInt(Database.makeHash("YNAMP_GEOGRAPHIC_UNLOCK_SHARED"))));
     const strictHash = Number(BigInt.asIntN(32, BigInt(Database.makeHash("YNAMP_GEOGRAPHIC_UNLOCK_STRICT"))));
-    if (mode === addHash) {
-        return "add";
+    if (mode === sharedHash) {
+        return "shared";
     }
     if (mode === strictHash) {
         return "strict";
