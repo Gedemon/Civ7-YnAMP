@@ -18,6 +18,8 @@ Design notes for geography-driven civilization unlocks on Earth TSL maps, using 
 ### To Do
 
 - edit the unlock UI screen in game
+- prepare for the game next update (1.4.0) coming soon, by allowing a Civilization to pick itself as the back-up low weigth next-age civ (for Example playing as Rome in the previous age, if Rome is also in the next age civ list, no need to own the territory to unlock it)
+- after update 1.4.0 of the game, remove the next-age backup civ in game code detection as one previous-age civilization will be able to continue in the next age
 - add MP compatibility
 - implement the code for those entries in the StartPosition table: 
 		Leader TEXT,

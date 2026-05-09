@@ -581,18 +581,18 @@ function getCandidateTier(currentProfile, candidateProfile) {
   return 3;
 }
 
-function collectNextAgeCandidateIds(civilizationId, leaderType, nextAgeType) {
+function collectAllNextAgeCandidateIds(nextAgeType) {
   if (!nextAgeType) {
     return [];
   }
   const candidateIds = new Set();
   for (const row of getCivilizationUnlockRows()) {
-    if (row.CivilizationType === civilizationId && row.AgeType === nextAgeType && row.Type) {
+    if (row.AgeType === nextAgeType && row.Type) {
       candidateIds.add(row.Type.toString());
     }
   }
   for (const row of getLeaderUnlockRows()) {
-    if (row.LeaderType === leaderType && row.AgeType === nextAgeType && row.Type) {
+    if (row.AgeType === nextAgeType && row.Type) {
       candidateIds.add(row.Type.toString());
     }
   }
@@ -681,9 +681,14 @@ function findAnchorLandLocation(localCoord) {
 function buildUnlockZone(candidateId, context) {
   const sourceCoord = context.coordMap.get(candidateId) ?? null;
   if (!sourceCoord) {
+    logGeographicUnlock(`Zone skipped civ=${candidateId} reason=missing-source-coord`);
     return null;
   }
   const localCoord = mapSourceToLocalCoordinate(sourceCoord.x, sourceCoord.y, context.runtimeMapContext);
+  if (!localCoord) {
+    logGeographicUnlock(`Zone skipped civ=${candidateId} reason=source-outside-live-crop source=(${sourceCoord.x},${sourceCoord.y})`);
+    return null;
+  }
   const anchorLocation = findAnchorLandLocation(localCoord);
   if (!anchorLocation) {
     logGeographicUnlock(`Zone skipped civ=${candidateId} reason=no-local-anchor source=(${sourceCoord.x},${sourceCoord.y})`);
@@ -757,16 +762,6 @@ function applyUnlockDelta(playerState, candidateId, delta, reason) {
   return previouslyAllowed !== nowAllowed || (previousCount === 0) !== (nextCount === 0);
 }
 
-function collectAllCandidateIds(playerStates) {
-  const candidateIds = new Set();
-  for (const playerState of playerStates.values()) {
-    for (const candidateId of playerState.candidateIds) {
-      candidateIds.add(candidateId);
-    }
-  }
-  return Array.from(candidateIds);
-}
-
 function initializeLiveUnlockState(state) {
   for (const plotIndex of state.trackedPlotIndices) {
     const location = getPlotLocation(plotIndex);
@@ -803,29 +798,24 @@ function buildGeographicUnlockState(reason) {
     };
   }
   const context = payloadContext;
+  const allNextAgeCandidateIds = collectAllNextAgeCandidateIds(context.nextAgeType);
   const playerStates = new Map();
   for (const playerId of getActivePlayerIds()) {
-    const playerState = buildPlayerState(playerId, context);
+    const playerState = buildPlayerState(playerId, context, allNextAgeCandidateIds);
     playerStates.set(playerId, {
       ...playerState,
-      candidateIds: [...playerState.lockedCivilizationIds],
-      candidateIdSet: new Set(playerState.lockedCivilizationIds),
+      candidateIds: [...playerState.candidateCivilizationIds],
+      candidateIdSet: new Set(playerState.candidateCivilizationIds),
       liveUnlockCounts: new Map(),
       dynamicUnlockedCivilizationIds: []
     });
-    playerStates.get(playerId).candidateIds = [
-      ...new Set([
-        ...collectNextAgeCandidateIds(playerState.currentCivilizationId, playerState.currentLeaderType, context.nextAgeType)
-      ])
-    ];
-    playerStates.get(playerId).candidateIdSet = new Set(playerStates.get(playerId).candidateIds);
     refreshAllowedCivilizationIds(playerStates.get(playerId));
   }
 
   const trackedPlotIndices = new Set();
   const plotZoneIdsByIndex = new Map();
   const zonesByCandidateId = new Map();
-  for (const candidateId of collectAllCandidateIds(playerStates)) {
+  for (const candidateId of allNextAgeCandidateIds) {
     const zone = buildUnlockZone(candidateId, context);
     if (!zone || zone.plotIndices.length === 0) {
       continue;
@@ -1397,10 +1387,12 @@ function chooseFallbackCivilization(candidateProfiles, currentProfile, runtimeMa
   return rankedProfiles[0] ?? null;
 }
 
-function buildPlayerState(playerId, context) {
+function buildPlayerState(playerId, context, allCandidateIds = null) {
   const currentCivilizationId = getPlayerCivilizationType(playerId);
   const currentLeaderType = getPlayerLeaderType(playerId);
-  const candidateIds = collectNextAgeCandidateIds(currentCivilizationId, currentLeaderType, context.nextAgeType);
+  const candidateIds = Array.isArray(allCandidateIds)
+    ? [...allCandidateIds]
+    : collectAllNextAgeCandidateIds(context.nextAgeType);
   const currentProfile = currentCivilizationId
     ? getCivilizationGeoProfile(
         currentCivilizationId,

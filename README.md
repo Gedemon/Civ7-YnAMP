@@ -2,8 +2,6 @@
 
 Yet (not) Another Maps Pack for Civilization VII.
 
-Last reviewed: 2026-04-25
-Verified against: Civ7 v1.3.2
 
 ## What this mod adds
 
@@ -13,6 +11,7 @@ Included content:
 
 - Larger playable map sizes for custom scripts and Earth maps.
 - Giant Earth and Greatest Earth maps with true-start support.
+- Geographic Unlock for next-age Civilizations on TSL maps.
 - Terra Map with Old World/New World civilization split.
 - Custom start-position shuffles for cultural and Terra-style distribution.
 - TSL natural wonder placement modes for Earth maps.
@@ -52,18 +51,11 @@ For Earth maps:
 
 For generated maps:
 
-1. Select Continents++ or Terra.
+1. Select Terra (ynAMP).
 2. Choose one of the map sizes.
 3. Optional: configure Region Tagging Mode and custom start-position options.
 4. Terra also exposes landmass ratio and spawn distribution options.
 
-
-## Documentation
-
-- [MAPS.md](MAPS.md): active maps, sizes, and configuration notes.
-- [MODDING NOTES.md](MODDING%20NOTES.md): Civ7 MapScript development notes and debugging guidance.
-- [PORTING_NOTES.md](PORTING_NOTES.md): API changes that mattered while aligning YnAMP to Civ7 v1.3.2.
-- [GEOGRAPHIC_UNLOCK.md](GEOGRAPHIC_UNLOCK.md): design notes for geography-driven civilization unlocks.
 
 ## Known limitations
 
