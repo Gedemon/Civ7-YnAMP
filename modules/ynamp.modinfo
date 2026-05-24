@@ -58,6 +58,13 @@
 				<Value>YNAMP_GEOGRAPHIC_UNLOCK_SHARED,YNAMP_GEOGRAPHIC_UNLOCK_STRICT</Value>
 			</ConfigurationValueContains>
 		</Criteria>
+		<Criteria id="custom-age-transition-screen-on">
+			<ConfigurationValueMatches>
+				<Group>Game</Group>
+				<ConfigurationId>UseCustomAgeTransitionScreen</ConfigurationId>
+				<Value>1</Value>
+			</ConfigurationValueMatches>
+		</Criteria>
 	</ActionCriteria>
 	<ActionGroups>
 		<ActionGroup id="base-game-init-ynamp" scope="game" criteria="always">
@@ -168,9 +175,21 @@
 				</AgeTransitionScripts>
 				<MapGenScripts>
 					<Item>scenario/test.js</Item>
-					<Item>maps/ynamp-mapsize-patch.js</Item>
 					<Item>maps/ynamp-cultural-start.js</Item>
 				</MapGenScripts>
+			</Actions>
+		</ActionGroup>
+		<ActionGroup id="base-game-custom-age-transition-bootstrap" scope="game" criteria="custom-age-transition-screen-on">
+			<Properties>
+				<LoadOrder>1000</LoadOrder>
+			</Properties>
+			<Actions>
+				<ImportFiles>
+					<Item>ui-next/screens/age-transition/age-transition-bootstrap.js</Item>
+					<Item>ui/age-transition/ynamp-age-transition-screen.js</Item>
+					<Item>ui/age-transition/ynamp-age-transition-selection-model.js</Item>
+					<Item>ui/ynamp-geographic-unlock-text.js</Item>
+				</ImportFiles>
 			</Actions>
 		</ActionGroup>
 		<ActionGroup id="base-game-geographic-unlock-lens" scope="game" criteria="geographic-unlock-active">
@@ -211,10 +230,12 @@
 				<ImportFiles>
 					<Item>icons/happy_cat.png</Item>
 					<Item>icons/civ6_earth.png</Item>
+					<Item>ui-next/screens/create-game/advanced-options.js</Item>
 					<Item>ui/ynamp-geographic-unlock-text.js</Item>
-					<Item>ui/shell/age-transition/age-transition-civ-select.js</Item>
-					<Item>ui/shell/age-transition/ynamp-age-transition-civ-select.js</Item>
 				</ImportFiles>
+				<UIScripts>
+					<Item>ui/shell/advanced-options-panel-override.js</Item>
+				</UIScripts>
 				<UpdateIcons>
 					<Item>icons/ynamp-icons.xml</Item>
 				</UpdateIcons>

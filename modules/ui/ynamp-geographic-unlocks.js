@@ -1,4 +1,4 @@
-console.warn("[YnAMP GeographicUnlock] Loading ynamp-geographic-unlocks.js");
+Automation.log("[YnAMP GeographicUnlock] Loading ynamp-geographic-unlocks.js");
 
 const AGE_TRANSITION_AUTOMATION_SET = "YnAMP";
 const AGE_TRANSITION_AUTOMATION_KEY = "AgeTransitionContext";
@@ -27,11 +27,7 @@ let geographicUnlockNotificationSnapshotByPlayer = new Map();
 let geographicUnlockPendingNotificationBurstByPlayer = new Map();
 
 function logGeographicUnlock(message) {
-  if (typeof Automation !== "undefined" && typeof Automation.log === "function") {
-    Automation.log(`[YnAMP GeographicUnlock] ${message}`);
-    return;
-  }
-  console.warn(`[YnAMP GeographicUnlock] ${message}`);
+  Automation.log(`[YnAMP GeographicUnlock] ${message}`);
 }
 
 function normalizeComparableConfigurationValue(rawValue) {
@@ -1367,26 +1363,6 @@ function resolvePlotOwnershipLocation(eventData) {
   return null;
 }
 
-function chooseFallbackCivilization(candidateProfiles, currentProfile, runtimeMapContext) {
-  if (candidateProfiles.length === 0) {
-    return null;
-  }
-  const rankedProfiles = [...candidateProfiles].sort((left, right) => {
-    const leftTier = getCandidateTier(currentProfile, left);
-    const rightTier = getCandidateTier(currentProfile, right);
-    if (leftTier !== rightTier) {
-      return leftTier - rightTier;
-    }
-    const leftDistance = getDistanceScore(currentProfile?.coord, left.coord, runtimeMapContext);
-    const rightDistance = getDistanceScore(currentProfile?.coord, right.coord, runtimeMapContext);
-    if (leftDistance !== rightDistance) {
-      return leftDistance - rightDistance;
-    }
-    return Locale.compare(left.civilizationId ?? "", right.civilizationId ?? "");
-  });
-  return rankedProfiles[0] ?? null;
-}
-
 function buildPlayerState(playerId, context, allCandidateIds = null) {
   const currentCivilizationId = getPlayerCivilizationType(playerId);
   const currentLeaderType = getPlayerLeaderType(playerId);
@@ -1402,22 +1378,13 @@ function buildPlayerState(playerId, context, allCandidateIds = null) {
         context.regionToCultureGroup
       )
     : null;
-  const candidateProfiles = candidateIds.map((candidateId) => {
-    return getCivilizationGeoProfile(
-      candidateId,
-      context.coordMap,
-      context.regionRows,
-      context.regionToSuperRegion,
-      context.regionToCultureGroup
-    );
-  });
-  const fallbackProfile = chooseFallbackCivilization(candidateProfiles, currentProfile, context.runtimeMapContext);
-  const allowedCivilizationIds = fallbackProfile ? [fallbackProfile.civilizationId] : [];
-  const lockedCivilizationIds = candidateIds.filter((candidateId) => candidateId !== fallbackProfile?.civilizationId);
+  const permanentFallbackCivilizationId = currentCivilizationId ?? null;
+  const allowedCivilizationIds = permanentFallbackCivilizationId ? [permanentFallbackCivilizationId] : [];
+  const lockedCivilizationIds = candidateIds.filter((candidateId) => candidateId !== permanentFallbackCivilizationId);
 
-  if (fallbackProfile) {
+  if (permanentFallbackCivilizationId) {
     logGeographicUnlock(
-      `Fallback player=${playerId} leader=${currentLeaderType ?? "NONE"} current=${currentCivilizationId ?? "NONE"} next=${fallbackProfile.civilizationId} tier=${getCandidateTier(currentProfile, fallbackProfile)}`
+      `Fallback player=${playerId} leader=${currentLeaderType ?? "NONE"} current=${currentCivilizationId ?? "NONE"} next=${permanentFallbackCivilizationId} source=current-civ`
     );
   } else {
     logGeographicUnlock(
@@ -1435,7 +1402,7 @@ function buildPlayerState(playerId, context, allCandidateIds = null) {
     allowedCivilizationIds,
     lockedCivilizationIds,
     candidateCivilizationIds: candidateIds,
-    permanentFallbackCivilizationId: fallbackProfile?.civilizationId ?? null,
+    permanentFallbackCivilizationId,
     liveUnlockTrackingImplemented: false
   };
 }

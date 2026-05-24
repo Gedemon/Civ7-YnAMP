@@ -1,12 +1,10 @@
 import ContextManager from '/core/ui/context-manager/context-manager.js';
 import { DisplayQueueManager } from '/core/ui/context-manager/display-queue-manager.js';
-import { b as DisplayHandlerBase } from '/core/ui/dialog-box/manager-dialog-box.chunk.js';
-import '/core/ui/framework.chunk.js';
+import { DisplayHandlerBase } from '/core/ui/context-manager/display-handler.js';
+import '/core/ui/framework.js';
 import '/core/ui/input/cursor.js';
-import '/core/ui/input/focus-manager.js';
-import '/core/ui/audio-base/audio-support.chunk.js';
-import '/core/ui/views/view-manager.chunk.js';
-import '/core/ui/panel-support.chunk.js';
+import '/core/ui/audio-base/audio-support.js';
+import '/core/ui/panel-support.js';
 
 class YnAMPGeographicUnlockPopupManagerClass extends DisplayHandlerBase {
   static instance = new YnAMPGeographicUnlockPopupManagerClass();

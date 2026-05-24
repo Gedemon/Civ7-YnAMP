@@ -331,6 +331,30 @@ function detectSingleContinent(iWidth, iHeight) {
     return false;
 }
 
+function isSemanticLandmassRegionId(regionId) {
+    return regionId !== undefined &&
+        regionId !== null &&
+        regionId !== NO_REGION_ID &&
+        regionId !== LandmassRegion.LANDMASS_REGION_DEFAULT &&
+        regionId !== LandmassRegion.LANDMASS_REGION_NONE &&
+        regionId !== LandmassRegion.LANDMASS_REGION_ANY;
+}
+
+function collectMapWideLandmassRegionStats(iWidth, iHeight) {
+    const regionCount = new Map();
+    for (let y = 0; y < iHeight; y++) {
+        for (let x = 0; x < iWidth; x++) {
+            if (GameplayMap.isWater(x, y)) continue;
+            const regionId = GameplayMap.getLandmassRegionId(x, y);
+            if (!isSemanticLandmassRegionId(regionId)) continue;
+            regionCount.set(regionId, (regionCount.get(regionId) || 0) + 1);
+        }
+    }
+
+    return Array.from(regionCount.entries(), ([regionId, count]) => ({ regionId, count }))
+        .sort((a, b) => b.count - a.count || a.regionId - b.regionId);
+}
+
 // Phase 1: Move civs to their correct regionID based on SuperRegion.
 // EURASIA → homeland regionID (majority of current EURASIA starts).
 // AMERICAS → the other regionID.
@@ -345,7 +369,8 @@ function assignCivsBySuperRegion(aliveMajorIds, civProfiles, iWidth, iHeight) {
         const plot  = StartPositioner.getStartPosition(pid);
         if (!isValidPlot(plot)) { playerRegionId.set(pid, NO_REGION_ID); continue; }
         const x = plot % iWidth, y = Math.floor(plot / iWidth);
-        playerRegionId.set(pid, GameplayMap.getLandmassRegionId(x, y));
+        const regionId = GameplayMap.getLandmassRegionId(x, y);
+        playerRegionId.set(pid, isSemanticLandmassRegionId(regionId) ? regionId : NO_REGION_ID);
     }
 
     // Determine which regionId is "homeland" for EURASIA by majority vote.
@@ -372,6 +397,9 @@ function assignCivsBySuperRegion(aliveMajorIds, civProfiles, iWidth, iHeight) {
         const rid = playerRegionId.get(aliveMajorIds[i]);
         if (rid !== NO_REGION_ID) allRegionIds.add(rid);
     }
+    const occupiedRegionIds = Array.from(allRegionIds).sort((a, b) => a - b);
+    console.log("[YnAMP Region] Occupied start regionIds: " +
+        (occupiedRegionIds.length > 0 ? occupiedRegionIds.join(",") : "none"));
 
     let americasRegionId = NO_REGION_ID;
     for (const rid of allRegionIds) {
@@ -379,9 +407,36 @@ function assignCivsBySuperRegion(aliveMajorIds, civProfiles, iWidth, iHeight) {
     }
 
     if (eurasiaRegionId === NO_REGION_ID || americasRegionId === NO_REGION_ID) {
-        console.log("[YnAMP Region] Phase 1 skipped: could not determine two distinct regionIDs " +
+        const mapWideRegionStats = collectMapWideLandmassRegionStats(iWidth, iHeight);
+        const mapWideRegionIds = mapWideRegionStats.map((entry) => entry.regionId);
+        console.log("[YnAMP Region] Phase 1 occupied-start inference incomplete " +
             "(eurasiaRid=" + eurasiaRegionId + " americasRid=" + americasRegionId + ")");
-        return;
+        console.log("[YnAMP Region] Phase 1 map-wide regionIds: " +
+            (mapWideRegionStats.length > 0
+                ? mapWideRegionStats.map((entry) => entry.regionId + "(" + entry.count + ")").join(",")
+                : "none"));
+
+        if (eurasiaRegionId === NO_REGION_ID && mapWideRegionIds.length > 0) {
+            eurasiaRegionId = mapWideRegionIds[0];
+        }
+        if (americasRegionId === NO_REGION_ID) {
+            for (let i = 0; i < mapWideRegionIds.length; i++) {
+                if (mapWideRegionIds[i] !== eurasiaRegionId) {
+                    americasRegionId = mapWideRegionIds[i];
+                    break;
+                }
+            }
+        }
+
+        if (eurasiaRegionId === NO_REGION_ID || americasRegionId === NO_REGION_ID) {
+            console.log("[YnAMP Region] Phase 1 skipped: could not determine two distinct regionIDs " +
+                "(eurasiaRid=" + eurasiaRegionId + " americasRid=" + americasRegionId + ")");
+            return;
+        }
+
+        console.log("[YnAMP Region] Phase 1 fallback: using map-wide regions " +
+            "EURASIA → regionId=" + eurasiaRegionId +
+            "  AMERICAS → regionId=" + americasRegionId);
     }
     console.log("[YnAMP Region] EURASIA → regionId=" + eurasiaRegionId +
         "  AMERICAS → regionId=" + americasRegionId);

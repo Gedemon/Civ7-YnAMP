@@ -403,9 +403,8 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
         }
         publishGeographicUnlockMapContext(mapName, mapContext);
     }
-
-    ynamp.createMapTerrains(iWidth, iHeight,  importedMap, mapType, mapContext);
     
+    ynamp.createMapTerrains(iWidth, iHeight,  importedMap, mapType, mapContext);
     
     console.log("validateAndFixTerrain (1)...");
     TerrainBuilder.validateAndFixTerrain();
@@ -427,6 +426,8 @@ export function generateYnAMP(mapName, importedMap, genParameters) {
         
     console.log("buildElevation...");
     TerrainBuilder.buildElevation();
+    dumpElevation(iWidth, iHeight);
+
     console.log("addHills...");
     addHills(iWidth, iHeight);
     console.log("buildRainfallMap...");

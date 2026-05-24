@@ -19,6 +19,12 @@
 		<Replace Tag="LOC_MAP_TERRA_YNAMP_DESCRIPTION">
 			<Text>A Terra-style Voronoi map with a larger landmass ("Old World") and a smaller one ("New World"). Suggested map script for "Terra" Start Position options.</Text>
 		</Replace>
+		<Replace Tag="LOC_MAP_TERRA_FRACTAL_YNAMP_NAME">
+			<Text>Terra Fractal (YnAMP)</Text>
+		</Replace>
+		<Replace Tag="LOC_MAP_TERRA_FRACTAL_YNAMP_DESCRIPTION">
+			<Text>A Fractal-based Terra map with a clustered Old World and a distant world made of multiple landmasses. The Terra Fractal options control old-world versus distant-world area and spawn distribution instead of a fixed two-continent split.</Text>
+		</Replace>
 		<Replace Tag="LOC_MAP_GIANT_EARTH_YNAMP_NAME">
 			<Text>Giant Earth Map (YnAMP)</Text>
 		</Replace>
@@ -135,10 +141,10 @@
 		</Replace>
 
 		<Replace Tag="LOC_TERRA_YNAMP_RATIO_NAME">
-			<Text>Landmass Ratio for Terra YnAMP</Text>
+			<Text>New World Ratio</Text>
 		</Replace>
 		<Replace Tag="LOC_TERRA_YNAMP_RATIO_DESC">
-			<Text>Percentage of total land area allocated to the smaller landmass ("New World"). The larger landmass (Old World) receives the remainder. Smaller values produce a more extreme size difference.</Text>
+			<Text>Percentage of total land area allocated to the "New World". Smaller values produce a stronger imbalance between the two worlds.</Text>
 		</Replace>
 		<Replace Tag="LOC_TERRA_YNAMP_RATIO_40_NAME">
 			<Text>40% New World</Text>
@@ -160,23 +166,23 @@
 		</Replace>
 
 		<Replace Tag="LOC_TERRA_YNAMP_SPAWN_MODE_NAME">
-			<Text>Spawn Distribution for Terra YnAMP</Text>
+			<Text>Civilization Distribution</Text>
 		</Replace>
 		<Replace Tag="LOC_TERRA_YNAMP_SPAWN_MODE_DESC">
-			<Text>Controls how civilizations are distributed between the two landmasses. Split places civs on both landmasses proportional to their size. Same Landmass places all civs on the larger landmass.</Text>
+			<Text>Controls how civilizations are distributed between the "Old"" and "New" worlds. Split places civilizations on both worlds according to available space. "Old World" leaves the "New World" empty.</Text>
 		</Replace>
 		<Replace Tag="LOC_TERRA_YNAMP_SPAWN_SPLIT_NAME">
-			<Text>Split civs on landmasses</Text>
+			<Text>Split across worlds</Text>
 		</Replace>
 		<Replace Tag="LOC_TERRA_YNAMP_SPAWN_SAME_NAME">
-			<Text>All civs on larger landmass</Text>
+			<Text>All civs in Old World</Text>
 		</Replace>
 
 		<Replace Tag="LOC_TERRA_YNAMP_OCEAN_SEPARATION_NAME">
-			<Text>Ocean Separation for Terra YnAMP</Text>
+			<Text>World Separation</Text>
 		</Replace>
 		<Replace Tag="LOC_TERRA_YNAMP_OCEAN_SEPARATION_DESC">
-			<Text>Controls how much ocean the generator keeps between the Old World and New World landmasses. Wide raises the minimal distance between landmasses. Standard uses the base Continents spacing.</Text>
+			<Text>Controls how much ocean the generator keeps between the "Old"" and "New" worlds. Wide increases the minimum separation. Standard uses the base map spacing.</Text>
 		</Replace>
 		<Replace Tag="LOC_TERRA_YNAMP_OCEAN_SEPARATION_STANDARD_NAME">
 			<Text>Standard</Text>

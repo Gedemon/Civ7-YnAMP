@@ -1,17 +1,17 @@
-import FocusManager from '/core/ui/input/focus-manager.js';
-import { P as Panel } from '/core/ui/panel-support.chunk.js';
+import { FocusManager } from '/core/ui-next/services/focus-manager.js';
+import Panel from '/core/ui/panel-support.js';
 import { YnAMPGeographicUnlockPopupManager } from './ynamp-geographic-unlock-popup-manager.js';
 import {
   buildGeographicUnlockCivilizationLabel,
   buildGeographicUnlockCivilizationName
 } from './ynamp-geographic-unlock-text.js';
-import '/core/ui/audio-base/audio-support.chunk.js';
-import '/core/ui/framework.chunk.js';
+import '/core/ui/audio-base/audio-support.js';
+import '/core/ui/framework.js';
 import '/core/ui/context-manager/context-manager.js';
 import '/core/ui/context-manager/display-queue-manager.js';
-import '/core/ui/dialog-box/manager-dialog-box.chunk.js';
+import '/core/ui/dialog-box/manager-dialog-box.js';
 import '/core/ui/input/cursor.js';
-import '/core/ui/views/view-manager.chunk.js';
+import '/core/ui/views/view-manager.js';
 
 const styles = 'fs://game/base-standard/ui/unlocks/screen-reward-unlocked.css';
 
@@ -38,8 +38,10 @@ class ScreenYnAMPGeographicUnlock extends Panel {
   }
 
   onReceiveFocus() {
+    
+    const focusManager = FocusManager.get();
     super.onReceiveFocus();
-    FocusManager.setFocus(this.closeButton);
+    focusManager.setFocus(this.closeButton);
   }
 
   render() {
