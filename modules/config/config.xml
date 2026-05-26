@@ -93,10 +93,12 @@
 		<Row Key1="Map" Key2="{ged-ynamp}maps/terra-map/terra-ynamp.js" ParameterID="StartPosition" Name="LOC_MAP_START_POSITION_NAME" Description="LOC_MAP_START_POSITION_DESCRIPTION" Domain="StandardMapStartPositions" Hash="1" DefaultValue="START_POSITION_REGION" ConfigurationGroup="Map" ConfigurationKey="StartPosition" GroupId="MapOptions" SortIndex="120"/>
 		<Row Key1="Map" Key2="{ged-ynamp}maps/terra-fractal/fractal-terra-ynamp.js" ParameterID="StartPosition" Name="LOC_MAP_START_POSITION_NAME" Description="LOC_MAP_START_POSITION_DESCRIPTION" Domain="StandardMapStartPositions" Hash="1" DefaultValue="START_POSITION_REGION" ConfigurationGroup="Map" ConfigurationKey="StartPosition" GroupId="MapOptions" SortIndex="120"/>
 
-		<!-- Terra YnAMP only: landmass size ratio (% of total land for smaller landmass), spawn distribution, and ocean separation -->
+		<!-- Terra YnAMP only: landmass ratio, spawn distribution, ocean separation, and distant island presets -->
 		<Row Key1="Map" Key2="{ged-ynamp}maps/terra-map/terra-ynamp.js" ParameterID="TerraLandmassRatio" Name="LOC_TERRA_YNAMP_RATIO_NAME" Description="LOC_TERRA_YNAMP_RATIO_DESC" Domain="TerraYnAMPLandmassRatios" Hash="0" DefaultValue="33" ConfigurationGroup="Map" ConfigurationKey="TerraLandmassRatio" GroupId="MapOptions" SortIndex="1011"/>
 		<Row Key1="Map" Key2="{ged-ynamp}maps/terra-map/terra-ynamp.js" ParameterID="TerraSpawnMode" Name="LOC_TERRA_YNAMP_SPAWN_MODE_NAME" Description="LOC_TERRA_YNAMP_SPAWN_MODE_DESC" Domain="TerraYnAMPSpawnModes" Hash="0" DefaultValue="0" ConfigurationGroup="Map" ConfigurationKey="TerraSpawnMode" GroupId="MapOptions" SortIndex="1012"/>
 		<Row Key1="Map" Key2="{ged-ynamp}maps/terra-map/terra-ynamp.js" ParameterID="TerraOceanSeparation" Name="LOC_TERRA_YNAMP_OCEAN_SEPARATION_NAME" Description="LOC_TERRA_YNAMP_OCEAN_SEPARATION_DESC" Domain="TerraYnAMPOceanSeparations" Hash="0" DefaultValue="WIDE" ConfigurationGroup="Map" ConfigurationKey="TerraOceanSeparation" GroupId="MapOptions" SortIndex="1013"/>
+		<Row Key1="Map" Key2="{ged-ynamp}maps/terra-map/terra-ynamp.js" ParameterID="TerraDistantIslandsDensity" Name="LOC_TERRA_YNAMP_DISTANT_ISLAND_DENSITY_NAME" Description="LOC_TERRA_YNAMP_DISTANT_ISLAND_DENSITY_DESC" Domain="TerraYnAMPDistantIslandDensities" Hash="0" DefaultValue="DEFAULT" ConfigurationGroup="Map" ConfigurationKey="TerraDistantIslandsDensity" GroupId="MapOptions" SortIndex="1014"/>
+		<Row Key1="Map" Key2="{ged-ynamp}maps/terra-map/terra-ynamp.js" ParameterID="TerraDistantIslandsSize" Name="LOC_TERRA_YNAMP_DISTANT_ISLAND_SIZE_NAME" Description="LOC_TERRA_YNAMP_DISTANT_ISLAND_SIZE_DESC" Domain="TerraYnAMPDistantIslandSizes" Hash="0" DefaultValue="DEFAULT" ConfigurationGroup="Map" ConfigurationKey="TerraDistantIslandsSize" GroupId="MapOptions" SortIndex="1015"/>
 		<!-- Add sea level option for YnAMP Terra -->
 		<Row Key1="Map" Key2="{ged-ynamp}maps/terra-map/terra-ynamp.js" ParameterID="MapSeaLevel" Name="LOC_MAP_SEA_LEVEL_NAME" Description="LOC_MAP_SEA_LEVEL_DESCRIPTION" Domain="SeaLevels" DefaultValue="SEA_LEVEL_STANDARD" Hash="0" ConfigurationGroup="Map" ConfigurationKey="SeaLevel" GroupId="MapOptions" SortIndex="1050" />
 
@@ -104,6 +106,9 @@
 		<Row Key1="Map" Key2="{ged-ynamp}maps/terra-fractal/fractal-terra-ynamp.js" ParameterID="TerraLandmassRatio" Name="LOC_TERRA_YNAMP_RATIO_NAME" Description="LOC_TERRA_YNAMP_RATIO_DESC" Domain="TerraYnAMPLandmassRatios" Hash="0" DefaultValue="33" ConfigurationGroup="Map" ConfigurationKey="TerraLandmassRatio" GroupId="MapOptions" SortIndex="1011"/>
 		<Row Key1="Map" Key2="{ged-ynamp}maps/terra-fractal/fractal-terra-ynamp.js" ParameterID="TerraSpawnMode" Name="LOC_TERRA_YNAMP_SPAWN_MODE_NAME" Description="LOC_TERRA_YNAMP_SPAWN_MODE_DESC" Domain="TerraYnAMPSpawnModes" Hash="0" DefaultValue="0" ConfigurationGroup="Map" ConfigurationKey="TerraSpawnMode" GroupId="MapOptions" SortIndex="1012"/>
 		<Row Key1="Map" Key2="{ged-ynamp}maps/terra-fractal/fractal-terra-ynamp.js" ParameterID="TerraOceanSeparation" Name="LOC_TERRA_YNAMP_OCEAN_SEPARATION_NAME" Description="LOC_TERRA_YNAMP_OCEAN_SEPARATION_DESC" Domain="TerraYnAMPOceanSeparations" Hash="0" DefaultValue="WIDE" ConfigurationGroup="Map" ConfigurationKey="TerraOceanSeparation" GroupId="MapOptions" SortIndex="1013"/>
+		<Row Key1="Map" Key2="{ged-ynamp}maps/terra-fractal/fractal-terra-ynamp.js" ParameterID="TerraDistantIslandsDensity" Name="LOC_TERRA_YNAMP_DISTANT_ISLAND_DENSITY_NAME" Description="LOC_TERRA_YNAMP_DISTANT_ISLAND_DENSITY_DESC" Domain="TerraYnAMPDistantIslandDensities" Hash="0" DefaultValue="DEFAULT" ConfigurationGroup="Map" ConfigurationKey="TerraDistantIslandsDensity" GroupId="MapOptions" SortIndex="1014"/>
+		<Row Key1="Map" Key2="{ged-ynamp}maps/terra-fractal/fractal-terra-ynamp.js" ParameterID="TerraDistantIslandsSize" Name="LOC_TERRA_YNAMP_DISTANT_ISLAND_SIZE_NAME" Description="LOC_TERRA_YNAMP_DISTANT_ISLAND_SIZE_DESC" Domain="TerraYnAMPDistantIslandSizes" Hash="0" DefaultValue="DEFAULT" ConfigurationGroup="Map" ConfigurationKey="TerraDistantIslandsSize" GroupId="MapOptions" SortIndex="1015"/>
+		<Row Key1="Map" Key2="{ged-ynamp}maps/terra-fractal/fractal-terra-ynamp.js" ParameterID="TerraFractalLandmasses" Name="LOC_TERRA_FRACTAL_LANDMASSES_NAME" Description="LOC_TERRA_FRACTAL_LANDMASSES_DESC" Domain="TerraFractalLandmassCounts" Hash="0" DefaultValue="2" ConfigurationGroup="Map" ConfigurationKey="TerraFractalLandmasses" GroupId="MapOptions" SortIndex="1016"/>
 		<Row Key1="Map" Key2="{ged-ynamp}maps/terra-fractal/fractal-terra-ynamp.js" ParameterID="MapSeaLevel" Name="LOC_MAP_SEA_LEVEL_NAME" Description="LOC_MAP_SEA_LEVEL_DESCRIPTION" Domain="SeaLevels" DefaultValue="SEA_LEVEL_STANDARD" Hash="0" ConfigurationGroup="Map" ConfigurationKey="SeaLevel" GroupId="MapOptions" SortIndex="1050" />
 	</Parameters>
 
@@ -138,6 +143,20 @@
 
 		<Row Domain="TerraYnAMPOceanSeparations" Value="STANDARD" Name="LOC_TERRA_YNAMP_OCEAN_SEPARATION_STANDARD_NAME" SortIndex="0"/>
 		<Row Domain="TerraYnAMPOceanSeparations" Value="WIDE" Name="LOC_TERRA_YNAMP_OCEAN_SEPARATION_WIDE_NAME" SortIndex="1"/>
+
+		<Row Domain="TerraYnAMPDistantIslandDensities" Value="RARE" Name="LOC_TERRA_YNAMP_DISTANT_ISLAND_DENSITY_RARE_NAME" SortIndex="0"/>
+		<Row Domain="TerraYnAMPDistantIslandDensities" Value="FEW" Name="LOC_TERRA_YNAMP_DISTANT_ISLAND_DENSITY_FEW_NAME" SortIndex="1"/>
+		<Row Domain="TerraYnAMPDistantIslandDensities" Value="DEFAULT" Name="LOC_TERRA_YNAMP_DISTANT_ISLAND_DENSITY_DEFAULT_NAME" SortIndex="2"/>
+
+		<Row Domain="TerraYnAMPDistantIslandSizes" Value="SMALL" Name="LOC_TERRA_YNAMP_DISTANT_ISLAND_SIZE_SMALL_NAME" SortIndex="0"/>
+		<Row Domain="TerraYnAMPDistantIslandSizes" Value="DEFAULT" Name="LOC_TERRA_YNAMP_DISTANT_ISLAND_SIZE_DEFAULT_NAME" SortIndex="1"/>
+		<Row Domain="TerraYnAMPDistantIslandSizes" Value="MIXED" Name="LOC_TERRA_YNAMP_DISTANT_ISLAND_SIZE_MIXED_NAME" SortIndex="2"/>
+
+		<Row Domain="TerraFractalLandmassCounts" Value="2" Name="LOC_TERRA_FRACTAL_LANDMASSES_2_NAME" SortIndex="0"/>
+		<Row Domain="TerraFractalLandmassCounts" Value="3" Name="LOC_TERRA_FRACTAL_LANDMASSES_3_NAME" SortIndex="1"/>
+		<Row Domain="TerraFractalLandmassCounts" Value="4" Name="LOC_TERRA_FRACTAL_LANDMASSES_4_NAME" SortIndex="2"/>
+		<Row Domain="TerraFractalLandmassCounts" Value="5" Name="LOC_TERRA_FRACTAL_LANDMASSES_5_NAME" SortIndex="3"/>
+		<Row Domain="TerraFractalLandmassCounts" Value="RANDOM" Name="LOC_TERRA_FRACTAL_LANDMASSES_RANDOM_NAME" SortIndex="4"/>
 
 		<Row Domain="YnAMPNWPlacementModes" Value="YNAMP_NW_PLACEMENT_RANDOM" Name="LOC_YNAMP_NW_PLACEMENT_RANDOM_NAME" Description="LOC_YNAMP_NW_PLACEMENT_RANDOM_DESC" SortIndex="0"/>
 		<Row Domain="YnAMPNWPlacementModes" Value="YNAMP_NW_PLACEMENT_REAL_AND_RANDOM" Name="LOC_YNAMP_NW_PLACEMENT_REAL_AND_RANDOM_NAME" Description="LOC_YNAMP_NW_PLACEMENT_REAL_AND_RANDOM_DESC" SortIndex="1"/>

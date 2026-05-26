@@ -182,6 +182,48 @@ const TERRA_RULE_TUNING_SETTINGS = Object.freeze({
   }
 });
 
+const TERRA_DISTANT_ISLAND_SETTINGS = Object.freeze({
+  base: Object.freeze({
+    factor: 0.3,
+    minSize: 0.1,
+    maxSize: 2,
+    totalSize: 4.5,
+    variance: 1
+  }),
+  densityMultipliers: Object.freeze({
+    RARE: 0.5,
+    FEW: 0.75,
+    DEFAULT: 1
+  }),
+  sizeMultipliers: Object.freeze({
+    SMALL: Object.freeze({
+      minSize: 0.5,
+      maxSize: 0.5,
+      totalSize: 0.6,
+      variance: 0.5
+    }),
+    DEFAULT: Object.freeze({
+      minSize: 1,
+      maxSize: 1,
+      totalSize: 1,
+      variance: 1
+    }),
+    MIXED: Object.freeze({
+      minSize: 0.5,
+      maxSize: 1.5,
+      totalSize: 1,
+      variance: 1.25
+    })
+  }),
+  bounds: Object.freeze({
+    factor: Object.freeze([0, 2]),
+    minSize: Object.freeze([0, 4]),
+    maxSize: Object.freeze([0, 4]),
+    totalSize: Object.freeze([0, 10]),
+    variance: Object.freeze([0, 2])
+  })
+});
+
 const TERRA_LAYOUT_PASS_SETTINGS = Object.freeze({
   primary: Object.freeze({
     oldworld: Object.freeze({
@@ -227,6 +269,53 @@ function fract(value) {
 
 function remapUnitToRange(value, range) {
   return range[0] + (range[1] - range[0]) * clamp01(value);
+}
+
+function clampToRange(value, range) {
+  return Math.max(range[0], Math.min(range[1], value));
+}
+
+function getTerraDistantIslandDensityOption(rawValue) {
+  switch (rawValue) {
+    case "RARE":
+    case "FEW":
+    case "DEFAULT":
+      return rawValue;
+    default:
+      return "DEFAULT";
+  }
+}
+
+function getTerraDistantIslandSizeOption(rawValue) {
+  switch (rawValue) {
+    case "SMALL":
+    case "DEFAULT":
+    case "MIXED":
+      return rawValue;
+    default:
+      return "DEFAULT";
+  }
+}
+
+function resolveTerraDistantIslandSettings(densityRaw, sizeRaw) {
+  const densityOption = getTerraDistantIslandDensityOption(densityRaw);
+  const sizeOption = getTerraDistantIslandSizeOption(sizeRaw);
+  const baseSettings = TERRA_DISTANT_ISLAND_SETTINGS.base;
+  const densityMultiplier = TERRA_DISTANT_ISLAND_SETTINGS.densityMultipliers[densityOption];
+  const sizeMultipliers = TERRA_DISTANT_ISLAND_SETTINGS.sizeMultipliers[sizeOption];
+  const bounds = TERRA_DISTANT_ISLAND_SETTINGS.bounds;
+  const minSize = clampToRange(baseSettings.minSize * sizeMultipliers.minSize, bounds.minSize);
+  const maxSize = Math.max(minSize, clampToRange(baseSettings.maxSize * sizeMultipliers.maxSize, bounds.maxSize));
+
+  return {
+    densityOption,
+    sizeOption,
+    factor: clampToRange(baseSettings.factor * densityMultiplier, bounds.factor),
+    minSize,
+    maxSize,
+    totalSize: clampToRange(baseSettings.totalSize * sizeMultipliers.totalSize, bounds.totalSize),
+    variance: clampToRange(baseSettings.variance * sizeMultipliers.variance, bounds.variance)
+  };
 }
 
 function countTruthyEntries(values) {
@@ -489,6 +578,7 @@ function createConfiguredTerraVoronoiMap(terraOptions, seaLevelType, oceanSepara
   voronoiMap.setPrimaryMapSetting(["totalPlayers"], terraOptions.totalPlayers);
 
   applyTerraIrregularitySettings(voronoiMap);
+  applyTerraDistantIslandSettings(voronoiMap, terraOptions.distantIslandSettings);
   applyTerraRuleTuningSettings(voronoiMap);
   applyTerraOceanSeparationSettings(voronoiMap, oceanSeparationMode);
 
@@ -551,6 +641,14 @@ function applyTerraRuleTuningSettings(voronoiMap) {
   voronoiMap.setPrimaryRuleSetting(["Landmasses", "Avoid Edge", "poleDistance"], TERRA_RULE_TUNING_SETTINGS.landmasses.avoidEdge.poleDistance);
   voronoiMap.setPrimaryRuleSetting(["Landmasses", "Avoid Edge", "poleDistanceFalloff"], TERRA_RULE_TUNING_SETTINGS.landmasses.avoidEdge.poleDistanceFalloff);
   voronoiMap.setPrimaryRuleSetting(["Landmasses", "Near Map Center", "weight"], TERRA_RULE_TUNING_SETTINGS.landmasses.nearMapCenter.weight);
+}
+
+function applyTerraDistantIslandSettings(voronoiMap, islandSettings) {
+  voronoiMap.setPrimaryGeneratorSetting(["island", "factor"], islandSettings.factor);
+  voronoiMap.setPrimaryGeneratorSetting(["island", "minSize"], islandSettings.minSize);
+  voronoiMap.setPrimaryGeneratorSetting(["island", "maxSize"], islandSettings.maxSize);
+  voronoiMap.setPrimaryGeneratorSetting(["island", "totalSize"], islandSettings.totalSize);
+  voronoiMap.setPrimaryGeneratorSetting(["island", "variance"], islandSettings.variance);
 }
 
 function applyTerraOceanSeparationSettings(voronoiMap, oceanSeparationMode) {
@@ -639,18 +737,23 @@ async function generateMap() {
   const seaLevelType = Configuration.getMapValue("SeaLevel");
   const ratioRaw = Configuration.getMapValue("TerraLandmassRatio");
   const spawnRaw = Configuration.getMapValue("TerraSpawnMode");
+  const distantIslandDensityRaw = Configuration.getMapValue("TerraDistantIslandsDensity");
+  const distantIslandSizeRaw = Configuration.getMapValue("TerraDistantIslandsSize");
   const oceanSeparationMode = oceanSeparationRaw === "STANDARD" ? "STANDARD" : "WIDE";
   const parsedSizeRatio = ratioRaw != null ? Number.parseInt(ratioRaw, 10) / 100 : 1 / 3;
   const sizeRatio = Number.isFinite(parsedSizeRatio) && parsedSizeRatio > 0 && parsedSizeRatio < 1 ? parsedSizeRatio : 1 / 3;
   const bSameLandmass = spawnRaw == "1";
+  const distantIslandSettings = resolveTerraDistantIslandSettings(distantIslandDensityRaw, distantIslandSizeRaw);
 
   console.log(`DEBUG: oceanSeparation=${oceanSeparationMode} (raw: "${oceanSeparationRaw}"), seaLevel=${seaLevelType}`);
   console.log(`DEBUG: sizeRatio=${sizeRatio.toFixed(4)} (raw: "${ratioRaw}"%); sameLandmass=${bSameLandmass} (raw: "${spawnRaw}")`);
+  console.log(`DEBUG: distant islands density=${distantIslandSettings.densityOption} (raw: "${distantIslandDensityRaw}") size=${distantIslandSettings.sizeOption} (raw: "${distantIslandSizeRaw}") factor=${distantIslandSettings.factor.toFixed(2)} minSize=${distantIslandSettings.minSize.toFixed(2)} maxSize=${distantIslandSettings.maxSize.toFixed(2)} totalSize=${distantIslandSettings.totalSize.toFixed(2)} variance=${distantIslandSettings.variance.toFixed(2)}`);
 
   const terraOptions = {
     sizeRatio,
     sameLandmass: bSameLandmass,
-    totalPlayers: iTotalPlayers
+    totalPlayers: iTotalPlayers,
+    distantIslandSettings
   };
   let selectedPassResult = simulateTerraVoronoiPass({
     ...terraOptions,

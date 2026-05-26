@@ -191,6 +191,60 @@
 			<Text>Wide</Text>
 		</Replace>
 
+		<Replace Tag="LOC_TERRA_YNAMP_DISTANT_ISLAND_DENSITY_NAME">
+			<Text>Distant Islands Density</Text>
+		</Replace>
+		<Replace Tag="LOC_TERRA_YNAMP_DISTANT_ISLAND_DENSITY_DESC">
+			<Text>Controls how many distant open-ocean islands the Terra generator creates. Default uses the base-game value for this map script.</Text>
+		</Replace>
+		<Replace Tag="LOC_TERRA_YNAMP_DISTANT_ISLAND_DENSITY_RARE_NAME">
+			<Text>Rare</Text>
+		</Replace>
+		<Replace Tag="LOC_TERRA_YNAMP_DISTANT_ISLAND_DENSITY_FEW_NAME">
+			<Text>Few</Text>
+		</Replace>
+		<Replace Tag="LOC_TERRA_YNAMP_DISTANT_ISLAND_DENSITY_DEFAULT_NAME">
+			<Text>Default</Text>
+		</Replace>
+
+		<Replace Tag="LOC_TERRA_YNAMP_DISTANT_ISLAND_SIZE_NAME">
+			<Text>Distant Islands Sizes</Text>
+		</Replace>
+		<Replace Tag="LOC_TERRA_YNAMP_DISTANT_ISLAND_SIZE_DESC">
+			<Text>Controls the size profile of distant open-ocean islands. Small reduces both individual island size and total footprint. Default uses the base-game value for this map script. Mixed keeps a similar total footprint while allowing a wider range of island sizes.</Text>
+		</Replace>
+		<Replace Tag="LOC_TERRA_YNAMP_DISTANT_ISLAND_SIZE_SMALL_NAME">
+			<Text>Small</Text>
+		</Replace>
+		<Replace Tag="LOC_TERRA_YNAMP_DISTANT_ISLAND_SIZE_DEFAULT_NAME">
+			<Text>Default</Text>
+		</Replace>
+		<Replace Tag="LOC_TERRA_YNAMP_DISTANT_ISLAND_SIZE_MIXED_NAME">
+			<Text>Mixed</Text>
+		</Replace>
+
+		<Replace Tag="LOC_TERRA_FRACTAL_LANDMASSES_NAME">
+			<Text>Fractal Landmasses</Text>
+		</Replace>
+		<Replace Tag="LOC_TERRA_FRACTAL_LANDMASSES_DESC">
+			<Text>Controls how many major spawn landmasses Terra Fractal targets. Higher values split the Old World into more separate homeland landmasses. Random favors lower counts.</Text>
+		</Replace>
+		<Replace Tag="LOC_TERRA_FRACTAL_LANDMASSES_2_NAME">
+			<Text>2 Landmasses</Text>
+		</Replace>
+		<Replace Tag="LOC_TERRA_FRACTAL_LANDMASSES_3_NAME">
+			<Text>3 Landmasses</Text>
+		</Replace>
+		<Replace Tag="LOC_TERRA_FRACTAL_LANDMASSES_4_NAME">
+			<Text>4 Landmasses</Text>
+		</Replace>
+		<Replace Tag="LOC_TERRA_FRACTAL_LANDMASSES_5_NAME">
+			<Text>5 Landmasses</Text>
+		</Replace>
+		<Replace Tag="LOC_TERRA_FRACTAL_LANDMASSES_RANDOM_NAME">
+			<Text>Random</Text>
+		</Replace>
+
 		<Replace Tag="LOC_TERRA_YNAMP_SEA_LEVEL_NAME">
 			<Text>Sea Level for Terra YnAMP</Text>
 		</Replace>

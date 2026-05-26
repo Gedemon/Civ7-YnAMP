@@ -88,7 +88,6 @@ const DEFAULT_SUPER_REGION   = "EURASIA";
 const DEFAULT_CULTURE_GROUP  = "ETHNICITY_EURO";
 // Minimum distance for fallback plots assigned during SuperRegion phase.
 const REGION_MIN_DISTANCE    = 8;
-
 // ── Option / map detection ────────────────────────────────────────────────────
 
 /**
@@ -355,6 +354,69 @@ function collectMapWideLandmassRegionStats(iWidth, iHeight) {
         .sort((a, b) => b.count - a.count || a.regionId - b.regionId);
 }
 
+function getCultureGroupPosition(cultureGroup) {
+    return CULTURE_GROUP_RELATIVE_POSITION[cultureGroup] !== undefined
+        ? CULTURE_GROUP_RELATIVE_POSITION[cultureGroup]
+        : 10;
+}
+
+function formatRegionCounts(regionIds, countsMap) {
+    return regionIds.length > 0
+        ? regionIds.map((regionId) => regionId + "(" + (countsMap.get(regionId) || 0) + ")").join(",")
+        : "none";
+}
+
+function collectOccupiedPlayerRegionData(aliveMajorIds, iWidth) {
+    const playerRegionId = new Map();
+    const regionCounts = new Map();
+
+    for (let i = 0; i < aliveMajorIds.length; i++) {
+        const pid = aliveMajorIds[i];
+        const plot = StartPositioner.getStartPosition(pid);
+        if (!isValidPlot(plot)) {
+            playerRegionId.set(pid, NO_REGION_ID);
+            continue;
+        }
+
+        const x = plot % iWidth;
+        const y = Math.floor(plot / iWidth);
+        const regionId = GameplayMap.getLandmassRegionId(x, y);
+        const semanticRegionId = isSemanticLandmassRegionId(regionId) ? regionId : NO_REGION_ID;
+        playerRegionId.set(pid, semanticRegionId);
+        if (semanticRegionId !== NO_REGION_ID) {
+            regionCounts.set(semanticRegionId, (regionCounts.get(semanticRegionId) || 0) + 1);
+        }
+    }
+
+    return {
+        playerRegionId,
+        regionCounts,
+        occupiedRegionIds: Array.from(regionCounts.keys()).sort((a, b) => a - b)
+    };
+}
+
+function chooseVotedRegionId(aliveMajorIds, civProfiles, playerRegionId, superRegion) {
+    const votes = new Map();
+    for (let i = 0; i < aliveMajorIds.length; i++) {
+        const pid = aliveMajorIds[i];
+        if ((civProfiles.get(pid) || {}).superRegion !== superRegion) continue;
+        const regionId = playerRegionId.get(pid);
+        if (regionId === NO_REGION_ID) continue;
+        votes.set(regionId, (votes.get(regionId) || 0) + 1);
+    }
+
+    let chosenRegionId = NO_REGION_ID;
+    let bestVotes = -1;
+    for (const [regionId, voteCount] of votes) {
+        if (voteCount > bestVotes || (voteCount === bestVotes && regionId < chosenRegionId)) {
+            bestVotes = voteCount;
+            chosenRegionId = regionId;
+        }
+    }
+
+    return chosenRegionId;
+}
+
 // Phase 1: Move civs to their correct regionID based on SuperRegion.
 // EURASIA → homeland regionID (majority of current EURASIA starts).
 // AMERICAS → the other regionID.
@@ -554,6 +616,326 @@ function assignCivsBySuperRegion(aliveMajorIds, civProfiles, iWidth, iHeight) {
     console.log("[YnAMP Region] Phase 1 complete.");
 }
 
+function buildCultureGroupSliceAssignment(playerIds, civProfiles, orderedRegionIds, regionCapacityById, logPrefix) {
+    const playerTargetRegion = new Map();
+    const regionCultureGroups = new Map();
+
+    if (orderedRegionIds.length === 0 || playerIds.length === 0) {
+        return { playerTargetRegion, regionCultureGroups };
+    }
+
+    const groupedPlayers = new Map();
+    for (let i = 0; i < playerIds.length; i++) {
+        const pid = playerIds[i];
+        const cultureGroup = (civProfiles.get(pid) || {}).cultureGroup || DEFAULT_CULTURE_GROUP;
+        const players = groupedPlayers.get(cultureGroup) || [];
+        players.push(pid);
+        groupedPlayers.set(cultureGroup, players);
+    }
+
+    const sortedGroups = Array.from(groupedPlayers.entries())
+        .map(([cultureGroup, players]) => ({
+            cultureGroup,
+            players: players.sort((a, b) => a - b),
+            position: getCultureGroupPosition(cultureGroup)
+        }))
+        .sort((a, b) => a.position - b.position || a.cultureGroup.localeCompare(b.cultureGroup));
+
+    let regionIndex = 0;
+    let remainingCapacity = regionCapacityById.get(orderedRegionIds[0]) || 0;
+
+    for (let i = 0; i < sortedGroups.length; i++) {
+        const group = sortedGroups[i];
+        const pendingPlayers = [...group.players];
+
+        while (pendingPlayers.length > 0 && regionIndex < orderedRegionIds.length) {
+            const regionId = orderedRegionIds[regionIndex];
+            const regionCapacity = regionCapacityById.get(regionId) || 0;
+
+            if (remainingCapacity <= 0) {
+                regionIndex++;
+                remainingCapacity = regionIndex < orderedRegionIds.length
+                    ? (regionCapacityById.get(orderedRegionIds[regionIndex]) || 0)
+                    : 0;
+                continue;
+            }
+
+            let takeCount = 0;
+            if (pendingPlayers.length <= remainingCapacity) {
+                takeCount = pendingPlayers.length;
+            } else if (remainingCapacity === regionCapacity) {
+                takeCount = remainingCapacity;
+            } else {
+                regionIndex++;
+                remainingCapacity = regionIndex < orderedRegionIds.length
+                    ? (regionCapacityById.get(orderedRegionIds[regionIndex]) || 0)
+                    : 0;
+                continue;
+            }
+
+            if (takeCount <= 0) {
+                regionIndex++;
+                remainingCapacity = regionIndex < orderedRegionIds.length
+                    ? (regionCapacityById.get(orderedRegionIds[regionIndex]) || 0)
+                    : 0;
+                continue;
+            }
+
+            const assignedPlayers = pendingPlayers.splice(0, takeCount);
+            for (let j = 0; j < assignedPlayers.length; j++) {
+                playerTargetRegion.set(assignedPlayers[j], regionId);
+            }
+
+            const regionGroups = regionCultureGroups.get(regionId) || [];
+            regionGroups.push(group.cultureGroup + (assignedPlayers.length < group.players.length ? "*" : ""));
+            regionCultureGroups.set(regionId, regionGroups);
+            remainingCapacity -= assignedPlayers.length;
+        }
+    }
+
+    const fallbackRegionId = orderedRegionIds[orderedRegionIds.length - 1];
+    for (let i = 0; i < playerIds.length; i++) {
+        const pid = playerIds[i];
+        if (!playerTargetRegion.has(pid)) {
+            playerTargetRegion.set(pid, fallbackRegionId);
+        }
+    }
+
+    if (logPrefix) {
+        console.log(logPrefix + " capacities: " +
+            orderedRegionIds.map((regionId) => "regionId=" + regionId + " capacity=" + (regionCapacityById.get(regionId) || 0)).join(" | "));
+        console.log(logPrefix + " culture slices: " +
+            orderedRegionIds.map((regionId) => "regionId=" + regionId + " groups=" + (((regionCultureGroups.get(regionId) || []).join(",")) || "none")).join(" | "));
+    }
+
+    return { playerTargetRegion, regionCultureGroups };
+}
+
+function assignOceaniaPlayersToSurplusRegions(playerIds, playerTargetRegion, orderedRegionIds, regionCapacityById) {
+    if (orderedRegionIds.length === 0 || playerIds.length === 0) {
+        return;
+    }
+
+    const assignedCounts = new Map();
+    for (let i = 0; i < orderedRegionIds.length; i++) {
+        assignedCounts.set(orderedRegionIds[i], 0);
+    }
+    for (const regionId of playerTargetRegion.values()) {
+        if (assignedCounts.has(regionId)) {
+            assignedCounts.set(regionId, assignedCounts.get(regionId) + 1);
+        }
+    }
+
+    for (let i = 0; i < playerIds.length; i++) {
+        const pid = playerIds[i];
+        let bestRegionId = orderedRegionIds[0];
+        let bestSurplus = -Infinity;
+
+        for (let j = 0; j < orderedRegionIds.length; j++) {
+            const regionId = orderedRegionIds[j];
+            const surplus = (regionCapacityById.get(regionId) || 0) - (assignedCounts.get(regionId) || 0);
+            if (surplus > bestSurplus || (surplus === bestSurplus && regionId < bestRegionId)) {
+                bestSurplus = surplus;
+                bestRegionId = regionId;
+            }
+        }
+
+        playerTargetRegion.set(pid, bestRegionId);
+        assignedCounts.set(bestRegionId, (assignedCounts.get(bestRegionId) || 0) + 1);
+    }
+}
+
+function assignPlayersToRegionTargets(aliveMajorIds, playerTargetRegion, iWidth, iHeight, logPrefix) {
+    const playerRegionId = new Map();
+    for (let i = 0; i < aliveMajorIds.length; i++) {
+        const pid = aliveMajorIds[i];
+        const plot = StartPositioner.getStartPosition(pid);
+        if (!isValidPlot(plot)) {
+            playerRegionId.set(pid, NO_REGION_ID);
+            continue;
+        }
+        const x = plot % iWidth;
+        const y = Math.floor(plot / iWidth);
+        playerRegionId.set(pid, GameplayMap.getLandmassRegionId(x, y));
+    }
+
+    const targetRegionIds = Array.from(new Set(
+        Array.from(playerTargetRegion.values()).filter((regionId) => regionId !== undefined && regionId !== NO_REGION_ID)
+    )).sort((a, b) => a - b);
+
+    if (targetRegionIds.length === 0) {
+        console.log(logPrefix + " Phase 1 skipped: no target regionIds.");
+        return;
+    }
+
+    const usedPlots = new Set();
+    for (let i = 0; i < aliveMajorIds.length; i++) {
+        const plot = StartPositioner.getStartPosition(aliveMajorIds[i]);
+        if (isValidPlot(plot)) usedPlots.add(plot);
+    }
+
+    const plotPoolByRegion = new Map();
+    const wantedInRegion = new Map();
+    for (let i = 0; i < targetRegionIds.length; i++) {
+        const regionId = targetRegionIds[i];
+        plotPoolByRegion.set(regionId, []);
+        wantedInRegion.set(regionId, []);
+    }
+
+    for (let i = 0; i < aliveMajorIds.length; i++) {
+        const pid = aliveMajorIds[i];
+        const plot = StartPositioner.getStartPosition(pid);
+        if (!isValidPlot(plot)) continue;
+        const x = plot % iWidth;
+        const y = Math.floor(plot / iWidth);
+        const regionId = GameplayMap.getLandmassRegionId(x, y);
+        if (plotPoolByRegion.has(regionId)) {
+            plotPoolByRegion.get(regionId).push(plot);
+        }
+
+        const targetRegionId = playerTargetRegion.get(pid);
+        if (wantedInRegion.has(targetRegionId)) {
+            wantedInRegion.get(targetRegionId).push(pid);
+        }
+    }
+
+    console.log(logPrefix + " current pools: " +
+        targetRegionIds.map((regionId) => "regionId=" + regionId + " plots=" + (plotPoolByRegion.get(regionId)?.length || 0)).join(" | "));
+    console.log(logPrefix + " target regions: " +
+        targetRegionIds.map((regionId) => "regionId=" + regionId + " players=" + (wantedInRegion.get(regionId)?.length || 0)).join(" | "));
+
+    for (let i = 0; i < targetRegionIds.length; i++) {
+        const regionId = targetRegionIds[i];
+        const needed = wantedInRegion.get(regionId).length;
+        const pool = plotPoolByRegion.get(regionId);
+        while (pool.length < needed) {
+            const fb = findFallbackStartPlot(-1, usedPlots, iWidth, iHeight, REGION_MIN_DISTANCE, regionId);
+            if (!isValidPlot(fb)) {
+                console.log(logPrefix + " WARNING: could not find enough fallback plots in regionId=" + regionId);
+                break;
+            }
+            pool.push(fb);
+            usedPlots.add(fb);
+            const fx = fb % iWidth;
+            const fy = Math.floor(fb / iWidth);
+            console.log(logPrefix + "  Fallback plot added for regionId=" + regionId + " at (" + fx + "," + fy + ")");
+        }
+    }
+
+    for (let i = 0; i < targetRegionIds.length; i++) {
+        const regionId = targetRegionIds[i];
+        const pool = plotPoolByRegion.get(regionId);
+        const wanted = wantedInRegion.get(regionId);
+        let poolIdx = 0;
+
+        for (let j = 0; j < wanted.length; j++) {
+            const pid = wanted[j];
+            if (playerRegionId.get(pid) === regionId) continue;
+
+            while (poolIdx < pool.length) {
+                const targetPlot = pool[poolIdx++];
+                const tx = targetPlot % iWidth;
+                const ty = Math.floor(targetPlot / iWidth);
+                if (GameplayMap.getLandmassRegionId(tx, ty) !== regionId) continue;
+
+                let ownerFound = false;
+                for (let k = 0; k < aliveMajorIds.length; k++) {
+                    const other = aliveMajorIds[k];
+                    if (other === pid) continue;
+                    if (StartPositioner.getStartPosition(other) === targetPlot &&
+                            wantedInRegion.get(regionId).indexOf(other) >= 0) {
+                        ownerFound = true;
+                        break;
+                    }
+                }
+                if (ownerFound) continue;
+
+                const oldPlot = StartPositioner.getStartPosition(pid);
+                StartPositioner.setStartPosition(targetPlot, pid);
+                playerRegionId.set(pid, regionId);
+                console.log(logPrefix + "  Moved " + (getCivTypeName(pid) || ("player" + pid)) +
+                    " from plot " + oldPlot + " → " + targetPlot +
+                    " (regionId " + regionId + ")");
+                break;
+            }
+        }
+    }
+
+    console.log(logPrefix + " Phase 1 complete.");
+}
+
+function runMultiRegionRegionAssignment(aliveMajorIds, civProfiles, iWidth, iHeight) {
+    const regionData = collectOccupiedPlayerRegionData(aliveMajorIds, iWidth);
+    if (regionData.occupiedRegionIds.length < 3) {
+        return false;
+    }
+
+    console.log("[YnAMP Region] ─── Phase 1: multi-region SuperRegion assignment ───");
+    console.log("[YnAMP Region] Occupied start regionIds: " + formatRegionCounts(regionData.occupiedRegionIds, regionData.regionCounts));
+
+    let americasRegionId = chooseVotedRegionId(aliveMajorIds, civProfiles, regionData.playerRegionId, "AMERICAS");
+    if (americasRegionId === NO_REGION_ID) {
+        americasRegionId = regionData.occupiedRegionIds[regionData.occupiedRegionIds.length - 1];
+        console.log("[YnAMP Region] Multi-region fallback: reserving highest regionId=" + americasRegionId + " for AMERICAS.");
+    }
+
+    const homelandRegionIds = regionData.occupiedRegionIds.filter((regionId) => regionId !== americasRegionId);
+    if (homelandRegionIds.length === 0) {
+        console.log("[YnAMP Region] Multi-region phase skipped: no homeland regionIds remain after AMERICAS selection.");
+        return false;
+    }
+
+    const regionCapacityById = new Map();
+    for (let i = 0; i < regionData.occupiedRegionIds.length; i++) {
+        const regionId = regionData.occupiedRegionIds[i];
+        regionCapacityById.set(regionId, regionData.regionCounts.get(regionId) || 0);
+    }
+
+    const playerTargetRegion = new Map();
+    const eurasianPlayers = [];
+    const oceaniaPlayers = [];
+    for (let i = 0; i < aliveMajorIds.length; i++) {
+        const pid = aliveMajorIds[i];
+        const superRegion = (civProfiles.get(pid) || {}).superRegion || DEFAULT_SUPER_REGION;
+        if (superRegion === "AMERICAS") {
+            playerTargetRegion.set(pid, americasRegionId);
+        } else if (superRegion === "EURASIA") {
+            eurasianPlayers.push(pid);
+        } else {
+            oceaniaPlayers.push(pid);
+        }
+    }
+
+    const homelandAssignment = buildCultureGroupSliceAssignment(
+        eurasianPlayers,
+        civProfiles,
+        homelandRegionIds,
+        regionCapacityById,
+        "[YnAMP Region] Multi-region homeland"
+    );
+    for (const [pid, regionId] of homelandAssignment.playerTargetRegion) {
+        playerTargetRegion.set(pid, regionId);
+    }
+
+    assignOceaniaPlayersToSurplusRegions(oceaniaPlayers, playerTargetRegion, regionData.occupiedRegionIds, regionCapacityById);
+
+    const targetCounts = new Map();
+    for (let i = 0; i < regionData.occupiedRegionIds.length; i++) {
+        targetCounts.set(regionData.occupiedRegionIds[i], 0);
+    }
+    for (const regionId of playerTargetRegion.values()) {
+        if (targetCounts.has(regionId)) {
+            targetCounts.set(regionId, targetCounts.get(regionId) + 1);
+        }
+    }
+
+    console.log("[YnAMP Region] AMERICAS → regionId=" + americasRegionId +
+        "  EURASIA homelands → " + homelandRegionIds.join(","));
+    console.log("[YnAMP Region] Multi-region targets: " + formatRegionCounts(regionData.occupiedRegionIds, targetCounts));
+    assignPlayersToRegionTargets(aliveMajorIds, playerTargetRegion, iWidth, iHeight, "[YnAMP Region]");
+    return true;
+}
+
 // Phase 2: Score a pair of players by their culture groups and actual map distance.
 // Same group → pairScore = actualDist * SAME_GROUP_WEIGHT (penalise distance heavily).
 // Diff group → pairScore = actualDist / relDiff (closer groups tolerate more distance).
@@ -593,7 +975,19 @@ function canSwapWithIslandConstraint(playerId, currentPlot, destinationPlot, swa
     if (!swapConstraint || !swapConstraint.islandLockedPlayers.has(playerId)) {
         return true;
     }
-    return swapConstraint.islandPlots.has(currentPlot) && swapConstraint.islandPlots.has(destinationPlot);
+
+    if (!swapConstraint.islandPlots.has(currentPlot) || !swapConstraint.islandPlots.has(destinationPlot)) {
+        return false;
+    }
+
+    const assignedComponentId = swapConstraint.islandComponentByPlayer?.get(playerId);
+    if (!Number.isInteger(assignedComponentId) || assignedComponentId <= 0) {
+        return true;
+    }
+
+    const currentComponentId = swapConstraint.plotToComponentId?.get(currentPlot);
+    const destinationComponentId = swapConstraint.plotToComponentId?.get(destinationPlot);
+    return currentComponentId === assignedComponentId && destinationComponentId === assignedComponentId;
 }
 
 function prepareOceaniaIslandStarts(playerIds, civProfiles, iWidth, iHeight) {
@@ -615,30 +1009,97 @@ function prepareOceaniaIslandStarts(playerIds, civProfiles, iWidth, iHeight) {
 
     const islandMetadata = buildIslandStartMetadata(iWidth, iHeight);
     const islandLockedPlayers = new Set(oceaniaPlayers);
+    const islandComponentByPlayer = new Map();
+    const componentOccupants = new Map();
+    const occupiedRegionData = collectOccupiedPlayerRegionData(playerIds, iWidth);
+    let nextUniqueRegionId = occupiedRegionData.occupiedRegionIds.length > 0
+        ? occupiedRegionData.occupiedRegionIds[occupiedRegionData.occupiedRegionIds.length - 1] + 1
+        : 1;
+    const claimedComponentIds = new Set();
+
+    for (let i = 0; i < playerIds.length; i++) {
+        const pid = playerIds[i];
+        const plot = StartPositioner.getStartPosition(pid);
+        if (!isValidPlot(plot)) continue;
+
+        const componentId = islandMetadata.plotToComponentId.get(plot);
+        if (!Number.isInteger(componentId) || componentId <= 0) continue;
+
+        const component = islandMetadata.componentsById.get(componentId);
+        if (!component || !component.isIsland) continue;
+
+        if (!componentOccupants.has(componentId)) {
+            componentOccupants.set(componentId, new Set());
+        }
+        componentOccupants.get(componentId).add(pid);
+    }
+
+    console.log("[YnAMP Region] Oceania unique island retags start at regionId=" + nextUniqueRegionId);
 
     for (let i = 0; i < oceaniaPlayers.length; i++) {
         const pid = oceaniaPlayers[i];
         const civ = getCivTypeName(pid) || ("player" + pid);
         const currentPlot = StartPositioner.getStartPosition(pid);
         let preferredRegionId = NO_REGION_ID;
+        let currentComponentId = -1;
         if (isValidPlot(currentPlot)) {
             const currentX = currentPlot % iWidth;
             const currentY = Math.floor(currentPlot / iWidth);
             preferredRegionId = GameplayMap.getLandmassRegionId(currentX, currentY);
             usedPlots.delete(currentPlot);
+            currentComponentId = islandMetadata.plotToComponentId.get(currentPlot) || -1;
+            if (currentComponentId > 0 && componentOccupants.has(currentComponentId)) {
+                const occupants = componentOccupants.get(currentComponentId);
+                occupants.delete(pid);
+                if (occupants.size === 0) {
+                    componentOccupants.delete(currentComponentId);
+                }
+            }
         }
 
-        const islandStart = findFallbackIslandStartPlot(
+        const excludedComponentIds = new Set(claimedComponentIds);
+        for (const componentId of componentOccupants.keys()) {
+            excludedComponentIds.add(componentId);
+        }
+
+        let islandStart = findFallbackIslandStartPlot(
             currentPlot,
             usedPlots,
             iWidth,
             iHeight,
             REGION_MIN_DISTANCE,
             preferredRegionId,
-            islandMetadata
+            islandMetadata,
+            {
+                excludedComponentIds,
+                targetRegionId: nextUniqueRegionId
+            }
         );
 
+        let claimedUniqueIsland = isValidPlot(islandStart?.plot);
+        if (!claimedUniqueIsland) {
+            islandStart = findFallbackIslandStartPlot(
+                currentPlot,
+                usedPlots,
+                iWidth,
+                iHeight,
+                REGION_MIN_DISTANCE,
+                preferredRegionId,
+                islandMetadata,
+                {
+                    excludedComponentIds: claimedComponentIds
+                }
+            );
+        }
+
         if (!islandStart || typeof islandStart !== "object") {
+            if (currentComponentId > 0) {
+                if (!componentOccupants.has(currentComponentId)) {
+                    componentOccupants.set(currentComponentId, new Set());
+                }
+                componentOccupants.get(currentComponentId).add(pid);
+                islandComponentByPlayer.set(pid, currentComponentId);
+            }
             if (isValidPlot(currentPlot)) usedPlots.add(currentPlot);
             console.log("[YnAMP Region]  WARNING: island fallback search returned invalid data for " + civ +
                 " (preferred regionId=" + preferredRegionId + ")");
@@ -646,10 +1107,22 @@ function prepareOceaniaIslandStarts(playerIds, civProfiles, iWidth, iHeight) {
         }
 
         if (!isValidPlot(islandStart.plot)) {
+            if (currentComponentId > 0) {
+                if (!componentOccupants.has(currentComponentId)) {
+                    componentOccupants.set(currentComponentId, new Set());
+                }
+                componentOccupants.get(currentComponentId).add(pid);
+                islandComponentByPlayer.set(pid, currentComponentId);
+            }
             if (isValidPlot(currentPlot)) usedPlots.add(currentPlot);
             console.log("[YnAMP Region]  WARNING: no island start found for " + civ +
                 " (preferred regionId=" + preferredRegionId + ")");
             continue;
+        }
+
+        if (!claimedUniqueIsland) {
+            console.log("[YnAMP Region]  WARNING: no unique island component available for " + civ +
+                "; using best-effort island placement instead.");
         }
 
         if (islandStart.plot !== currentPlot) {
@@ -657,6 +1130,17 @@ function prepareOceaniaIslandStarts(playerIds, civProfiles, iWidth, iHeight) {
         }
 
         usedPlots.add(islandStart.plot);
+        if (islandStart.componentId > 0) {
+            if (!componentOccupants.has(islandStart.componentId)) {
+                componentOccupants.set(islandStart.componentId, new Set());
+            }
+            componentOccupants.get(islandStart.componentId).add(pid);
+            islandComponentByPlayer.set(pid, islandStart.componentId);
+            if (claimedUniqueIsland) {
+                claimedComponentIds.add(islandStart.componentId);
+                nextUniqueRegionId++;
+            }
+        }
 
         const finalX = islandStart.plot % iWidth;
         const finalY = Math.floor(islandStart.plot / iWidth);
@@ -670,7 +1154,12 @@ function prepareOceaniaIslandStarts(playerIds, civProfiles, iWidth, iHeight) {
     }
 
     console.log("[YnAMP Region] Oceania island placement complete.");
-    return { islandLockedPlayers, islandPlots: islandMetadata.islandPlots };
+    return {
+        islandLockedPlayers,
+        islandPlots: islandMetadata.islandPlots,
+        islandComponentByPlayer,
+        plotToComponentId: islandMetadata.plotToComponentId
+    };
 }
 
 // Run brute-force swap passes for a given set of players (optionally restricted to one regionId).
@@ -760,13 +1249,14 @@ function runRegionShuffle() {
         runCultureGroupSwaps(aliveMajorIds, civProfiles, iWidth, "global", swapConstraint);
         logFinalRegionPlacements(aliveMajorIds, civProfiles, iWidth);
     } else {
-        // Phase 1: force civs to their correct hemisphere regionId.
-        assignCivsBySuperRegion(aliveMajorIds, civProfiles, iWidth, iHeight);
+        const usesMultiRegion = runMultiRegionRegionAssignment(aliveMajorIds, civProfiles, iWidth, iHeight);
+        if (!usesMultiRegion) {
+            assignCivsBySuperRegion(aliveMajorIds, civProfiles, iWidth, iHeight);
+        }
         const swapConstraint = prepareOceaniaIslandStarts(aliveMajorIds, civProfiles, iWidth, iHeight);
 
         // Phase 2: fine-tune within each regionId independently.
         console.log("[YnAMP Region] ─── Phase 2: intra-region culture-group swaps ───");
-        // Collect distinct regionIds.
         const regionGroups = new Map();
         for (let i = 0; i < aliveMajorIds.length; i++) {
             const pid  = aliveMajorIds[i];
@@ -1151,6 +1641,44 @@ function assignCivsByGroupAssignment(aliveMajorIds, playerTargetRegion, iWidth, 
     console.log("[YnAMP Balanced] Phase 1 complete.");
 }
 
+function runMultiRegionBalancedAssignment(aliveMajorIds, civProfiles, iWidth, iHeight) {
+    const regionData = collectOccupiedPlayerRegionData(aliveMajorIds, iWidth);
+    if (regionData.occupiedRegionIds.length < 3) {
+        return false;
+    }
+
+    console.log("[YnAMP Balanced] ─── Phase 1: multi-region culture-group assignment ───");
+    console.log("[YnAMP Balanced] Occupied start regionIds: " + formatRegionCounts(regionData.occupiedRegionIds, regionData.regionCounts));
+
+    const regionCapacityById = new Map();
+    for (let i = 0; i < regionData.occupiedRegionIds.length; i++) {
+        const regionId = regionData.occupiedRegionIds[i];
+        regionCapacityById.set(regionId, regionData.regionCounts.get(regionId) || 0);
+    }
+
+    const assignment = buildCultureGroupSliceAssignment(
+        aliveMajorIds,
+        civProfiles,
+        regionData.occupiedRegionIds,
+        regionCapacityById,
+        "[YnAMP Balanced] Multi-region"
+    );
+
+    const targetCounts = new Map();
+    for (let i = 0; i < regionData.occupiedRegionIds.length; i++) {
+        targetCounts.set(regionData.occupiedRegionIds[i], 0);
+    }
+    for (const regionId of assignment.playerTargetRegion.values()) {
+        if (targetCounts.has(regionId)) {
+            targetCounts.set(regionId, targetCounts.get(regionId) + 1);
+        }
+    }
+
+    console.log("[YnAMP Balanced] Multi-region targets: " + formatRegionCounts(regionData.occupiedRegionIds, targetCounts));
+    assignPlayersToRegionTargets(aliveMajorIds, assignment.playerTargetRegion, iWidth, iHeight, "[YnAMP Balanced]");
+    return true;
+}
+
 // Top-level Cultural Region (Balanced) shuffle orchestrator.
 function runRegionBalancedShuffle() {
     console.log("[YnAMP Balanced] ═══ Cultural Region Balanced Shuffle ══════════════");
@@ -1165,17 +1693,41 @@ function runRegionBalancedShuffle() {
     const civProfiles = buildCivProfileMap(aliveMajorIds);
 
     if (detectSingleContinent(iWidth, iHeight)) {
+        const swapConstraint = prepareOceaniaIslandStarts(aliveMajorIds, civProfiles, iWidth, iHeight);
         console.log("[YnAMP Balanced] Single-continent map — running global culture-group swaps.");
-        runCultureGroupSwaps(aliveMajorIds, civProfiles, iWidth, "global");
+        runCultureGroupSwaps(aliveMajorIds, civProfiles, iWidth, "global", swapConstraint);
         logFinalRegionPlacements(aliveMajorIds, civProfiles, iWidth);
         console.log("[YnAMP Balanced] ════════════════════════════════════════════════");
         return;
     }
 
+    const usesMultiRegion = runMultiRegionBalancedAssignment(aliveMajorIds, civProfiles, iWidth, iHeight);
+    if (usesMultiRegion) {
+        const swapConstraint = prepareOceaniaIslandStarts(aliveMajorIds, civProfiles, iWidth, iHeight);
+        console.log("[YnAMP Balanced] ─── Phase 2: intra-region culture-group swaps ───");
+        const regionGroups = new Map();
+        for (let i = 0; i < aliveMajorIds.length; i++) {
+            const pid  = aliveMajorIds[i];
+            const plot = StartPositioner.getStartPosition(pid);
+            if (!isValidPlot(plot)) continue;
+            const x   = plot % iWidth, y = Math.floor(plot / iWidth);
+            const rid = GameplayMap.getLandmassRegionId(x, y);
+            if (!regionGroups.has(rid)) regionGroups.set(rid, []);
+            regionGroups.get(rid).push(pid);
+        }
+        for (const [rid, players] of regionGroups) {
+            runCultureGroupSwaps(players, civProfiles, iWidth, "regionId=" + rid, swapConstraint);
+        }
+        logFinalRegionPlacements(aliveMajorIds, civProfiles, iWidth);
+        console.log("[YnAMP Balanced] ════════════════════════════════════════════════════");
+        return;
+    }
+
     const hemispheres = detectHemisphereRegionIds(aliveMajorIds, civProfiles, iWidth);
     if (!hemispheres) {
+        const swapConstraint = prepareOceaniaIslandStarts(aliveMajorIds, civProfiles, iWidth, iHeight);
         console.log("[YnAMP Balanced] WARNING: falling back to global culture-group swaps.");
-        runCultureGroupSwaps(aliveMajorIds, civProfiles, iWidth, "global");
+        runCultureGroupSwaps(aliveMajorIds, civProfiles, iWidth, "global", swapConstraint);
         logFinalRegionPlacements(aliveMajorIds, civProfiles, iWidth);
         console.log("[YnAMP Balanced] ════════════════════════════════════════════════");
         return;
@@ -1188,6 +1740,7 @@ function runRegionBalancedShuffle() {
     const playerTargetRegion = buildBalancedGroupAssignment(
         aliveMajorIds, civProfiles, eurasiaRegionId, americasRegionId);
     assignCivsByGroupAssignment(aliveMajorIds, playerTargetRegion, iWidth, iHeight);
+    const swapConstraint = prepareOceaniaIslandStarts(aliveMajorIds, civProfiles, iWidth, iHeight);
 
     // Phase 2: intra-region culture-group swaps.
     console.log("[YnAMP Balanced] ─── Phase 2: intra-region culture-group swaps ───");
@@ -1202,7 +1755,7 @@ function runRegionBalancedShuffle() {
         regionGroups.get(rid).push(pid);
     }
     for (const [rid, players] of regionGroups) {
-        runCultureGroupSwaps(players, civProfiles, iWidth, "regionId=" + rid);
+        runCultureGroupSwaps(players, civProfiles, iWidth, "regionId=" + rid, swapConstraint);
     }
     logFinalRegionPlacements(aliveMajorIds, civProfiles, iWidth);
     console.log("[YnAMP Balanced] ════════════════════════════════════════════════════");

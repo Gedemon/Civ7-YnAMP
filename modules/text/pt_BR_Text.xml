@@ -181,6 +181,57 @@
     <Replace Tag="LOC_TERRA_YNAMP_OCEAN_SEPARATION_WIDE_NAME" Language="pt_BR">
       <Text>Amplo</Text>
     </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_DISTANT_ISLAND_DENSITY_NAME" Language="pt_BR">
+      <Text>Distant Islands Density</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_DISTANT_ISLAND_DENSITY_DESC" Language="pt_BR">
+      <Text>Controls how many distant open-ocean islands the Terra generator creates. Default uses the base-game value for this map script.</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_DISTANT_ISLAND_DENSITY_RARE_NAME" Language="pt_BR">
+      <Text>Rare</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_DISTANT_ISLAND_DENSITY_FEW_NAME" Language="pt_BR">
+      <Text>Few</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_DISTANT_ISLAND_DENSITY_DEFAULT_NAME" Language="pt_BR">
+      <Text>Default</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_DISTANT_ISLAND_SIZE_NAME" Language="pt_BR">
+      <Text>Distant Islands Sizes</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_DISTANT_ISLAND_SIZE_DESC" Language="pt_BR">
+      <Text>Controls the size profile of distant open-ocean islands. Small reduces both individual island size and total footprint. Default uses the base-game value for this map script. Mixed keeps a similar total footprint while allowing a wider range of island sizes.</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_DISTANT_ISLAND_SIZE_SMALL_NAME" Language="pt_BR">
+      <Text>Small</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_DISTANT_ISLAND_SIZE_DEFAULT_NAME" Language="pt_BR">
+      <Text>Default</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_YNAMP_DISTANT_ISLAND_SIZE_MIXED_NAME" Language="pt_BR">
+      <Text>Mixed</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_FRACTAL_LANDMASSES_NAME" Language="pt_BR">
+      <Text>Fractal Landmasses</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_FRACTAL_LANDMASSES_DESC" Language="pt_BR">
+      <Text>Controls how many major spawn landmasses Terra Fractal targets. Higher values split the Old World into more separate homeland landmasses. Random favors lower counts.</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_FRACTAL_LANDMASSES_2_NAME" Language="pt_BR">
+      <Text>2 Landmasses</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_FRACTAL_LANDMASSES_3_NAME" Language="pt_BR">
+      <Text>3 Landmasses</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_FRACTAL_LANDMASSES_4_NAME" Language="pt_BR">
+      <Text>4 Landmasses</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_FRACTAL_LANDMASSES_5_NAME" Language="pt_BR">
+      <Text>5 Landmasses</Text>
+    </Replace>
+    <Replace Tag="LOC_TERRA_FRACTAL_LANDMASSES_RANDOM_NAME" Language="pt_BR">
+      <Text>Random</Text>
+    </Replace>
     <Replace Tag="LOC_TERRA_YNAMP_SEA_LEVEL_NAME" Language="pt_BR">
       <Text>Nível do mar para Terra YnAMP</Text>
     </Replace>

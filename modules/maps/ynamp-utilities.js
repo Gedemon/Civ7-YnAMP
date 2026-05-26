@@ -1837,17 +1837,43 @@ export function findFallbackStartPlot(defaultPlot, usedPlots, iWidth, iHeight, m
     return chooseFallbackStartPlot(defaultPlot, usedPlots, iWidth, iHeight, minDistance, requiredRegionId);
 }
 
-export function findFallbackIslandStartPlot(defaultPlot, usedPlots, iWidth, iHeight, minDistance, preferredRegionId = NO_REGION_FILTER, islandMetadata = null) {
+export function findFallbackIslandStartPlot(defaultPlot, usedPlots, iWidth, iHeight, minDistance, preferredRegionId = NO_REGION_FILTER, islandMetadata = null, options = null) {
     let metadata = islandMetadata || buildIslandStartMetadata(iWidth, iHeight);
+    let excludedComponentIds = options && options.excludedComponentIds instanceof Set
+        ? options.excludedComponentIds
+        : null;
+    let explicitTargetRegionId = options && options.targetRegionId != undefined
+        ? options.targetRegionId
+        : NO_REGION_ID;
 
     function getComponentForPlot(plot) {
         let componentId = metadata.plotToComponentId.get(plot);
         return componentId ? metadata.componentsById.get(componentId) : null;
     }
 
+    function isAllowedIslandComponent(component) {
+        return !!component &&
+            component.isIsland &&
+            (!excludedComponentIds || !excludedComponentIds.has(component.id));
+    }
+
+    function finalizeIslandSelection(plot, component, fallbackRegionId, source) {
+        let targetRegionId = explicitTargetRegionId !== NO_REGION_ID ? explicitTargetRegionId : fallbackRegionId;
+        if (component && targetRegionId !== NO_REGION_ID && component.primaryRegionId !== targetRegionId) {
+            retagIslandComponentRegion(component, targetRegionId);
+        }
+
+        return {
+            plot,
+            componentId: component ? component.id : -1,
+            regionId: targetRegionId,
+            source,
+        };
+    }
+
     function isRegionIslandCandidate(x, y, plot) {
         let component = getComponentForPlot(plot);
-        return !!component && component.isIsland && component.regionIds.indexOf(preferredRegionId) >= 0;
+        return isAllowedIslandComponent(component) && component.regionIds.indexOf(preferredRegionId) >= 0;
     }
 
     if (preferredRegionId !== NO_REGION_FILTER) {
@@ -1862,18 +1888,18 @@ export function findFallbackIslandStartPlot(defaultPlot, usedPlots, iWidth, iHei
         );
         if (isValidPlot(preferredIslandPlot)) {
             let component = getComponentForPlot(preferredIslandPlot);
-            return {
-                plot: preferredIslandPlot,
-                componentId: component ? component.id : -1,
-                regionId: preferredRegionId,
-                source: "region-island",
-            };
+            return finalizeIslandSelection(
+                preferredIslandPlot,
+                component,
+                preferredRegionId,
+                explicitTargetRegionId !== NO_REGION_ID ? "retagged-region-island" : "region-island"
+            );
         }
     }
 
     function isNeutralIslandCandidate(x, y, plot) {
         let component = getComponentForPlot(plot);
-        return !!component && component.isIsland && component.regionIds.length === 0;
+        return isAllowedIslandComponent(component) && component.regionIds.length === 0;
     }
 
     let neutralIslandPlot = chooseFallbackStartPlot(
@@ -1895,16 +1921,15 @@ export function findFallbackIslandStartPlot(defaultPlot, usedPlots, iWidth, iHei
     }
 
     let component = getComponentForPlot(neutralIslandPlot);
-    let targetRegionId = resolveClosestMainlandRegionId(component, metadata);
-    if (targetRegionId !== NO_REGION_ID) {
-        retagIslandComponentRegion(component, targetRegionId);
-    }
+    let fallbackRegionId = explicitTargetRegionId !== NO_REGION_ID
+        ? explicitTargetRegionId
+        : resolveClosestMainlandRegionId(component, metadata);
 
-    return {
-        plot: neutralIslandPlot,
-        componentId: component ? component.id : -1,
-        regionId: targetRegionId,
-        source: "retagged-island",
-    };
+    return finalizeIslandSelection(
+        neutralIslandPlot,
+        component,
+        fallbackRegionId,
+        explicitTargetRegionId !== NO_REGION_ID ? "retagged-unique-island" : "retagged-island"
+    );
 }
 
