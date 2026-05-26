@@ -8,6 +8,7 @@ import { g_PolarWaterRows, g_FlatTerrain, g_MountainTerrain, g_HillTerrain, g_Vo
 import { addNaturalWonders } from '/base-standard/maps/natural-wonder-generator.js';
 import { generateResources } from '/base-standard/maps/resource-generator.js';
 import { generateSnow, dumpPermanentSnow } from '/base-standard/maps/snow-generator.js';
+import { dumpLandmassRegionIds, dumpPlayerLandmassIds } from '/ged-ynamp/maps/ynamp-utilities.js';
 import { HexValidationSettings, RemoveBridgingCoastsOptions } from '/base-standard/scripts/voronoi-hex.js';
 import { TerrainType } from '/base-standard/scripts/voronoi-types.js';
 import { VoronoiFractal } from '/base-standard/scripts/voronoi_maps/fractal.js';
@@ -18,8 +19,10 @@ const TERRA_FRACTAL_SETTINGS = Object.freeze({
   totalLandPercent: 39,
   voronoiCellCountMultiple: 1.1,
   voronoiRelaxationSteps: 2,
-  minLandmassSpawnCenterDistance: 0.15,
-  maxLandmassSpawnCenterDistance: 0.35,
+  homelandClustering: Object.freeze({
+    minSpawnCenterDistance: 0.2,
+    maxSpawnCenterDistance: 0.3
+  }),
   standardOcean: {
     minDistantSpawnCenterDistance: 0.58,
     maxDistantSpawnCenterDistance: 0.78
@@ -253,8 +256,57 @@ function allocateLandmassPlayers(entries, totalPlayers) {
   return allocations;
 }
 
+function getTerraFractalHomelandPairDistanceSummary(homelandEntries) {
+  if (homelandEntries.length < 2) {
+    return {
+      minDistance: 0,
+      maxDistance: 0
+    };
+  }
+
+  let minDistance = Number.POSITIVE_INFINITY;
+  let maxDistance = 0;
+  for (let leftIndex = 0; leftIndex < homelandEntries.length - 1; ++leftIndex) {
+    const leftEntry = homelandEntries[leftIndex];
+    for (let rightIndex = leftIndex + 1; rightIndex < homelandEntries.length; ++rightIndex) {
+      const rightEntry = homelandEntries[rightIndex];
+      const distance = Math.hypot(rightEntry.centerX - leftEntry.centerX, rightEntry.centerY - leftEntry.centerY);
+      minDistance = Math.min(minDistance, distance);
+      maxDistance = Math.max(maxDistance, distance);
+    }
+  }
+
+  return {
+    minDistance,
+    maxDistance
+  };
+}
+
+function logTerraFractalHomelandDiagnostics(homelandEntries, hexDims) {
+  if (homelandEntries.length === 0) {
+    console.log('DEBUG: Terra Fractal homeland diagnostics unavailable: no homeland entries.');
+    return;
+  }
+
+  const minX = homelandEntries.reduce((best, entry) => Math.min(best, entry.centerX), Number.POSITIVE_INFINITY);
+  const maxX = homelandEntries.reduce((best, entry) => Math.max(best, entry.centerX), Number.NEGATIVE_INFINITY);
+  const minY = homelandEntries.reduce((best, entry) => Math.min(best, entry.centerY), Number.POSITIVE_INFINITY);
+  const maxY = homelandEntries.reduce((best, entry) => Math.max(best, entry.centerY), Number.NEGATIVE_INFINITY);
+  const mapCenterX = hexDims.x * 0.5;
+  const mapCenterY = hexDims.y * 0.5;
+  const radii = homelandEntries.map((entry) => Math.hypot(entry.centerX - mapCenterX, entry.centerY - mapCenterY));
+  const pairDistanceSummary = getTerraFractalHomelandPairDistanceSummary(homelandEntries);
+  const homelandCenterLog = homelandEntries
+    .map((entry) => `raw=${entry.rawPlayerLandmassId} center=(${entry.centerX.toFixed(1)},${entry.centerY.toFixed(1)})`)
+    .join(' | ');
+
+  console.log(`DEBUG: Terra Fractal homeland centers [${homelandCenterLog}]`);
+  console.log(`DEBUG: Terra Fractal homeland spread span=${(maxX - minX).toFixed(1)}x${(maxY - minY).toFixed(1)} spanRatio=${((maxX - minX) / Math.max(1, hexDims.x)).toFixed(3)}x${((maxY - minY) / Math.max(1, hexDims.y)).toFixed(3)} minPair=${pairDistanceSummary.minDistance.toFixed(1)} maxPair=${pairDistanceSummary.maxDistance.toFixed(1)} maxRadius=${Math.max(...radii).toFixed(1)}`);
+}
+
 function applyTerraFractalSettings(voronoiMap, terraOptions) {
   const oceanSettings = terraOptions.oceanSeparationMode === 'WIDE' ? TERRA_FRACTAL_SETTINGS.wideOcean : TERRA_FRACTAL_SETTINGS.standardOcean;
+  const homelandClusteringSettings = TERRA_FRACTAL_SETTINGS.homelandClustering;
   const totalLandPercent = TERRA_FRACTAL_SETTINGS.totalLandPercent;
   const oldWorldShare = 1 - terraOptions.distantWorldShare;
   const islandSettings = terraOptions.distantIslandSettings;
@@ -271,8 +323,8 @@ function applyTerraFractalSettings(voronoiMap, terraOptions) {
   voronoiMap.setPrimaryMapSetting(['landmassSeedSizeFactor'], 0);
   voronoiMap.setPrimaryMapSetting(['forceAtLeastTwo'], 0);
   voronoiMap.setPrimaryMapSetting(['forceAtLeastThree'], 0);
-  voronoiMap.setPrimaryMapSetting(['minLandmassSpawnCenterDistance'], TERRA_FRACTAL_SETTINGS.minLandmassSpawnCenterDistance);
-  voronoiMap.setPrimaryMapSetting(['maxLandmassSpawnCenterDistance'], TERRA_FRACTAL_SETTINGS.maxLandmassSpawnCenterDistance);
+  voronoiMap.setPrimaryMapSetting(['minLandmassSpawnCenterDistance'], homelandClusteringSettings.minSpawnCenterDistance);
+  voronoiMap.setPrimaryMapSetting(['maxLandmassSpawnCenterDistance'], homelandClusteringSettings.maxSpawnCenterDistance);
   voronoiMap.setPrimaryMapSetting(['minDistantSpawnCenterDistance'], oceanSettings.minDistantSpawnCenterDistance);
   voronoiMap.setPrimaryMapSetting(['maxDistantSpawnCenterDistance'], oceanSettings.maxDistantSpawnCenterDistance);
 
@@ -482,6 +534,7 @@ class TerraFractalVoronoi extends VoronoiFractal {
       americasSemanticLandmassId: americasEntry.semanticLandmassId,
       semanticLandmassIdByRaw
     };
+    logTerraFractalHomelandDiagnostics(homelandEntries, this.m_hexDims);
     return this.landmassMetadata;
   }
 
@@ -566,8 +619,10 @@ async function generateMap() {
   const distantIslandSettings = resolveTerraFractalDistantIslandSettings(distantIslandDensityRaw, distantIslandSizeRaw);
   const resolvedLandmassCount = resolveTerraFractalLandmassCount(landmassCountRaw);
   const startTime = Date.now();
+  const homelandClusteringSettings = TERRA_FRACTAL_SETTINGS.homelandClustering;
 
   console.log(`DEBUG: Terra Fractal oceanSeparation=${oceanSeparationMode} seaLevel=${seaLevelType} distantWorldShare=${distantWorldShare.toFixed(4)} sameLandmass=${sameLandmass} requestedLandmasses=${resolvedLandmassCount.requested} resolvedLandmasses=${resolvedLandmassCount.resolved}${resolvedLandmassCount.roll == null ? '' : ` roll=${resolvedLandmassCount.roll}`}`);
+  console.log(`DEBUG: Terra Fractal homeland clustering minSpawn=${homelandClusteringSettings.minSpawnCenterDistance.toFixed(2)} maxSpawn=${homelandClusteringSettings.maxSpawnCenterDistance.toFixed(2)}`);
   console.log(`DEBUG: Terra Fractal distant islands density=${distantIslandSettings.densityOption} (raw: '${distantIslandDensityRaw}') size=${distantIslandSettings.sizeOption} (raw: '${distantIslandSizeRaw}') factor=${distantIslandSettings.factor.toFixed(2)} minSize=${distantIslandSettings.minSize.toFixed(2)} maxSize=${distantIslandSettings.maxSize.toFixed(2)} totalSize=${distantIslandSettings.totalSize.toFixed(2)} variance=${distantIslandSettings.variance.toFixed(2)}`);
 
   const terraOptions = {
@@ -592,6 +647,7 @@ async function generateMap() {
   voronoiMap.init({ x: iWidth, y: iHeight });
   voronoiMap.simulate();
   const tiles = voronoiMap.getHexTiles().getTiles();
+  dumpPlayerLandmassIds(tiles, 'TERRA_FRACTAL_PLAYER_LANDMASS_IDS');
 
   for (let y = 0; y < tiles.length; ++y) {
     for (let x = 0; x < tiles[y].length; ++x) {
@@ -642,6 +698,7 @@ async function generateMap() {
   console.log('STEP: createMajorPlayerAreas');
   voronoiMap.createMajorPlayerAreas(fertilityGetter);
   const exportRegionData = stampTerraFractalLandmassRegions(voronoiMap, tiles);
+  dumpLandmassRegionIds(iWidth, iHeight, 'TERRA_FRACTAL_EXPORTED_LANDMASS_REGION_IDS');
   const playerRegions = Array.from({ length: iTotalPlayers }, () => new PlayerRegion());
   playerRegions.forEach((region, index) => {
     region.regionId = index;

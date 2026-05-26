@@ -1,5 +1,6 @@
 import * as globals from '/base-standard/maps/map-globals.js';
 import * as utilities from '/base-standard/maps/map-utilities.js';
+import { TerrainType } from '/base-standard/scripts/voronoi-types.js';
 import {
     getActiveEarthMapContext,
     getEarthMapLabel,
@@ -1564,6 +1565,74 @@ export function dumpElevationPrecise(iWidth, iHeight) {
         }
         console.log(str);
     }
+}
+
+function getDumpRowPrefix(iY) {
+    if (iY % 2 == 1) {
+        return ' ';
+    }
+    return '';
+}
+
+function formatDumpToken(value) {
+    return String(value).padStart(2, ' ');
+}
+
+export function dumpPlayerLandmassIds(tiles, label = "YNAMP_PLAYER_LANDMASS_IDS") {
+    if (!tiles || tiles.length === 0) {
+        console.log(label + ": no tiles to dump");
+        return;
+    }
+
+    console.log(label + "_BEGIN");
+    for (let iY = tiles.length - 1; iY >= 0; iY--) {
+        let str = getDumpRowPrefix(iY);
+        for (let iX = 0; iX < tiles[iY].length; iX++) {
+            let tile = tiles[iY][iX];
+            let token = '?';
+
+            if (tile) {
+                if (tile.terrainType === TerrainType.Ocean) {
+                    token = '.';
+                } else if (tile.playerLandmassId >= 0) {
+                    token = tile.playerLandmassId;
+                }
+            }
+
+            str += formatDumpToken(token) + ' ';
+        }
+        console.log(str);
+    }
+    console.log(label + "_END");
+}
+
+export function dumpLandmassRegionIds(iWidth, iHeight, label = "YNAMP_LANDMASS_REGION_IDS") {
+    let mapContext = getActiveEarthMapContext();
+
+    console.log(label + "_BEGIN");
+    for (let iY = iHeight - 1; iY >= 0; iY--) {
+        let str = getDumpRowPrefix(iY);
+        for (let iX = 0; iX < iWidth; iX++) {
+            let token = '.';
+
+            if (isEarthMapSyntheticWorldEndColumn(iX, mapContext)) {
+                token = '#';
+            } else {
+                let regionId = GameplayMap.getLandmassRegionId(iX, iY);
+                if (regionId != LandmassRegion.LANDMASS_REGION_DEFAULT &&
+                        regionId != LandmassRegion.LANDMASS_REGION_NONE &&
+                        regionId != LandmassRegion.LANDMASS_REGION_ANY) {
+                    token = regionId;
+                } else if (!GameplayMap.isWater(iX, iY)) {
+                    token = '+';
+                }
+            }
+
+            str += formatDumpToken(token) + ' ';
+        }
+        console.log(str);
+    }
+    console.log(label + "_END");
 }
 
 export function dumpRivers(iWidth, iHeight) {
