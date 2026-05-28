@@ -13,6 +13,7 @@ Included content:
 - Giant Earth and Greatest Earth maps with true-start support.
 - Geographic Unlock for next-age Civilizations on TSL maps.
 - Terra Map with Old World/New World civilization split.
+- Terra Fractal and Continents Terra generated maps sharing Terra-style option surfaces.
 - Custom start-position shuffles for cultural and Terra-style distribution.
 - TSL natural wonder placement modes for Earth maps.
 
@@ -23,6 +24,8 @@ Active map scripts in the current build:
 | Map | Type | Main use |
 |---|---|---|
 | Terra (YnAMP) | Generated | Two-landmass Terra-style Voronoi map |
+| Terra Fractal (YnAMP) | Generated | Fractal Terra layout for explicit Old World / New World play |
+| Continents Terra (YnAMP) | Generated | Compatibility clone of the current Terra Fractal behavior |
 | Greatest Earth Map (YnAMP) | Fixed geography / TSL | Compact Earth map with true starts |
 | Giant Earth Map (YnAMP) | Fixed geography / TSL | Large Earth map with true starts |
 | Massive Regional Earth Map (YnAMP) | Fixed geography / TSL | "Colonization", "Old World", "Indo-Pacific" regions with true starts |
@@ -51,10 +54,10 @@ For Earth maps:
 
 For generated maps:
 
-1. Select Terra (ynAMP).
+1. Select Terra (YnAMP), Terra Fractal (YnAMP), or Continents Terra (YnAMP).
 2. Choose one of the map sizes.
 3. Optional: configure Region Tagging Mode and custom start-position options.
-4. Terra also exposes landmass ratio and spawn distribution options.
+4. Terra exposes landmass ratio and spawn distribution options, while Terra Fractal and Continents Terra also expose ocean separation, distant islands, and fractal landmass-count options.
 
 
 ## Known limitations

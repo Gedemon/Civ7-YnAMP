@@ -17,13 +17,19 @@
 			<Text>Terra (YnAMP)</Text>
 		</Replace>
 		<Replace Tag="LOC_MAP_TERRA_YNAMP_DESCRIPTION">
-			<Text>A Terra-style Voronoi map with a larger landmass ("Old World") and a smaller one ("New World"). Suggested map script for "Terra" Start Position options.</Text>
+			<Text>A Terra-style Voronoi map with a larger landmass ("Old World") and a smaller one ("New World"). Only American civilizations can spawn on the "New World", "Oceania" civilizations will be placed on Distant Islands if possible.</Text>
 		</Replace>
 		<Replace Tag="LOC_MAP_TERRA_FRACTAL_YNAMP_NAME">
 			<Text>Terra Fractal (YnAMP)</Text>
 		</Replace>
 		<Replace Tag="LOC_MAP_TERRA_FRACTAL_YNAMP_DESCRIPTION">
-			<Text>A Fractal-based Terra map with a clustered Old World and a distant world made of multiple landmasses. The Terra Fractal options control old-world versus distant-world area and spawn distribution instead of a fixed two-continent split.</Text>
+			<Text>A multiple continents Voronoi Terra map with 1-4 "Old World" landmasses and a "New World" landmass. The landmasses sizes, shapes and relative placement on the Old World side are more varied than "Terra Continents".</Text>
+		</Replace>
+		<Replace Tag="LOC_MAP_CONTINENTS_TERRA_YNAMP_NAME">
+			<Text>Terra Continents (YnAMP)</Text>
+		</Replace>
+		<Replace Tag="LOC_MAP_CONTINENTS_TERRA_YNAMP_DESCRIPTION">
+			<Text>A multiple continents Voronoi Terra map with 1-4 "Old World" landmasses and a "New World" landmass. The Old World landmasses are roughly similar and more evenly placed than for "Terra Fractal".</Text>
 		</Replace>
 		<Replace Tag="LOC_MAP_GIANT_EARTH_YNAMP_NAME">
 			<Text>Giant Earth Map (YnAMP)</Text>
@@ -179,7 +185,7 @@
 		</Replace>
 
 		<Replace Tag="LOC_TERRA_YNAMP_OCEAN_SEPARATION_NAME">
-			<Text>World Separation</Text>
+			<Text>Ocean Separation</Text>
 		</Replace>
 		<Replace Tag="LOC_TERRA_YNAMP_OCEAN_SEPARATION_DESC">
 			<Text>Controls how much ocean the generator keeps between the "Old"" and "New" worlds. Wide increases the minimum separation. Standard uses the base map spacing.</Text>
@@ -224,10 +230,10 @@
 		</Replace>
 
 		<Replace Tag="LOC_TERRA_FRACTAL_LANDMASSES_NAME">
-			<Text>Fractal Landmasses</Text>
+			<Text>Generated Landmasses</Text>
 		</Replace>
 		<Replace Tag="LOC_TERRA_FRACTAL_LANDMASSES_DESC">
-			<Text>Controls how many major spawn landmasses Terra Fractal targets. Higher values split the Old World into more separate homeland landmasses. Random favors lower counts.</Text>
+			<Text>Controls how many major spawn landmasses "Terra Fractal" and "Terra Continents" targets. Higher values split the Old World into more separate homeland landmasses.</Text>
 		</Replace>
 		<Replace Tag="LOC_TERRA_FRACTAL_LANDMASSES_2_NAME">
 			<Text>2 Landmasses</Text>
@@ -242,7 +248,7 @@
 			<Text>5 Landmasses</Text>
 		</Replace>
 		<Replace Tag="LOC_TERRA_FRACTAL_LANDMASSES_RANDOM_NAME">
-			<Text>Random</Text>
+			<Text>Random (2-5)</Text>
 		</Replace>
 
 		<Replace Tag="LOC_TERRA_YNAMP_SEA_LEVEL_NAME">
@@ -277,13 +283,13 @@
 			<Text>Off</Text>
 		</Replace>
 		<Replace Tag="LOC_YNAMP_REGIONAL_RESOURCE_OFF_DESC">
-			<Text>No regional cleanup or backfilling is applied. Resources keep the current YnAMP behavior.</Text>
+			<Text>Resources placement follow the base game rules.</Text>
 		</Replace>
 		<Replace Tag="LOC_YNAMP_REGIONAL_RESOURCE_CURATED_NAME">
-			<Text>Curated Regional Rules (default)</Text>
+			<Text>Regional Rules</Text>
 		</Replace>
 		<Replace Tag="LOC_YNAMP_REGIONAL_RESOURCE_CURATED_DESC">
-			<Text>Applies a narrow first-pass Earth ruleset for distinctive resources, removing obvious out-of-region placements and guaranteeing a few regional deposits where they are expected.</Text>
+			<Text>Applies a Earth ruleset for distinctive resources, removing obvious out-of-region placements and guaranteeing a few regional deposits where they are expected.</Text>
 		</Replace>
 		<Replace Tag="LOC_YNAMP_GEOGRAPHIC_UNLOCK_MODE_NAME">
 			<Text>Geographic Civilization Unlocks</Text>
@@ -316,16 +322,16 @@
 			<Text>Natural Wonders are placed entirely randomly, ignoring real-world positions.</Text>
 		</Replace>
 		<Replace Tag="LOC_YNAMP_NW_PLACEMENT_REAL_AND_RANDOM_NAME">
-			<Text>Real World + Random (default)</Text>
+			<Text>Real World + Random</Text>
 		</Replace>
 		<Replace Tag="LOC_YNAMP_NW_PLACEMENT_REAL_AND_RANDOM_DESC">
-			<Text>Uses XML real-world positions first, then fills any remaining Natural Wonder slots with random placement.</Text>
+			<Text>Uses real-world positions first, then fills any remaining Natural Wonder slots with random placement.</Text>
 		</Replace>
 		<Replace Tag="LOC_YNAMP_NW_PLACEMENT_REAL_ONLY_NAME">
 			<Text>Real World Only</Text>
 		</Replace>
 		<Replace Tag="LOC_YNAMP_NW_PLACEMENT_REAL_ONLY_DESC">
-			<Text>Only XML real-world positions are used. No random fill. Adjacency and elevation placement requirements are removed from the game database to improve placement success.</Text>
+			<Text>Only real-world positions are used. No random fill. Adjacency and elevation placement requirements are removed from the game database to improve placement success.</Text>
 		</Replace>
 		<Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_MODE_NAME">
 			<Text>Exploration Ocean Travel on Large Maps</Text>
@@ -340,13 +346,13 @@
 			<Text>Keeps the vanilla Exploration deep-ocean movement and damage rules.</Text>
 		</Replace>
 		<Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_RELAXED_MOVEMENT_NAME">
-			<Text>Relaxed Movement</Text>
+			<Text>Faster Movement</Text>
 		</Replace>
 		<Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_RELAXED_MOVEMENT_DESC">
 			<Text>On Large and larger maps, entering Ocean no longer ends a unit's turn. Cartography grants embarked units +1 Movement when starting on an Ocean tile, Astronomy grants naval units +1 Movement when starting on an Ocean tile, and Shipbuilding grants +1 Movement when starting on an Ocean tile to all units.</Text>
 		</Replace>
 		<Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_RELAXED_MOVEMENT_DAMAGE_NAME">
-			<Text>Relaxed Movement + Reduced Damage</Text>
+			<Text>Faster Movement + Reduced Damage</Text>
 		</Replace>
 		<Replace Tag="LOC_YNAMP_EXPLORATION_OCEAN_TRAVEL_RELAXED_MOVEMENT_DAMAGE_DESC">
 			<Text>Also reduces base deep-ocean damage on Large and larger maps.</Text>

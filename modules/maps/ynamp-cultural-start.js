@@ -340,18 +340,92 @@ function isSemanticLandmassRegionId(regionId) {
 }
 
 function collectMapWideLandmassRegionStats(iWidth, iHeight) {
-    const regionCount = new Map();
+    const regionStats = new Map();
     for (let y = 0; y < iHeight; y++) {
         for (let x = 0; x < iWidth; x++) {
             if (GameplayMap.isWater(x, y)) continue;
             const regionId = GameplayMap.getLandmassRegionId(x, y);
             if (!isSemanticLandmassRegionId(regionId)) continue;
-            regionCount.set(regionId, (regionCount.get(regionId) || 0) + 1);
+            let entry = regionStats.get(regionId);
+            if (!entry) {
+                entry = { regionId, count: 0, xSum: 0 };
+                regionStats.set(regionId, entry);
+            }
+            entry.count += 1;
+            entry.xSum += x;
         }
     }
 
-    return Array.from(regionCount.entries(), ([regionId, count]) => ({ regionId, count }))
+    return Array.from(regionStats.values(), (entry) => ({
+        regionId: entry.regionId,
+        count: entry.count,
+        avgX: entry.count > 0 ? entry.xSum / entry.count : 0
+    }))
         .sort((a, b) => b.count - a.count || a.regionId - b.regionId);
+}
+
+function isTerraOptionMap() {
+    return Configuration.getMapValue("TerraLandmassRatio") != null ||
+        Configuration.getMapValue("TerraOceanSeparation") != null ||
+        Configuration.getMapValue("TerraFractalLandmasses") != null;
+}
+
+function countSuperRegionPlayers(aliveMajorIds, civProfiles, superRegion) {
+    let count = 0;
+    for (let i = 0; i < aliveMajorIds.length; i++) {
+        const pid = aliveMajorIds[i];
+        if ((civProfiles.get(pid) || {}).superRegion === superRegion) {
+            count++;
+        }
+    }
+    return count;
+}
+
+function chooseFirstRegionId(regionIds, excludedRegionId) {
+    for (let i = 0; i < regionIds.length; i++) {
+        const regionId = regionIds[i];
+        if (regionId !== excludedRegionId) {
+            return regionId;
+        }
+    }
+    return NO_REGION_ID;
+}
+
+function chooseEasternmostRegionId(regionStats) {
+    let chosenRegionId = NO_REGION_ID;
+    let bestAverageX = -1;
+
+    for (let i = 0; i < regionStats.length; i++) {
+        const entry = regionStats[i];
+        if (entry.avgX > bestAverageX || (entry.avgX === bestAverageX && entry.regionId > chosenRegionId)) {
+            bestAverageX = entry.avgX;
+            chosenRegionId = entry.regionId;
+        }
+    }
+
+    return chosenRegionId;
+}
+
+function getReservedTerraAmericasRegionId(iWidth, iHeight) {
+    if (!isTerraOptionMap()) {
+        return NO_REGION_ID;
+    }
+
+    const mapWideRegionStats = collectMapWideLandmassRegionStats(iWidth, iHeight);
+    if (mapWideRegionStats.length <= 1) {
+        return NO_REGION_ID;
+    }
+
+    if (mapWideRegionStats.length === 2) {
+        // Classic Terra stamps only two semantic regions. The New World is the
+        // eastern stamped side after the explicit old/new seed remap, so reserve
+        // the easternmost semantic region directly instead of assuming regionId order.
+        return chooseEasternmostRegionId(mapWideRegionStats);
+    }
+
+    // Terra Fractal and Continents Terra stamp homeland regions first and reserve
+    // the highest semantic regionId for the actual distant-world landmass.
+    return mapWideRegionStats.reduce((highestRegionId, entry) => Math.max(highestRegionId, entry.regionId), NO_REGION_ID);
 }
 
 function getCultureGroupPosition(cultureGroup) {
@@ -395,13 +469,13 @@ function collectOccupiedPlayerRegionData(aliveMajorIds, iWidth) {
     };
 }
 
-function chooseVotedRegionId(aliveMajorIds, civProfiles, playerRegionId, superRegion) {
+function chooseVotedRegionId(aliveMajorIds, civProfiles, playerRegionId, superRegion, excludedRegionId = NO_REGION_ID) {
     const votes = new Map();
     for (let i = 0; i < aliveMajorIds.length; i++) {
         const pid = aliveMajorIds[i];
         if ((civProfiles.get(pid) || {}).superRegion !== superRegion) continue;
         const regionId = playerRegionId.get(pid);
-        if (regionId === NO_REGION_ID) continue;
+        if (regionId === NO_REGION_ID || regionId === excludedRegionId) continue;
         votes.set(regionId, (votes.get(regionId) || 0) + 1);
     }
 
@@ -435,23 +509,22 @@ function assignCivsBySuperRegion(aliveMajorIds, civProfiles, iWidth, iHeight) {
         playerRegionId.set(pid, isSemanticLandmassRegionId(regionId) ? regionId : NO_REGION_ID);
     }
 
+    const reservedTerraAmericasRegionId = getReservedTerraAmericasRegionId(iWidth, iHeight);
+    const mapWideRegionStats = collectMapWideLandmassRegionStats(iWidth, iHeight);
+    const mapWideRegionIds = mapWideRegionStats.map((entry) => entry.regionId);
+    if (reservedTerraAmericasRegionId !== NO_REGION_ID) {
+        console.log("[YnAMP Region] Terra reserve: AMERICAS uses regionId=" + reservedTerraAmericasRegionId +
+            " (highest stamped map-wide regionId).");
+    }
+
     // Determine which regionId is "homeland" for EURASIA by majority vote.
-    const eurasiaVotes = {};
-    for (let i = 0; i < aliveMajorIds.length; i++) {
-        const pid = aliveMajorIds[i];
-        if ((civProfiles.get(pid) || {}).superRegion !== "EURASIA") continue;
-        const rid = playerRegionId.get(pid);
-        if (rid === NO_REGION_ID) continue;
-        eurasiaVotes[rid] = (eurasiaVotes[rid] || 0) + 1;
-    }
-    let eurasiaRegionId = NO_REGION_ID;
-    let bestVotes = -1;
-    for (const rid in eurasiaVotes) {
-        if (eurasiaVotes[rid] > bestVotes || (eurasiaVotes[rid] === bestVotes && Number(rid) < eurasiaRegionId)) {
-            bestVotes = eurasiaVotes[rid];
-            eurasiaRegionId = Number(rid);
-        }
-    }
+    let eurasiaRegionId = chooseVotedRegionId(
+        aliveMajorIds,
+        civProfiles,
+        playerRegionId,
+        "EURASIA",
+        reservedTerraAmericasRegionId
+    );
 
     // Collect all distinct regionIds from current starts.
     const allRegionIds = new Set();
@@ -463,14 +536,12 @@ function assignCivsBySuperRegion(aliveMajorIds, civProfiles, iWidth, iHeight) {
     console.log("[YnAMP Region] Occupied start regionIds: " +
         (occupiedRegionIds.length > 0 ? occupiedRegionIds.join(",") : "none"));
 
-    let americasRegionId = NO_REGION_ID;
-    for (const rid of allRegionIds) {
-        if (rid !== eurasiaRegionId) { americasRegionId = rid; break; }
+    let americasRegionId = reservedTerraAmericasRegionId;
+    if (americasRegionId === NO_REGION_ID) {
+        americasRegionId = chooseFirstRegionId(occupiedRegionIds, eurasiaRegionId);
     }
 
     if (eurasiaRegionId === NO_REGION_ID || americasRegionId === NO_REGION_ID) {
-        const mapWideRegionStats = collectMapWideLandmassRegionStats(iWidth, iHeight);
-        const mapWideRegionIds = mapWideRegionStats.map((entry) => entry.regionId);
         console.log("[YnAMP Region] Phase 1 occupied-start inference incomplete " +
             "(eurasiaRid=" + eurasiaRegionId + " americasRid=" + americasRegionId + ")");
         console.log("[YnAMP Region] Phase 1 map-wide regionIds: " +
@@ -478,16 +549,20 @@ function assignCivsBySuperRegion(aliveMajorIds, civProfiles, iWidth, iHeight) {
                 ? mapWideRegionStats.map((entry) => entry.regionId + "(" + entry.count + ")").join(",")
                 : "none"));
 
-        if (eurasiaRegionId === NO_REGION_ID && mapWideRegionIds.length > 0) {
-            eurasiaRegionId = mapWideRegionIds[0];
+        if (eurasiaRegionId === NO_REGION_ID) {
+            eurasiaRegionId = chooseFirstRegionId(occupiedRegionIds, americasRegionId);
+        }
+        if (eurasiaRegionId === NO_REGION_ID) {
+            eurasiaRegionId = chooseFirstRegionId(mapWideRegionIds, americasRegionId);
         }
         if (americasRegionId === NO_REGION_ID) {
-            for (let i = 0; i < mapWideRegionIds.length; i++) {
-                if (mapWideRegionIds[i] !== eurasiaRegionId) {
-                    americasRegionId = mapWideRegionIds[i];
-                    break;
-                }
-            }
+            americasRegionId = reservedTerraAmericasRegionId;
+        }
+        if (americasRegionId === NO_REGION_ID) {
+            americasRegionId = chooseFirstRegionId(occupiedRegionIds, eurasiaRegionId);
+        }
+        if (americasRegionId === NO_REGION_ID) {
+            americasRegionId = chooseFirstRegionId(mapWideRegionIds, eurasiaRegionId);
         }
 
         if (eurasiaRegionId === NO_REGION_ID || americasRegionId === NO_REGION_ID) {
@@ -512,6 +587,7 @@ function assignCivsBySuperRegion(aliveMajorIds, civProfiles, iWidth, iHeight) {
         else if (super_ === "AMERICAS") wantedInRegion[americasRegionId].push(pid);
         else wantedInRegion.oceania.push(pid);
     }
+    const americasPlayerCount = wantedInRegion[americasRegionId].length;
 
     // Build the usedPlots set.
     const usedPlots = new Set();
@@ -534,7 +610,14 @@ function assignCivsBySuperRegion(aliveMajorIds, civProfiles, iWidth, iHeight) {
     // Assign OCEANIA civs to whichever region has effective surplus slots.
     // "Effective surplus" = pool size minus civs leaving that region minus civs already
     // assigned to stay — so plots vacated by cross-region movers don't count as free slots.
+    if (americasPlayerCount === 0 && wantedInRegion.oceania.length > 0) {
+        console.log("[YnAMP Region] No AMERICAS civs are present; keeping the reserved New World empty.");
+    }
     for (const pid of wantedInRegion.oceania) {
+        if (americasPlayerCount === 0) {
+            wantedInRegion[eurasiaRegionId].push(pid);
+            continue;
+        }
         const poolE = plotPoolByRegion[eurasiaRegionId];
         const poolA = plotPoolByRegion[americasRegionId];
         // Count how many civs currently on each region are being sent to the OTHER region.
@@ -873,27 +956,38 @@ function runMultiRegionRegionAssignment(aliveMajorIds, civProfiles, iWidth, iHei
     console.log("[YnAMP Region] ─── Phase 1: multi-region SuperRegion assignment ───");
     console.log("[YnAMP Region] Occupied start regionIds: " + formatRegionCounts(regionData.occupiedRegionIds, regionData.regionCounts));
 
-    let americasRegionId = chooseVotedRegionId(aliveMajorIds, civProfiles, regionData.playerRegionId, "AMERICAS");
-    if (americasRegionId === NO_REGION_ID) {
-        americasRegionId = regionData.occupiedRegionIds[regionData.occupiedRegionIds.length - 1];
-        console.log("[YnAMP Region] Multi-region fallback: reserving highest regionId=" + americasRegionId + " for AMERICAS.");
+    const reservedTerraAmericasRegionId = getReservedTerraAmericasRegionId(iWidth, iHeight);
+    let americasRegionId = reservedTerraAmericasRegionId;
+    if (americasRegionId !== NO_REGION_ID) {
+        console.log("[YnAMP Region] Multi-region Terra reserve: AMERICAS → regionId=" + americasRegionId + ".");
+    } else {
+        americasRegionId = chooseVotedRegionId(aliveMajorIds, civProfiles, regionData.playerRegionId, "AMERICAS");
+        if (americasRegionId === NO_REGION_ID) {
+            americasRegionId = regionData.occupiedRegionIds[regionData.occupiedRegionIds.length - 1];
+            console.log("[YnAMP Region] Multi-region fallback: reserving highest regionId=" + americasRegionId + " for AMERICAS.");
+        }
     }
 
-    const homelandRegionIds = regionData.occupiedRegionIds.filter((regionId) => regionId !== americasRegionId);
+    const phaseRegionIds = Array.from(new Set([
+        ...regionData.occupiedRegionIds,
+        ...(americasRegionId !== NO_REGION_ID ? [americasRegionId] : [])
+    ])).sort((a, b) => a - b);
+    const homelandRegionIds = phaseRegionIds.filter((regionId) => regionId !== americasRegionId);
     if (homelandRegionIds.length === 0) {
         console.log("[YnAMP Region] Multi-region phase skipped: no homeland regionIds remain after AMERICAS selection.");
         return false;
     }
 
     const regionCapacityById = new Map();
-    for (let i = 0; i < regionData.occupiedRegionIds.length; i++) {
-        const regionId = regionData.occupiedRegionIds[i];
+    for (let i = 0; i < phaseRegionIds.length; i++) {
+        const regionId = phaseRegionIds[i];
         regionCapacityById.set(regionId, regionData.regionCounts.get(regionId) || 0);
     }
 
     const playerTargetRegion = new Map();
     const eurasianPlayers = [];
     const oceaniaPlayers = [];
+    const americasPlayerCount = countSuperRegionPlayers(aliveMajorIds, civProfiles, "AMERICAS");
     for (let i = 0; i < aliveMajorIds.length; i++) {
         const pid = aliveMajorIds[i];
         const superRegion = (civProfiles.get(pid) || {}).superRegion || DEFAULT_SUPER_REGION;
@@ -917,11 +1011,15 @@ function runMultiRegionRegionAssignment(aliveMajorIds, civProfiles, iWidth, iHei
         playerTargetRegion.set(pid, regionId);
     }
 
-    assignOceaniaPlayersToSurplusRegions(oceaniaPlayers, playerTargetRegion, regionData.occupiedRegionIds, regionCapacityById);
+    const oceaniaRegionIds = americasPlayerCount > 0 ? phaseRegionIds : homelandRegionIds;
+    if (americasPlayerCount === 0 && oceaniaPlayers.length > 0) {
+        console.log("[YnAMP Region] No AMERICAS civs are present; keeping the reserved New World empty.");
+    }
+    assignOceaniaPlayersToSurplusRegions(oceaniaPlayers, playerTargetRegion, oceaniaRegionIds, regionCapacityById);
 
     const targetCounts = new Map();
-    for (let i = 0; i < regionData.occupiedRegionIds.length; i++) {
-        targetCounts.set(regionData.occupiedRegionIds[i], 0);
+    for (let i = 0; i < phaseRegionIds.length; i++) {
+        targetCounts.set(phaseRegionIds[i], 0);
     }
     for (const regionId of playerTargetRegion.values()) {
         if (targetCounts.has(regionId)) {
@@ -931,7 +1029,7 @@ function runMultiRegionRegionAssignment(aliveMajorIds, civProfiles, iWidth, iHei
 
     console.log("[YnAMP Region] AMERICAS → regionId=" + americasRegionId +
         "  EURASIA homelands → " + homelandRegionIds.join(","));
-    console.log("[YnAMP Region] Multi-region targets: " + formatRegionCounts(regionData.occupiedRegionIds, targetCounts));
+    console.log("[YnAMP Region] Multi-region targets: " + formatRegionCounts(phaseRegionIds, targetCounts));
     assignPlayersToRegionTargets(aliveMajorIds, playerTargetRegion, iWidth, iHeight, "[YnAMP Region]");
     return true;
 }
@@ -1012,9 +1110,11 @@ function prepareOceaniaIslandStarts(playerIds, civProfiles, iWidth, iHeight) {
     const islandComponentByPlayer = new Map();
     const componentOccupants = new Map();
     const occupiedRegionData = collectOccupiedPlayerRegionData(playerIds, iWidth);
-    let nextUniqueRegionId = occupiedRegionData.occupiedRegionIds.length > 0
-        ? occupiedRegionData.occupiedRegionIds[occupiedRegionData.occupiedRegionIds.length - 1] + 1
-        : 1;
+    const reservedTerraAmericasRegionId = getReservedTerraAmericasRegionId(iWidth, iHeight);
+    const highestOccupiedRegionId = occupiedRegionData.occupiedRegionIds.length > 0
+        ? occupiedRegionData.occupiedRegionIds[occupiedRegionData.occupiedRegionIds.length - 1]
+        : 0;
+    let nextUniqueRegionId = Math.max(highestOccupiedRegionId, reservedTerraAmericasRegionId) + 1;
     const claimedComponentIds = new Set();
 
     for (let i = 0; i < playerIds.length; i++) {
@@ -1391,7 +1491,8 @@ function runRelativeDistanceTerraShuffle() {
 // Determines which landmass regionIds correspond to EURASIA and AMERICAS hemispheres
 // by majority vote among EURASIA-superRegion civs' current start plots.
 // Returns { eurasiaRegionId, americasRegionId } or null if two distinct IDs can't be found.
-function detectHemisphereRegionIds(aliveMajorIds, civProfiles, iWidth) {
+function detectHemisphereRegionIds(aliveMajorIds, civProfiles, iWidth, iHeight) {
+    const reservedTerraAmericasRegionId = getReservedTerraAmericasRegionId(iWidth, iHeight);
     const eurasiaVotes = {};
     const allRegionIds = new Set();
     for (let i = 0; i < aliveMajorIds.length; i++) {
@@ -1401,7 +1502,7 @@ function detectHemisphereRegionIds(aliveMajorIds, civProfiles, iWidth) {
         const x   = plot % iWidth, y = Math.floor(plot / iWidth);
         const rid = GameplayMap.getLandmassRegionId(x, y);
         allRegionIds.add(rid);
-        if ((civProfiles.get(pid) || {}).superRegion === "EURASIA") {
+        if ((civProfiles.get(pid) || {}).superRegion === "EURASIA" && rid !== reservedTerraAmericasRegionId) {
             eurasiaVotes[rid] = (eurasiaVotes[rid] || 0) + 1;
         }
     }
@@ -1413,9 +1514,13 @@ function detectHemisphereRegionIds(aliveMajorIds, civProfiles, iWidth) {
             eurasiaRegionId = Number(rid);
         }
     }
-    let americasRegionId = NO_REGION_ID;
-    for (const rid of allRegionIds) {
-        if (rid !== eurasiaRegionId) { americasRegionId = rid; break; }
+    const occupiedRegionIds = Array.from(allRegionIds).sort((a, b) => a - b);
+    let americasRegionId = reservedTerraAmericasRegionId;
+    if (americasRegionId === NO_REGION_ID) {
+        americasRegionId = chooseFirstRegionId(occupiedRegionIds, eurasiaRegionId);
+    }
+    if (eurasiaRegionId === NO_REGION_ID) {
+        eurasiaRegionId = chooseFirstRegionId(occupiedRegionIds, americasRegionId);
     }
     if (eurasiaRegionId === NO_REGION_ID || americasRegionId === NO_REGION_ID) {
         console.log("[YnAMP Balanced] Could not determine two distinct regionIDs " +
@@ -1464,10 +1569,17 @@ function buildBalancedGroupAssignment(aliveMajorIds, civProfiles, eurasiaRegionI
         // OCEANIA left unassigned for now.
     }
 
-    // Assign OCEANIA to the lighter side (tie → eurasia).
+    const americasPlayersPresent = americasCount > 0;
+
+    // Assign OCEANIA to the lighter side (tie → eurasia). When there are no
+    // AMERICAS civs, keep the reserved New World empty and leave OCEANIA on the
+    // homeland side instead of backfilling the distant world.
     for (const cg in groupCount) {
         if (groupSuper[cg] !== "OCEANIA") continue;
-        if (americasCount < eurasiaCount) {
+        if (!americasPlayersPresent) {
+            groupToRegion[cg] = eurasiaRegionId;
+            eurasiaCount += groupCount[cg];
+        } else if (americasCount < eurasiaCount) {
             groupToRegion[cg] = americasRegionId;
             americasCount += groupCount[cg];
         } else {
@@ -1650,6 +1762,75 @@ function runMultiRegionBalancedAssignment(aliveMajorIds, civProfiles, iWidth, iH
     console.log("[YnAMP Balanced] ─── Phase 1: multi-region culture-group assignment ───");
     console.log("[YnAMP Balanced] Occupied start regionIds: " + formatRegionCounts(regionData.occupiedRegionIds, regionData.regionCounts));
 
+    const reservedTerraAmericasRegionId = getReservedTerraAmericasRegionId(iWidth, iHeight);
+    if (reservedTerraAmericasRegionId !== NO_REGION_ID) {
+        const phaseRegionIds = Array.from(new Set([
+            ...regionData.occupiedRegionIds,
+            reservedTerraAmericasRegionId
+        ])).sort((a, b) => a - b);
+        const homelandRegionIds = phaseRegionIds.filter((regionId) => regionId !== reservedTerraAmericasRegionId);
+        if (homelandRegionIds.length === 0) {
+            console.log("[YnAMP Balanced] Multi-region phase skipped: no homeland regionIds remain after Terra reserve.");
+            return false;
+        }
+
+        const regionCapacityById = new Map();
+        for (let i = 0; i < phaseRegionIds.length; i++) {
+            const regionId = phaseRegionIds[i];
+            regionCapacityById.set(regionId, regionData.regionCounts.get(regionId) || 0);
+        }
+
+        const playerTargetRegion = new Map();
+        const eurasianPlayers = [];
+        const oceaniaPlayers = [];
+        const americasPlayerCount = countSuperRegionPlayers(aliveMajorIds, civProfiles, "AMERICAS");
+
+        for (let i = 0; i < aliveMajorIds.length; i++) {
+            const pid = aliveMajorIds[i];
+            const superRegion = (civProfiles.get(pid) || {}).superRegion || DEFAULT_SUPER_REGION;
+            if (superRegion === "AMERICAS") {
+                playerTargetRegion.set(pid, reservedTerraAmericasRegionId);
+            } else if (superRegion === "EURASIA") {
+                eurasianPlayers.push(pid);
+            } else {
+                oceaniaPlayers.push(pid);
+            }
+        }
+
+        const homelandAssignment = buildCultureGroupSliceAssignment(
+            eurasianPlayers,
+            civProfiles,
+            homelandRegionIds,
+            regionCapacityById,
+            "[YnAMP Balanced] Multi-region homeland"
+        );
+        for (const [pid, regionId] of homelandAssignment.playerTargetRegion) {
+            playerTargetRegion.set(pid, regionId);
+        }
+
+        const oceaniaRegionIds = americasPlayerCount > 0 ? phaseRegionIds : homelandRegionIds;
+        if (americasPlayerCount === 0 && oceaniaPlayers.length > 0) {
+            console.log("[YnAMP Balanced] No AMERICAS civs are present; keeping the reserved New World empty.");
+        }
+        assignOceaniaPlayersToSurplusRegions(oceaniaPlayers, playerTargetRegion, oceaniaRegionIds, regionCapacityById);
+
+        const targetCounts = new Map();
+        for (let i = 0; i < phaseRegionIds.length; i++) {
+            targetCounts.set(phaseRegionIds[i], 0);
+        }
+        for (const regionId of playerTargetRegion.values()) {
+            if (targetCounts.has(regionId)) {
+                targetCounts.set(regionId, targetCounts.get(regionId) + 1);
+            }
+        }
+
+        console.log("[YnAMP Balanced] Terra reserve: AMERICAS → regionId=" + reservedTerraAmericasRegionId +
+            "  homelands → " + homelandRegionIds.join(","));
+        console.log("[YnAMP Balanced] Multi-region targets: " + formatRegionCounts(phaseRegionIds, targetCounts));
+        assignPlayersToRegionTargets(aliveMajorIds, playerTargetRegion, iWidth, iHeight, "[YnAMP Balanced]");
+        return true;
+    }
+
     const regionCapacityById = new Map();
     for (let i = 0; i < regionData.occupiedRegionIds.length; i++) {
         const regionId = regionData.occupiedRegionIds[i];
@@ -1723,7 +1904,7 @@ function runRegionBalancedShuffle() {
         return;
     }
 
-    const hemispheres = detectHemisphereRegionIds(aliveMajorIds, civProfiles, iWidth);
+    const hemispheres = detectHemisphereRegionIds(aliveMajorIds, civProfiles, iWidth, iHeight);
     if (!hemispheres) {
         const swapConstraint = prepareOceaniaIslandStarts(aliveMajorIds, civProfiles, iWidth, iHeight);
         console.log("[YnAMP Balanced] WARNING: falling back to global culture-group swaps.");

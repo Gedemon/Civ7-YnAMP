@@ -88,11 +88,33 @@ const TERRA_FRACTAL_DISTANT_ISLAND_SETTINGS = Object.freeze({
 
 const TERRA_FRACTAL_DEFAULT_LANDMASS_COUNT = 2;
 const TERRA_FRACTAL_RANDOM_LANDMASS_COUNTS = Object.freeze([
-  { count: 2, weight: 40 },
+  { count: 2, weight: 20 },
   { count: 3, weight: 30 },
-  { count: 4, weight: 20 },
-  { count: 5, weight: 10 }
+  { count: 4, weight: 30 },
+  { count: 5, weight: 20 }
 ]);
+
+const TERRA_FRACTAL_LAYOUT_SETTINGS = Object.freeze({
+  oldWorld: Object.freeze({
+    // Normalized seed window for homeland landmasses after the base Fractal layout.
+    // Wider xRange spreads homeland landmasses farther east-west; narrower xRange
+    // packs them closer together inside the Old World.
+    xRange: Object.freeze([0.18, 0.52]),
+    // Wider yRange allows more north-south spread inside the same side window.
+    yRange: Object.freeze([0.2, 0.8]),
+    // slotFill controls how much of each per-landmass slot stays usable after we
+    // subdivide the side window. Lower values leave more ocean between neighbors.
+    slotFill: 0.78
+  }),
+  newWorld: Object.freeze({
+    // Normalized seed window for the reserved distant-world landmass side.
+    xRange: Object.freeze([0.72, 0.86]),
+    yRange: Object.freeze([0.22, 0.78]),
+    // Higher fill lets the distant-world slot use more of its window while still
+    // keeping margin for the wider inter-world ocean gap.
+    slotFill: 0.82
+  })
+});
 
 function requestMapData(initParams) {
   console.log(initParams.width);
@@ -159,6 +181,79 @@ function resolveTerraFractalLandmassCount(rawValue) {
 
 function clampToRange(value, range) {
   return Math.max(range[0], Math.min(range[1], value));
+}
+
+function clamp01(value) {
+  return clampToRange(value, [0, 1]);
+}
+
+function fract(value) {
+  return value - Math.floor(value);
+}
+
+function remapUnitToRange(value, range) {
+  return range[0] + (range[1] - range[0]) * clamp01(value);
+}
+
+function getTerraFractalSeedEntropy(baseX, baseY, salt) {
+  const safeBaseX = clamp01(Number.isFinite(baseX) ? baseX : 0.5);
+  const safeBaseY = clamp01(Number.isFinite(baseY) ? baseY : 0.5);
+  return fract(safeBaseX * (12.9898 + salt * 0.25) + safeBaseY * (78.233 + salt * 0.5) + salt * 0.61803398875);
+}
+
+function getCenteredSlotOrder(count) {
+  if (count <= 0) {
+    return [];
+  }
+
+  const order = [];
+  let left = Math.floor((count - 1) / 2);
+  let right = left + 1;
+
+  if (count % 2 === 1) {
+    order.push(left);
+    left -= 1;
+  } else {
+    order.push(left);
+    if (right < count) {
+      order.push(right);
+      right += 1;
+    }
+    left -= 1;
+  }
+
+  while (order.length < count) {
+    if (right < count) {
+      order.push(right);
+      right += 1;
+    }
+    if (order.length >= count) {
+      break;
+    }
+    if (left >= 0) {
+      order.push(left);
+      left -= 1;
+    }
+  }
+
+  return order;
+}
+
+function getPackedSlotRange(range, slotIndex, slotCount, slotFill) {
+  if (slotCount <= 1) {
+    return range;
+  }
+
+  const slotWidth = (range[1] - range[0]) / slotCount;
+  const clampedFill = clampToRange(slotFill, [0.2, 1]);
+  const inset = slotWidth * (1 - clampedFill) * 0.5;
+  const slotStart = range[0] + slotWidth * slotIndex + inset;
+  const slotEnd = range[0] + slotWidth * (slotIndex + 1) - inset;
+  return [slotStart, Math.max(slotStart, slotEnd)];
+}
+
+function getTerraFractalLandmassSeedSummary(landmasses) {
+  return landmasses.map((landmass, index) => `landmass[${index}] size=${landmass.size.toFixed(2)} x=${landmass.xPos.toFixed(4)} y=${landmass.yPos.toFixed(4)} group=${landmass.groupId}`).join(' | ');
 }
 
 function getTerraDistantIslandDensityOption(rawValue) {
@@ -377,6 +472,63 @@ class TerraFractalVoronoi extends VoronoiFractal {
     super();
     this.terraOptions = terraOptions;
     this.landmassMetadata = null;
+  }
+
+  applyTerraSeedPlacement(landmasses) {
+    const homelandIndexes = [];
+    const distantIndexes = [];
+
+    for (let index = 0; index < landmasses.length; ++index) {
+      if ((landmasses[index].groupId ?? 0) > 0) {
+        homelandIndexes.push(index);
+      } else {
+        distantIndexes.push(index);
+      }
+    }
+
+    const assignSideSeeds = (indexes, sideSettings, saltBase, sideName) => {
+      if (indexes.length === 0) {
+        return;
+      }
+
+      const sortedIndexes = [...indexes].sort((leftIndex, rightIndex) => {
+        const left = landmasses[leftIndex];
+        const right = landmasses[rightIndex];
+        return right.size - left.size || left.xPos - right.xPos || left.yPos - right.yPos || leftIndex - rightIndex;
+      });
+      const centeredOrder = getCenteredSlotOrder(sortedIndexes.length);
+
+      for (let entryIndex = 0; entryIndex < sortedIndexes.length; ++entryIndex) {
+        const landmassIndex = sortedIndexes[entryIndex];
+        const landmass = landmasses[landmassIndex];
+        const slotIndex = centeredOrder[entryIndex] ?? entryIndex;
+        const xRange = getPackedSlotRange(sideSettings.xRange, slotIndex, sortedIndexes.length, sideSettings.slotFill);
+        const xEntropy = getTerraFractalSeedEntropy(landmass.xPos, landmass.yPos, saltBase + entryIndex * 13 + 1);
+        const yEntropy = getTerraFractalSeedEntropy(landmass.yPos, landmass.xPos, saltBase + entryIndex * 13 + 7);
+        landmass.xPos = remapUnitToRange(xEntropy, xRange);
+        landmass.yPos = remapUnitToRange(yEntropy, sideSettings.yRange);
+      }
+
+      console.log(`DEBUG: Terra Fractal ${sideName} slots indexes=[${sortedIndexes.join(',')}]`);
+    };
+
+    assignSideSeeds(homelandIndexes, TERRA_FRACTAL_LAYOUT_SETTINGS.oldWorld, 11, 'old-world');
+    assignSideSeeds(distantIndexes, TERRA_FRACTAL_LAYOUT_SETTINGS.newWorld, 101, 'new-world');
+
+    console.log(`DEBUG: Terra Fractal remapped seeds ${getTerraFractalLandmassSeedSummary(landmasses)}`);
+  }
+
+  applySettings() {
+    super.applySettings();
+    const generatorSettings = this.getGenerator().getSettings();
+    const landmasses = generatorSettings.landmass;
+
+    if (!Array.isArray(landmasses) || landmasses.length < 2) {
+      console.error('Terra Fractal YnAMP expected at least two landmasses after VoronoiFractal.applySettings().');
+      return;
+    }
+
+    this.applyTerraSeedPlacement(landmasses);
   }
 
   simulateInternal() {

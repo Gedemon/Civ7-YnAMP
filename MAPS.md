@@ -11,6 +11,8 @@ Verified against: Civ7 v1.3.2
 | Map | Script | Type | Default size |
 |---|---|---|---|
 | Terra (YnAMP) | `modules/maps/terra-map/terra-ynamp.js` | Generated | YnAMP sizes |
+| Terra Fractal (YnAMP) | `modules/maps/terra-fractal/fractal-terra-ynamp.js` | Generated | YnAMP sizes |
+| Continents Terra (YnAMP) | `modules/maps/terra-fractal/continents-terra-ynamp.js` | Generated | YnAMP sizes |
 | Greatest Earth Map (YnAMP) | `modules/maps/greatest-earth-map/greatest-earth-map.js` | Fixed geography / TSL | `MAPSIZE_GREATEST_EARTH` |
 | Giant Earth Map (YnAMP) | `modules/maps/giant-earth-map/giant-earth-map.js` | Fixed geography / TSL | `MAPSIZE_GIANT` |
 
@@ -24,6 +26,26 @@ Verified against: Civ7 v1.3.2
   - `TerraSpawnMode`
 - Best use: homeland vs new-world style games.
 - Notes: the current implementation documents this as the best target for Terra-oriented cultural-region start options.
+
+### Terra Fractal (YnAMP)
+
+- Purpose: Fractal Terra map reserved for the explicit Old World / New World variant.
+- Main options:
+  - `TerraLandmassRatio`
+  - `TerraSpawnMode`
+  - `TerraOceanSeparation`
+  - `TerraFractalLandmasses`
+- Best use: Terra-style generated maps with fractal landmass counts and hemisphere-aware starts.
+
+### Continents Terra (YnAMP)
+
+- Purpose: Compatibility clone of the current Terra Fractal behavior.
+- Main options:
+  - `TerraLandmassRatio`
+  - `TerraSpawnMode`
+  - `TerraOceanSeparation`
+  - `TerraFractalLandmasses`
+- Best use: preserving the current clustered-homeland Terra Fractal layout while the original Terra Fractal script evolves.
 
 ### Greatest Earth Map (YnAMP)
 
@@ -63,6 +85,16 @@ Verified against: Civ7 v1.3.2
 - `TerraLandmassRatio`
 - `TerraSpawnMode`
 - `HomelandMode`
+
+### Available on Terra Fractal and Continents Terra
+
+- `TerraLandmassRatio`
+- `TerraSpawnMode`
+- `TerraOceanSeparation`
+- `TerraDistantIslandsDensity`
+- `TerraDistantIslandsSize`
+- `TerraFractalLandmasses`
+- `StartPosition`
 
 ### Available on supported generated maps
 
