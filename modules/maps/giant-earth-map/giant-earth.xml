@@ -13,6 +13,7 @@
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_EGYPT"			X="32" Y="43" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_GREECE"		X="28" Y="56" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_HAN"			X="78" Y="60" />
+		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_HEIAN"			X="96" Y="58" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_KHMER"			X="77" Y="40" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_MAURYA"		X="60" Y="52" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_MAYA"			X="145" Y="47" />
@@ -35,6 +36,7 @@
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_MONGOLIA"		X="73" Y="71" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_NORMAN"		X="13"  Y="68" UnlockIgnoreCoast="1" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_PIRATE_REPUBLIC" X="151" Y="50" UnlockIgnoreCoast="1" />
+		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_SENGOKU"		X="96" Y="58" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_SHAWNEE"		X="150"  Y="64" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_SONGHAI"		X="7"  Y="39" />
 		<Replace MapName="GiantEarth" Civilization="CIVILIZATION_SPAIN"			X="7"  Y="57" />

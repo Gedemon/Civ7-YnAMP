@@ -88,6 +88,7 @@ const DEFAULT_SUPER_REGION   = "EURASIA";
 const DEFAULT_CULTURE_GROUP  = "ETHNICITY_EURO";
 // Minimum distance for fallback plots assigned during SuperRegion phase.
 const REGION_MIN_DISTANCE    = 8;
+let hasLoggedTerraSpawnPolicy = false;
 // ── Option / map detection ────────────────────────────────────────────────────
 
 /**
@@ -406,26 +407,73 @@ function chooseEasternmostRegionId(regionStats) {
     return chosenRegionId;
 }
 
-function getReservedTerraAmericasRegionId(iWidth, iHeight) {
+function normalizeIntegerConfigurationValue(rawValue) {
+    if (rawValue === undefined || rawValue === null) {
+        return null;
+    }
+
+    const normalizedValue = Number.parseInt(String(rawValue), 10);
+    return Number.isFinite(normalizedValue) ? normalizedValue : null;
+}
+
+function getTerraSpawnPolicy(iWidth, iHeight) {
     if (!isTerraOptionMap()) {
-        return NO_REGION_ID;
+        return {
+            isTerraMap: false,
+            spawnModeRaw: null,
+            spawnModeValue: null,
+            allCivsInOldWorld: false,
+            mapWideRegionStats: [],
+            distantWorldRegionId: NO_REGION_ID,
+            homelandRegionIds: []
+        };
     }
 
+    const spawnModeRaw = Configuration.getMapValue("TerraSpawnMode");
+    const spawnModeValue = normalizeIntegerConfigurationValue(spawnModeRaw);
     const mapWideRegionStats = collectMapWideLandmassRegionStats(iWidth, iHeight);
-    if (mapWideRegionStats.length <= 1) {
+    let distantWorldRegionId = NO_REGION_ID;
+
+    if (mapWideRegionStats.length > 1) {
+        if (mapWideRegionStats.length === 2) {
+            distantWorldRegionId = chooseEasternmostRegionId(mapWideRegionStats);
+        } else {
+            distantWorldRegionId = mapWideRegionStats.reduce(
+                (highestRegionId, entry) => Math.max(highestRegionId, entry.regionId),
+                NO_REGION_ID
+            );
+        }
+    }
+
+    const allCivsInOldWorld = spawnModeValue === 1;
+    if (!hasLoggedTerraSpawnPolicy) {
+        hasLoggedTerraSpawnPolicy = true;
+        console.log("[YnAMP Region] Terra spawn policy: raw=" + spawnModeRaw +
+            " normalized=" + spawnModeValue +
+            " isTerraMap=true allCivsInOldWorld=" + allCivsInOldWorld +
+            " mapWideRegionCount=" + mapWideRegionStats.length);
+    }
+
+    return {
+        isTerraMap: true,
+        spawnModeRaw,
+        spawnModeValue,
+        allCivsInOldWorld,
+        mapWideRegionStats,
+        distantWorldRegionId,
+        homelandRegionIds: mapWideRegionStats
+            .map((entry) => entry.regionId)
+            .filter((regionId) => regionId !== distantWorldRegionId)
+    };
+}
+
+function getReservedTerraAmericasRegionId(iWidth, iHeight) {
+    const terraSpawnPolicy = getTerraSpawnPolicy(iWidth, iHeight);
+    if (!terraSpawnPolicy.isTerraMap || terraSpawnPolicy.allCivsInOldWorld) {
         return NO_REGION_ID;
     }
 
-    if (mapWideRegionStats.length === 2) {
-        // Classic Terra stamps only two semantic regions. The New World is the
-        // eastern stamped side after the explicit old/new seed remap, so reserve
-        // the easternmost semantic region directly instead of assuming regionId order.
-        return chooseEasternmostRegionId(mapWideRegionStats);
-    }
-
-    // Terra Fractal and Continents Terra stamp homeland regions first and reserve
-    // the highest semantic regionId for the actual distant-world landmass.
-    return mapWideRegionStats.reduce((highestRegionId, entry) => Math.max(highestRegionId, entry.regionId), NO_REGION_ID);
+    return terraSpawnPolicy.distantWorldRegionId;
 }
 
 function getCultureGroupPosition(cultureGroup) {
@@ -947,6 +995,105 @@ function assignPlayersToRegionTargets(aliveMajorIds, playerTargetRegion, iWidth,
     console.log(logPrefix + " Phase 1 complete.");
 }
 
+function buildScaledRegionCapacityMap(regionIds, sourceCounts, totalPlayers) {
+    const regionCapacityById = new Map();
+    if (regionIds.length === 0) {
+        return regionCapacityById;
+    }
+
+    let totalSourceCount = 0;
+    for (let i = 0; i < regionIds.length; i++) {
+        totalSourceCount += sourceCounts.get(regionIds[i]) || 0;
+    }
+
+    if (totalSourceCount <= 0) {
+        regionCapacityById.set(regionIds[0], totalPlayers);
+        for (let i = 1; i < regionIds.length; i++) {
+            regionCapacityById.set(regionIds[i], 0);
+        }
+        return regionCapacityById;
+    }
+
+    const residuals = [];
+    let assignedPlayers = 0;
+    for (let i = 0; i < regionIds.length; i++) {
+        const regionId = regionIds[i];
+        const sourceCount = sourceCounts.get(regionId) || 0;
+        const exactCapacity = totalPlayers * (sourceCount / totalSourceCount);
+        const baseCapacity = Math.floor(exactCapacity);
+        regionCapacityById.set(regionId, baseCapacity);
+        assignedPlayers += baseCapacity;
+        residuals.push({
+            regionId,
+            remainder: exactCapacity - baseCapacity
+        });
+    }
+
+    residuals.sort((a, b) => b.remainder - a.remainder || a.regionId - b.regionId);
+    let residualIndex = 0;
+    while (assignedPlayers < totalPlayers && residuals.length > 0) {
+        const regionId = residuals[residualIndex].regionId;
+        regionCapacityById.set(regionId, (regionCapacityById.get(regionId) || 0) + 1);
+        assignedPlayers++;
+        residualIndex = (residualIndex + 1) % residuals.length;
+    }
+
+    return regionCapacityById;
+}
+
+function runTerraOldWorldOnlyAssignment(aliveMajorIds, civProfiles, iWidth, iHeight, logPrefix) {
+    const terraSpawnPolicy = getTerraSpawnPolicy(iWidth, iHeight);
+    if (!terraSpawnPolicy.allCivsInOldWorld) {
+        return false;
+    }
+
+    const regionData = collectOccupiedPlayerRegionData(aliveMajorIds, iWidth);
+    let homelandRegionIds = regionData.occupiedRegionIds
+        .filter((regionId) => regionId !== terraSpawnPolicy.distantWorldRegionId);
+    if (homelandRegionIds.length === 0) {
+        homelandRegionIds = terraSpawnPolicy.homelandRegionIds.slice();
+    }
+    if (homelandRegionIds.length === 0) {
+        console.log(logPrefix + " Old World override skipped: no homeland regionIds detected.");
+        return false;
+    }
+
+    const regionCapacityById = buildScaledRegionCapacityMap(
+        homelandRegionIds,
+        regionData.regionCounts,
+        aliveMajorIds.length
+    );
+    const assignment = buildCultureGroupSliceAssignment(
+        aliveMajorIds,
+        civProfiles,
+        homelandRegionIds,
+        regionCapacityById,
+        logPrefix + " Old World"
+    );
+
+    const targetCounts = new Map();
+    for (let i = 0; i < homelandRegionIds.length; i++) {
+        targetCounts.set(homelandRegionIds[i], 0);
+    }
+    for (const regionId of assignment.playerTargetRegion.values()) {
+        if (targetCounts.has(regionId)) {
+            targetCounts.set(regionId, targetCounts.get(regionId) + 1);
+        }
+    }
+
+    console.log(logPrefix + " ─── Phase 1: Terra old-world override ───");
+    console.log(logPrefix + " Terra old-world override active: spawnMode=" + terraSpawnPolicy.spawnModeRaw +
+        " homelandRegionIds=" + homelandRegionIds.join(",") +
+        (terraSpawnPolicy.distantWorldRegionId !== NO_REGION_ID
+            ? " blockedNewWorldRegionId=" + terraSpawnPolicy.distantWorldRegionId
+            : ""));
+    console.log(logPrefix + " Terra reserve skipped: user selected all civs in the Old World.");
+    console.log(logPrefix + " Occupied homeland regionIds: " + formatRegionCounts(homelandRegionIds, regionData.regionCounts));
+    console.log(logPrefix + " Old World targets: " + formatRegionCounts(homelandRegionIds, targetCounts));
+    assignPlayersToRegionTargets(aliveMajorIds, assignment.playerTargetRegion, iWidth, iHeight, logPrefix);
+    return true;
+}
+
 function runMultiRegionRegionAssignment(aliveMajorIds, civProfiles, iWidth, iHeight) {
     const regionData = collectOccupiedPlayerRegionData(aliveMajorIds, iWidth);
     if (regionData.occupiedRegionIds.length < 3) {
@@ -1109,6 +1256,10 @@ function prepareOceaniaIslandStarts(playerIds, civProfiles, iWidth, iHeight) {
     const islandLockedPlayers = new Set(oceaniaPlayers);
     const islandComponentByPlayer = new Map();
     const componentOccupants = new Map();
+    const terraSpawnPolicy = getTerraSpawnPolicy(iWidth, iHeight);
+    const allowedIslandRegionIds = terraSpawnPolicy.allCivsInOldWorld && terraSpawnPolicy.homelandRegionIds.length > 0
+        ? new Set(terraSpawnPolicy.homelandRegionIds)
+        : null;
     const occupiedRegionData = collectOccupiedPlayerRegionData(playerIds, iWidth);
     const reservedTerraAmericasRegionId = getReservedTerraAmericasRegionId(iWidth, iHeight);
     const highestOccupiedRegionId = occupiedRegionData.occupiedRegionIds.length > 0
@@ -1135,6 +1286,13 @@ function prepareOceaniaIslandStarts(playerIds, civProfiles, iWidth, iHeight) {
     }
 
     console.log("[YnAMP Region] Oceania unique island retags start at regionId=" + nextUniqueRegionId);
+    if (allowedIslandRegionIds) {
+        console.log("[YnAMP Region] Terra old-world island filter: homelandRegionIds=" +
+            terraSpawnPolicy.homelandRegionIds.join(",") +
+            (terraSpawnPolicy.distantWorldRegionId !== NO_REGION_ID
+                ? " blockedNewWorldRegionId=" + terraSpawnPolicy.distantWorldRegionId
+                : ""));
+    }
 
     for (let i = 0; i < oceaniaPlayers.length; i++) {
         const pid = oceaniaPlayers[i];
@@ -1172,7 +1330,8 @@ function prepareOceaniaIslandStarts(playerIds, civProfiles, iWidth, iHeight) {
             islandMetadata,
             {
                 excludedComponentIds,
-                targetRegionId: nextUniqueRegionId
+                targetRegionId: nextUniqueRegionId,
+                allowedClosestRegionIds: allowedIslandRegionIds
             }
         );
 
@@ -1187,7 +1346,8 @@ function prepareOceaniaIslandStarts(playerIds, civProfiles, iWidth, iHeight) {
                 preferredRegionId,
                 islandMetadata,
                 {
-                    excludedComponentIds: claimedComponentIds
+                    excludedComponentIds: claimedComponentIds,
+                    allowedClosestRegionIds: allowedIslandRegionIds
                 }
             );
         }
@@ -1349,9 +1509,12 @@ function runRegionShuffle() {
         runCultureGroupSwaps(aliveMajorIds, civProfiles, iWidth, "global", swapConstraint);
         logFinalRegionPlacements(aliveMajorIds, civProfiles, iWidth);
     } else {
-        const usesMultiRegion = runMultiRegionRegionAssignment(aliveMajorIds, civProfiles, iWidth, iHeight);
-        if (!usesMultiRegion) {
-            assignCivsBySuperRegion(aliveMajorIds, civProfiles, iWidth, iHeight);
+        const usedOldWorldOverride = runTerraOldWorldOnlyAssignment(aliveMajorIds, civProfiles, iWidth, iHeight, "[YnAMP Region]");
+        if (!usedOldWorldOverride) {
+            const usesMultiRegion = runMultiRegionRegionAssignment(aliveMajorIds, civProfiles, iWidth, iHeight);
+            if (!usesMultiRegion) {
+                assignCivsBySuperRegion(aliveMajorIds, civProfiles, iWidth, iHeight);
+            }
         }
         const swapConstraint = prepareOceaniaIslandStarts(aliveMajorIds, civProfiles, iWidth, iHeight);
 
@@ -1466,7 +1629,10 @@ function runRelativeDistanceTerraShuffle() {
 
     // Phase 1: hemisphere assignment.
     const civProfiles = buildCivProfileMap(aliveMajorIds);
-    assignCivsBySuperRegion(aliveMajorIds, civProfiles, iWidth, iHeight);
+    const usedOldWorldOverride = runTerraOldWorldOnlyAssignment(aliveMajorIds, civProfiles, iWidth, iHeight, "[YnAMP TerraRelDist]");
+    if (!usedOldWorldOverride) {
+        assignCivsBySuperRegion(aliveMajorIds, civProfiles, iWidth, iHeight);
+    }
 
     // Phase 2: per-region relative-distance swaps.
     console.log("[YnAMP TerraRelDist] ─── Phase 2: per-region relative-distance swaps ───");
@@ -1882,8 +2048,9 @@ function runRegionBalancedShuffle() {
         return;
     }
 
-    const usesMultiRegion = runMultiRegionBalancedAssignment(aliveMajorIds, civProfiles, iWidth, iHeight);
-    if (usesMultiRegion) {
+    const usedOldWorldOverride = runTerraOldWorldOnlyAssignment(aliveMajorIds, civProfiles, iWidth, iHeight, "[YnAMP Balanced]");
+    const usesMultiRegion = !usedOldWorldOverride && runMultiRegionBalancedAssignment(aliveMajorIds, civProfiles, iWidth, iHeight);
+    if (usedOldWorldOverride || usesMultiRegion) {
         const swapConstraint = prepareOceaniaIslandStarts(aliveMajorIds, civProfiles, iWidth, iHeight);
         console.log("[YnAMP Balanced] ─── Phase 2: intra-region culture-group swaps ───");
         const regionGroups = new Map();

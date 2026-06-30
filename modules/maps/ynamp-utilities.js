@@ -1911,6 +1911,9 @@ export function findFallbackIslandStartPlot(defaultPlot, usedPlots, iWidth, iHei
     let excludedComponentIds = options && options.excludedComponentIds instanceof Set
         ? options.excludedComponentIds
         : null;
+    let allowedClosestRegionIds = options && options.allowedClosestRegionIds instanceof Set
+        ? options.allowedClosestRegionIds
+        : null;
     let explicitTargetRegionId = options && options.targetRegionId != undefined
         ? options.targetRegionId
         : NO_REGION_ID;
@@ -1924,6 +1927,10 @@ export function findFallbackIslandStartPlot(defaultPlot, usedPlots, iWidth, iHei
         return !!component &&
             component.isIsland &&
             (!excludedComponentIds || !excludedComponentIds.has(component.id));
+    }
+
+    function isAllowedClosestRegionId(regionId) {
+        return !allowedClosestRegionIds || allowedClosestRegionIds.has(regionId);
     }
 
     function finalizeIslandSelection(plot, component, fallbackRegionId, source) {
@@ -1942,7 +1949,9 @@ export function findFallbackIslandStartPlot(defaultPlot, usedPlots, iWidth, iHei
 
     function isRegionIslandCandidate(x, y, plot) {
         let component = getComponentForPlot(plot);
-        return isAllowedIslandComponent(component) && component.regionIds.indexOf(preferredRegionId) >= 0;
+        return isAllowedIslandComponent(component) &&
+            isAllowedClosestRegionId(preferredRegionId) &&
+            component.regionIds.indexOf(preferredRegionId) >= 0;
     }
 
     if (preferredRegionId !== NO_REGION_FILTER) {
@@ -1968,7 +1977,9 @@ export function findFallbackIslandStartPlot(defaultPlot, usedPlots, iWidth, iHei
 
     function isNeutralIslandCandidate(x, y, plot) {
         let component = getComponentForPlot(plot);
-        return isAllowedIslandComponent(component) && component.regionIds.length === 0;
+        return isAllowedIslandComponent(component) &&
+            component.regionIds.length === 0 &&
+            isAllowedClosestRegionId(resolveClosestMainlandRegionId(component, metadata));
     }
 
     let neutralIslandPlot = chooseFallbackStartPlot(

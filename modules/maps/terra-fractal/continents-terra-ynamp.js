@@ -9,7 +9,8 @@ import { addNaturalWonders } from '/base-standard/maps/natural-wonder-generator.
 import { generateResources } from '/base-standard/maps/resource-generator.js';
 import { generateSnow, dumpPermanentSnow } from '/base-standard/maps/snow-generator.js';
 import { dumpLandmassRegionIds, dumpPlayerLandmassIds } from '/ged-ynamp/maps/ynamp-utilities.js';
-import { HexValidationSettings, RemoveBridgingCoastsOptions } from '/base-standard/scripts/voronoi-hex.js';
+import { HexValidationSettings, RemoveBridgingLandmassOptions, SeparationFilterOptions, VoronoiValidationSettings } from '/base-standard/scripts/hex-map.js';
+import { CreateMajorPlayerAreas } from '/base-standard/scripts/player-areas.js';
 import { TerrainType } from '/base-standard/scripts/voronoi-types.js';
 import { VoronoiFractal } from '/base-standard/scripts/voronoi_maps/fractal.js';
 
@@ -123,6 +124,10 @@ function getDistantWorldShare(ratioRaw) {
 
 function getLandmassScore(entry) {
   return entry.land + entry.coast * 0.6;
+}
+
+function isVoronoiLandTile(tile) {
+  return tile.terrainType !== TerrainType.Ocean && tile.terrainType !== TerrainType.Coast;
 }
 
 function getRandomTerraFractalLandmassCount() {
@@ -326,12 +331,12 @@ function collectPlayerBearingDistantWorldTiles(voronoiMap, tiles) {
     }
 
     distantWorldTiles.add(tile);
-    for (const neighbor of hexTiles.getNeighbors(tile)) {
+    hexTiles.forNeighbors(tile.coord.x, tile.coord.y, tiles, (neighbor) => {
       if (!neighbor || distantWorldTiles.has(neighbor) || neighbor.playerLandmassId !== 0 || neighbor.terrainType === TerrainType.Ocean) {
-        continue;
+        return;
       }
       considerationList.push(neighbor);
-    }
+    });
   }
 
   return distantWorldTiles;
@@ -386,11 +391,17 @@ class TerraFractalVoronoi extends VoronoiFractal {
     this.landmassMetadata = null;
 
     const hexValidationSettings = new HexValidationSettings();
-    hexValidationSettings.removeBridgingLandmass = false;
-    hexValidationSettings.removeBridgingCoasts = RemoveBridgingCoastsOptions.DIFFERENT_TYPES | RemoveBridgingCoastsOptions.DIFFERENT_LANDMASS_GROUPS;
+    hexValidationSettings.removeBridgingPlayerLandmasses = RemoveBridgingLandmassOptions.OFF;
     hexValidationSettings.polarMargin = 1;
     this.getHexTiles().setValidationSettings(hexValidationSettings);
     this.applySettings();
+  }
+
+  getVoronoiValidationSettings() {
+    const voronoiValidationSettings = new VoronoiValidationSettings();
+    voronoiValidationSettings.forceOceans = SeparationFilterOptions.DIFFERENT_TYPES | SeparationFilterOptions.DIFFERENT_LANDMASS_GROUPS;
+    voronoiValidationSettings.forceCoasts = SeparationFilterOptions.OFF;
+    return voronoiValidationSettings;
   }
 
   getLandmassMetadata() {
@@ -404,8 +415,9 @@ class TerraFractalVoronoi extends VoronoiFractal {
         continue;
       }
 
+      const isLand = isVoronoiLandTile(tile);
       const isCoast = tile.terrainType === TerrainType.Coast;
-      if (!tile.isLand() && !isCoast) {
+      if (!isLand && !isCoast) {
         continue;
       }
 
@@ -425,8 +437,8 @@ class TerraFractalVoronoi extends VoronoiFractal {
         rawEntries.set(tile.playerLandmassId, entry);
       }
 
-      const weight = tile.isLand() ? 1 : 0.6;
-      if (tile.isLand()) {
+      const weight = isLand ? 1 : 0.6;
+      if (isLand) {
         entry.land++;
       } else {
         entry.coast++;
@@ -530,7 +542,7 @@ class TerraFractalVoronoi extends VoronoiFractal {
       .map((entry) => `bucket=${entry.semanticLandmassId} raw=${entry.rawPlayerLandmassId} score=${getLandmassScore(entry).toFixed(1)} players=${homelandPlayerAllocations.get(entry.semanticLandmassId) ?? 0}`)
       .join(' | ');
     console.log(`DEBUG: Continents Terra player areas oldWorld=${oldWorldPlayers} distantWorld=${distantWorldPlayers} oldScore=${oldWorldScore.toFixed(1)} distantScore=${distantWorldScore.toFixed(1)} homeland=[${homelandAllocationLog}]`);
-    this.getHexTiles().createMajorPlayerAreas(playerAreas, valueFunction, {
+    CreateMajorPlayerAreas(this.getHexTiles(), playerAreas, valueFunction, {
       wrap: this.getWrapType(),
       width: this.m_hexDims.x,
       height: this.m_hexDims.y
@@ -561,12 +573,13 @@ async function generateMap() {
   const landmassCountRaw = Configuration.getMapValue('TerraFractalLandmasses');
   const oceanSeparationMode = oceanSeparationRaw === 'STANDARD' ? 'STANDARD' : 'WIDE';
   const distantWorldShare = getDistantWorldShare(ratioRaw);
-  const sameLandmass = spawnRaw === '1';
+  const spawnModeValue = spawnRaw != null ? Number.parseInt(String(spawnRaw), 10) : null;
+  const sameLandmass = spawnModeValue === 1;
   const distantIslandSettings = resolveTerraFractalDistantIslandSettings(distantIslandDensityRaw, distantIslandSizeRaw);
   const resolvedLandmassCount = resolveTerraFractalLandmassCount(landmassCountRaw);
   const startTime = Date.now();
 
-  console.log(`DEBUG: Continents Terra oceanSeparation=${oceanSeparationMode} seaLevel=${seaLevelType} distantWorldShare=${distantWorldShare.toFixed(4)} sameLandmass=${sameLandmass} requestedLandmasses=${resolvedLandmassCount.requested} resolvedLandmasses=${resolvedLandmassCount.resolved}${resolvedLandmassCount.roll == null ? '' : ` roll=${resolvedLandmassCount.roll}`}`);
+  console.log(`DEBUG: Continents Terra oceanSeparation=${oceanSeparationMode} seaLevel=${seaLevelType} distantWorldShare=${distantWorldShare.toFixed(4)} sameLandmass=${sameLandmass} spawnModeRaw='${spawnRaw}' normalizedSpawnMode=${spawnModeValue} requestedLandmasses=${resolvedLandmassCount.requested} resolvedLandmasses=${resolvedLandmassCount.resolved}${resolvedLandmassCount.roll == null ? '' : ` roll=${resolvedLandmassCount.roll}`}`);
   console.log(`DEBUG: Continents Terra distant islands density=${distantIslandSettings.densityOption} (raw: '${distantIslandDensityRaw}') size=${distantIslandSettings.sizeOption} (raw: '${distantIslandSizeRaw}') factor=${distantIslandSettings.factor.toFixed(2)} minSize=${distantIslandSettings.minSize.toFixed(2)} maxSize=${distantIslandSettings.maxSize.toFixed(2)} totalSize=${distantIslandSettings.totalSize.toFixed(2)} variance=${distantIslandSettings.variance.toFixed(2)}`);
 
   const terraOptions = {
@@ -641,7 +654,9 @@ async function generateMap() {
   const fertilityGetter = (tile) => StartPositioner.getPlotFertilityForCoord(tile.coord.x, tile.coord.y);
   console.log('STEP: createMajorPlayerAreas');
   voronoiMap.createMajorPlayerAreas(fertilityGetter);
+  console.log('STEP: stampTerraFractalLandmassRegions');
   const exportRegionData = stampTerraFractalLandmassRegions(voronoiMap, tiles);
+  console.log('STEP: stampTerraFractalLandmassRegions complete');
   dumpLandmassRegionIds(iWidth, iHeight, 'CONTINENTS_TERRA_EXPORTED_LANDMASS_REGION_IDS');
   const playerRegions = Array.from({ length: iTotalPlayers }, () => new PlayerRegion());
   playerRegions.forEach((region, index) => {

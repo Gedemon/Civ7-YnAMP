@@ -1,5 +1,5 @@
 import { assignAdvancedStartRegions } from '/base-standard/maps/assign-advanced-start-region.js';
-import { PlayerRegion, assignStartPositionsFromTiles } from '/base-standard/maps/assign-starting-plots.js';
+import { assignStartPositionsFromHexMap } from '/base-standard/maps/assign-starting-plots.js';
 import { generateDiscoveries } from '/base-standard/maps/discovery-generator.js';
 import { generateLakes, addHills, buildRainfallMap } from '/base-standard/maps/elevation-terrain-generator.js';
 import { designateBiomes, addFeatures } from '/base-standard/maps/feature-biome-generator.js';
@@ -33,6 +33,14 @@ function getSeaLevelVariantKey(seaLevelType) {
     default:
       return void 0;
   }
+}
+
+function isVoronoiLandTile(tile) {
+  return tile.terrainType !== TerrainType.Ocean && tile.terrainType !== TerrainType.Coast;
+}
+
+function isVoronoiWaterTile(tile) {
+  return tile.terrainType === TerrainType.Ocean || tile.terrainType === TerrainType.Coast;
 }
 
 const TERRA_IRREGULARITY_SETTINGS = Object.freeze({
@@ -476,7 +484,7 @@ function analyzeTerraLayout(tiles, iWidth, iHeight, passName) {
   for (let y = 0; y < tiles.length; y++) {
     for (let x = 0; x < tiles[y].length; x++) {
       const tile = tiles[y][x];
-      if (tile.landmassId <= 0 || !tile.isLand()) {
+      if (tile.landmassId <= 0 || !isVoronoiLandTile(tile)) {
         continue;
       }
 
@@ -551,7 +559,7 @@ function dumpRejectedTerraLayout(passResult, terraOptions, seaLevelType, oceanSe
     let row = "";
     for (let x = 0; x < tiles[y].length; x++) {
       const tile = tiles[y][x];
-      if (!tile.isLand()) {
+      if (!isVoronoiLandTile(tile)) {
         row += ".";
       } else if (tile.landmassId === analysis.oldworldLandmassId) {
         row += "H";
@@ -742,11 +750,12 @@ async function generateMap() {
   const oceanSeparationMode = oceanSeparationRaw === "STANDARD" ? "STANDARD" : "WIDE";
   const parsedSizeRatio = ratioRaw != null ? Number.parseInt(ratioRaw, 10) / 100 : 1 / 3;
   const sizeRatio = Number.isFinite(parsedSizeRatio) && parsedSizeRatio > 0 && parsedSizeRatio < 1 ? parsedSizeRatio : 1 / 3;
-  const bSameLandmass = spawnRaw == "1";
+  const spawnModeValue = spawnRaw != null ? Number.parseInt(String(spawnRaw), 10) : null;
+  const bSameLandmass = spawnModeValue === 1;
   const distantIslandSettings = resolveTerraDistantIslandSettings(distantIslandDensityRaw, distantIslandSizeRaw);
 
   console.log(`DEBUG: oceanSeparation=${oceanSeparationMode} (raw: "${oceanSeparationRaw}"), seaLevel=${seaLevelType}`);
-  console.log(`DEBUG: sizeRatio=${sizeRatio.toFixed(4)} (raw: "${ratioRaw}"%); sameLandmass=${bSameLandmass} (raw: "${spawnRaw}")`);
+  console.log(`DEBUG: sizeRatio=${sizeRatio.toFixed(4)} (raw: "${ratioRaw}"%); sameLandmass=${bSameLandmass} (raw: "${spawnRaw}", normalized: ${spawnModeValue})`);
   console.log(`DEBUG: distant islands density=${distantIslandSettings.densityOption} (raw: "${distantIslandDensityRaw}") size=${distantIslandSettings.sizeOption} (raw: "${distantIslandSizeRaw}") factor=${distantIslandSettings.factor.toFixed(2)} minSize=${distantIslandSettings.minSize.toFixed(2)} maxSize=${distantIslandSettings.maxSize.toFixed(2)} totalSize=${distantIslandSettings.totalSize.toFixed(2)} variance=${distantIslandSettings.variance.toFixed(2)}`);
 
   const terraOptions = {
@@ -793,7 +802,7 @@ async function generateMap() {
   for (let y = 0; y < tiles.length; ++y) {
     for (let x = 0; x < tiles[y].length; ++x) {
       const tile = tiles[y][x];
-      if (tile.isLand()) {
+      if (isVoronoiLandTile(tile)) {
         const type = tile.terrainType === TerrainType.Flat ? g_FlatTerrain : tile.terrainType === TerrainType.Mountainous || tile.terrainType === TerrainType.Volcano ? g_MountainTerrain : tile.terrainType === TerrainType.Rough ? g_HillTerrain : g_FlatTerrain;
         TerrainBuilder.setTerrainType(x, y, type);
         if (tile.terrainType === TerrainType.Volcano) {
@@ -810,7 +819,7 @@ async function generateMap() {
         } else {
           TerrainBuilder.addPlotTag(x, y, PlotTags.PLOT_TAG_ISLAND);
         }
-      } else if (tile.isWater()) {
+      } else if (isVoronoiWaterTile(tile)) {
         const type = tile.terrainType === TerrainType.Ocean ? g_OceanTerrain : g_CoastTerrain;
         TerrainBuilder.setTerrainType(x, y, type);
         if (tile.terrainType === TerrainType.Coast) {
@@ -898,26 +907,11 @@ async function generateMap() {
   dumpPermanentSnow(iWidth, iHeight);
   console.log("STEP: generateResources");
   generateResources(iWidth, iHeight);
-  let startPositions = [];
   const fertilityGetter = (tile) => StartPositioner.getPlotFertilityForCoord(tile.coord.x, tile.coord.y);
   console.log("STEP: createMajorPlayerAreas");
   voronoiMap.createMajorPlayerAreas(fertilityGetter);
-  const playerRegions = Array.from({ length: iTotalPlayers }, () => new PlayerRegion());
-  playerRegions.forEach((region, index) => {
-    region.regionId = index;
-  });
-  console.log(`Creating player regions.. initializing indices: ${playerRegions.map((pr) => pr.regionId)}`);
-  for (const row of tiles) {
-    for (const tile of row) {
-      if (tile.majorPlayerRegionId >= 0 && tile.landmassId > 0) {
-        const playerRegion = playerRegions[tile.majorPlayerRegionId];
-        playerRegion.landmassId = tile.playerLandmassId - 1;
-        playerRegion.tiles.push({ x: tile.coord.x, y: tile.coord.y });
-      }
-    }
-  }
-  console.log("STEP: assignStartPositionsFromTiles");
-  startPositions = assignStartPositionsFromTiles(playerRegions);
+  console.log("STEP: assignStartPositionsFromHexMap");
+  const startPositions = assignStartPositionsFromHexMap(voronoiMap.getHexTiles());
   console.log("STEP: generateDiscoveries");
   generateDiscoveries(iWidth, iHeight, startPositions, g_PolarWaterRows);
   dumpResources(iWidth, iHeight);
